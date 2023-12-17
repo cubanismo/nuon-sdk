@@ -1,0 +1,595 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./library-overview_files/filelist.xml">
+<link rel=Edit-Time-Data href="./library-overview_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>NUON SDK Library Overview</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>tbienz</o:Author>
+  <o:LastAuthor>tbienz</o:LastAuthor>
+  <o:Revision>12</o:Revision>
+  <o:TotalTime>10</o:TotalTime>
+  <o:Created>2001-12-19T23:43:00Z</o:Created>
+  <o:LastSaved>2001-12-19T23:53:00Z</o:LastSaved>
+  <o:Pages>4</o:Pages>
+  <o:Words>812</o:Words>
+  <o:Characters>4629</o:Characters>
+  <o:Company>VM Labs, Inc.</o:Company>
+  <o:Lines>38</o:Lines>
+  <o:Paragraphs>9</o:Paragraphs>
+  <o:CharactersWithSpaces>5684</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:ActiveWritingStyle Lang="EN-US" VendorID="64" DLLVersion="131077"
+   NLCheck="1">1</w:ActiveWritingStyle>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+h1
+	{color:black;}
+h2
+	{color:black;}
+h3
+	{color:black;}
+a:link, span.MsoHyperlink
+	{color:green;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link=green vlink=navy style='tab-interval:.5in'
+alink="#FF0000">
+
+<div class=Section1>
+
+<p align=center style='text-align:center'><img width=120 height=54
+id="_x0000_i1025" src="..\images\nuon_logo_3.gif" border=0></p>
+
+<h1 align=center style='text-align:center'>NUON SDK Library Overview</h1>
+
+<p align=center style='text-align:center'><b>19 December 2001</b></p>
+
+<p align=center style='text-align:center'><b>Copyright &copy; 1997-2001<br>
+VM Labs, Inc.<br>
+All Rights Reserved</b></p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<p>This document provides an overview of the various libraries that are
+included with the NUON SDK.</p>
+
+<p>The linkable library files discussed here are all contained in the SDK's <span
+style='font-family:"Courier New"'>lib</span> directory.&nbsp; The filenames are
+in the form lib<b><i>name</i></b>.a, where <b><i>name</i></b> corresponds to the
+library name shown in the table below. For example, the name of the library
+listed as &#8220;JPEG&#8221; is <span style='font-family:"Courier New"'>libjpeg.a</span>.</p>
+
+<p>Source code for many of the libraries is included in the SDK's <span
+style='font-family:"Courier New"'>lib\src</span> directory.&nbsp; Each library
+has its own subdirectory tree from that point down.</p>
+
+<p>The following tables show the name of each library and give a brief description.</p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2 align=center style='text-align:center'>NUON Graphics Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>mml2d</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>This library contains a variety of 2-D graphics functions
+  for rendering 2-D graphics primitives such as lines, boxes, ellipses, etc.
+  MML2D also contains a variety of functions for manipulating bitmapped images.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>AGL</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>2-D graphics and text output library licensed from
+  AlphaMask.&nbsp; It is a C++ class library that offers a wide variety of 2-D
+  graphics capabilities.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>AGLEffects</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>This library is an extension to libAGL. It allows the user
+  to create graphical special effects such as dashing, gradients, blurs,
+  wobbles, and embossing.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>NuonAGL</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>This library is a NUON-specific extension to libAGL. It
+  provides a NUON-specific rasterizer and color table, as well as a family of
+  Channel Managers which abstract the NUON-specific hardware structures so that
+  NUON applications running under BIOS or PE as well as Win32 emulations of
+  those apps can all use the same AGL interface. </p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>mltxt</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>A scaleable outline font library licensed for NUON from
+  Type Solutions.&nbsp; It's largely integrated into MML2D in many respects,
+  including documentation, but is a separate library file.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>mml3d</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>A simple 3-D graphics library.&nbsp;It is well-suited for
+  applications where small code size and development speed are the main
+  consideration.&nbsp; Not as feature-packed as the other 3-D library choices
+  available for NUON, so it's probably not the first choice for a 3-D game
+  engine.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>mgl</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>A 3-D graphics library patterned after version 1.1 of the
+  popular OpenGL library. The entire version 1.1 specification is not
+  implemented.&nbsp; However, the implementation does include the majority of
+  those functions that are typically used in game development.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>m3dl</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>This is a 2D and 3D graphics library that is structured in
+  similar fashion to console game machine libraries. </p>
+  <p>This is perhaps the most powerful graphics library currently available for
+  NUON.&nbsp; The performance of mGL and M3DL is comparable, but the M3DL library
+  has several features that are not available in the current version of
+  mGL.&nbsp; The main feature you'll find in mGL that is missing in M3DL is
+  better control over lighting. </p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>sprite</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>A sprite library.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON Utility Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>mutil</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>A variety of utility routines that most large programs
+  will find useful. It contains code for things like downloading code to other
+  processors.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p align=center style='text-align:center'>&nbsp;</p>
+
+<h2 align=center style='text-align:center'>NUON Terminal Emulator Library</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td width=106 style='width:79.5pt;padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td width=428 style='width:321.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=106 style='width:79.5pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>term</p>
+  </td>
+  <td width=428 style='width:321.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Contains routines to emulate a simple terminal window on a
+  NUON system. </p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>Standard C &amp; C++ Libraries</h2>
+
+<div align=center>
+
+<table border=0 cellspacing=0 cellpadding=0 width=550 style='width:412.5pt;
+ mso-cellspacing:0in;mso-padding-alt:0in 0in 0in 0in'>
+ <tr>
+  <td style='padding:0in 0in 0in 0in'>
+  <p>If you find library files that aren't described anywhere else, they
+  probably belong in this table even if don't find them there either.</p>
+  <p>These library files are most likely support files (like startup code) or
+  else have something to do with the standard C or C++ libraries.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p class=MsoNormal align=center style='text-align:center'><span
+style='display:none;mso-hide:all'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>M</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Floating point math library.&nbsp; The NUON supports
+  floating point math only in software. While VM Labs does provide the usual FP
+  math functions, we <b>VERY STRONGLY RECOMMEND</b> that fixed-point math be
+  used in place of floating point in any time-critical code.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>C</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Standard C library.</p>
+  </td>
+ </tr>
+ <tr style='height:18.75pt'>
+  <td style='padding:.75pt .75pt .75pt .75pt;height:18.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>G</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt;height:18.75pt'>
+  <p class=MsoNormal>Debug version of the C library.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>C_P</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Profiling version of the standard C library.</p>
+  </td>
+ </tr>
+ <tr style='height:18.75pt'>
+  <td style='padding:.75pt .75pt .75pt .75pt;height:18.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>G_P</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt;height:18.75pt'>
+  <p class=MsoNormal>Profiling version of the GNU C++ library.</p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>STDC++</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Standard C++ library.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON Imaging Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>JPEG</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Standard JPEG image library</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON Audio Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>synth</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>NUON synthesizer library.&nbsp;It provides MIDI, low-level
+  music synthesis, and memory-based PCM functions. </p>
+  <p>Note that the Synth's Wavetable data takes up approximately 1.5MB of
+  memory space when linked into your application.</p>
+  <p>The Synth requires a single dedicated MPE to operate, and currently cannot
+  co-exist on the same MPE as the mini-BIOS. </p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>nise</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Streaming and non-streaming PCM audio functionality. </p>
+  <p>This library can play PCM audio data either from memory or as it is
+  streamed from a media device (normally a DVD disc).</p>
+  <p>The NISE library coexists with the mini-BIOS, which is normally installed
+  on MPE 0.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON BIOS Libraries</h2>
+
+<div align=center>
+
+<table border=0 cellspacing=0 cellpadding=0 width=550 style='width:412.5pt;
+ mso-cellspacing:0in;mso-padding-alt:0in 0in 0in 0in'>
+ <tr>
+  <td style='padding:0in 0in 0in 0in'>
+  <p>The NUON BIOS contains all of the code necessary to access hardware
+  devices that are external to the NUON processor.&nbsp; Since such devices may
+  be different from one implementation of a NUON player to another, the BIOS
+  abstracts the differences and provides applications with a consistent API.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p class=MsoNormal align=center style='text-align:center'><span
+style='display:none;mso-hide:all'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>BIOS Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>ROMBIOS</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>This isn't a real library.&nbsp; Instead of the actual
+  BIOS code, it simply contains the information needed by the linker to direct
+  your application's BIOS function calls to the ROM. </p>
+  <p>The ROM-based BIOS should only be used by applications that use MPE 3 as
+  their main processor. </p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON Movie Playback Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>MOVIE</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Movie playback functions. The _PlayClip() function
+  requires libpe.a.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<h2 align=center style='text-align:center'>&nbsp;</h2>
+
+<h2 align=center style='text-align:center'>NUON Presentation Engine Libraries</h2>
+
+<div align=center>
+
+<table border=1 cellpadding=0 width=550 style='width:412.5pt;mso-cellspacing:
+ 1.5pt'>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Library Name</h3>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <h3 align=center style='text-align:center'>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>PE</p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Interfaces to the ROM entry points for the DVD
+  Presentation Engine.</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p align=center style='text-align:center'>&nbsp;</p>
+
+<p align=center style='text-align:center'>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

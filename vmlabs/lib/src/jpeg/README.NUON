@@ -1,0 +1,14 @@
+Here is the Independent JPEG Group's software, compiled for
+NUON. The port was very straightforward, and involved only
+changing the makefile, configuration files, and adding
+an "in memory" source (see memdata.c). No NUON specific
+optimization has been performed yet, which means that
+the code runs rather slowly compared to what could be
+achieved if, for example, the IDCT were re-coded in
+NUON assembly language.
+
+This library is provided as-is, as a "quick and dirty"
+way to get JPEG images up. BE PREPARED TO MODIFY ANY OF
+YOUR CODE WHICH USES THIS LIBRARY when we release a
+NUON specific (and much faster!) JPEG decompresser.
+Believe me, JPEG can go much faster on NUON.

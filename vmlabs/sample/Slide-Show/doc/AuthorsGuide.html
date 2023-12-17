@@ -1,0 +1,560 @@
+<html>
+<head>
+<title>Slide-Show App: Author's Guide</title>
+</head>
+<body>
+
+<h2>Slide-Show App: Author's Guide</h2>
+
+<p>
+Here is the checklist of the steps involved, with full
+explanations following:
+
+<OL><font color="blue">
+<LI><!-- item 1 -->
+Edit the "user.dat" file in the Slide-Show directory, to specify
+the behavior of your slide show (e.g., whether or not there will be
+background music).
+
+<LI><!-- item 2 -->
+Prepare a set of JPEG images (method described below), and copy
+the prepared JPEG files to the Slide-Show\jpegfiles subdirectory.
+
+<LI><!-- item 3 -->
+Create a file "jpegfiles.lst" in the Slide-Show directory, that
+lists the JPEG files in the desired viewing order.
+
+<LI><!-- item 4 -->
+If there is to be music, prepare a set of MIDI files (method
+described below), and copy them to the Slide-Show\midifiles
+subdirectory. 
+
+<LI><!-- item 5 -->
+Following step 4, create a file "midifiles.lst" in the Slide-Show
+directory, that lists the MIDI files in the desired playing order.
+
+<LI><!-- item 6 -->
+cd into the Slide-Show\build directory and type "gmake". This will
+produce a NUON.CD file, whose size is required to be under 4.5MB. If
+it is larger, an iteration will be necessary, as described below.
+
+<LI><!-- item 7 -->
+Optionally, create a Table of Contents, to allow the user to
+summon up any image or MIDI file by index when in Manual mode.
+</font></OL>
+
+The <a href="#conclusion"><b>Conclusion</b></a> section below talks
+about packaging your slide show for distribution, either
+electronically or on physical media.
+
+<h2>Detailed discussion of the checklist steps</h2>
+
+<h3>1. Editing the "user.dat" file</h3>
+
+<p>
+This file, found in the Slide-Show directory, allows specification of
+three parameters that define the slide show behavior. This file will
+be incorporated into the Makefile at build time, and so must follow
+Makefile syntax -- notice the use of the # sign for comment lines.
+Careful editing of this file should involve changing exactly three
+numbers, two of which can only have the values 0 or 1.
+
+<p>
+Here is the file in question:
+
+<pre><font color="blue"># SlideShow app configuration data. Edit only as directed.
+
+# for MIDI playback, set MIDIPLAY to 1. Set it to 0 for no MIDI playback.
+MIDIPLAY = 1
+
+# for 480-line images, set HIRES to 1. For 240-line images, set it to 0.
+HIRES = 1
+
+# specify the number of seconds to hold each image onscreen
+VIEWTIME = 10
+</font></pre>
+
+<p>
+As it appears, MIDI file playback is called for, and the Synth will
+be linked into the final application. If you don't wish to use MIDI,
+change the line
+
+<pre><font color="blue">MIDIPLAY = 1
+</font></pre>
+
+<p>
+to 
+
+<pre><font color="blue">MIDIPLAY = 0
+</font></pre>
+
+<p>
+This will prevent the Synth from being linked, which will make more
+room for images.
+
+<p>
+The second decision involves viewing resolution. The default is to
+show the images at 480 lines (i.e. 480 pixel resolution in the
+vertical direction). Images prepared for this size will take about
+2.5 seconds to decode, limiting the rapidity with which they can be
+advanced. At 240 lines, the images are smaller and can be decoded in
+about 0.5 seconds. In Manual mode, it will be striking how much
+faster the new image paints itself over the old one.
+
+<p> The problem with 240-line images is that they don't look as good
+as the 480-line ones, but with many images the results may still be
+satisfactory. The advantage, of course, is that you can fit about
+four times as many images within the same 4.5MB limitation.
+
+<p>
+If the goal is to have several hundred images, and medium quality is
+acceptable, then opt for low resolution, and change
+
+<pre><font color="blue">HIRES = 1
+</font></pre>
+
+<p>to 
+
+<pre><font color="blue">HIRES = 0
+</font></pre>
+
+<p>
+in "user.dat".
+
+<p>
+Finally, the slide show will come up in Automatic mode, where each
+image is held on-screen for a fixed viewing time, and then advanced
+to the next image, endlessly cycling through the entire series. The
+default shown above (VIEWTIME = 10) is reasonable for the demo slide
+show of 33 images -- it translates to a cycle time for the whole show
+of 33 x 10 = 330 seconds or five and a half minutes. With a very
+small number of images, say fewer than 10, one might prefer longer
+viewing time per image, say 20 seconds or more. If there are lots of
+images, a shorter viewing time might be preferred, the practical
+limits being 3 seconds for 480-line images, and 1 second for the
+240-line images.
+
+<p>
+The value you set is the viewing time per image with which the slide
+show will begin; it can always be changed by the user, by entering
+Manual mode and then keying in a new viewing time before resuming
+with the PLAY button.
+
+<p>
+<b>Note:</b> this value is an integer, so don't use a decimal point
+anywhere (e.g. 4.5 is illegal: pick 4 or 5).
+
+
+<h3>2. Preparing the JPEG images</h3>
+
+<p>
+JPEG images, without processing, will not display satisfactorily on
+the TV. A pair of utility programs -- ana480.exe and ana240.exe --
+have been provided in the Slide-Show\utils directory to make the
+necessary conversion, and it may be convenient to copy these
+executables to another directory that already lies in your PATH.
+
+<p>
+These programs will accomodate source images of fairly arbitrary
+sizes and proportions; images that are tall or wide, relative to the
+TV's 4 by 3 aspect ratio, will be centered in a black background. The
+programs also stretch the images horizontally to compensate for the
+non-square pixels of the TV; images should therefore look correct on
+the TV, while the processed JPEG files will look slightly elongated
+if viewed on the PC.
+
+<p>
+If you have selected HIRES = 0, then you'll use ana240.exe and
+produce 240-line final images. If you've selected HIRES = 1, then
+you'll work with ana480.exe instead. I'll assume the latter for
+illustation, below.
+
+<p>
+ana480.exe is a command-line utility that expects two arguments, the
+second of which is optional and will be discussed in Section 6. The
+first is a text file that lists your JPEG originals, each JPEG
+filename necessarily starting in the first column. Such files are
+used in several places during preparation of the slide show -- let me
+call them "list files". Here is an example of such a file, called
+"jpegs.lst":
+
+<pre><font color="blue">; a few pictures from my trip
+
+c:\trip\PIC00034.JPG
+d:/photos/summer_01/freds_cat.jpg  ; a fine animal!
+
+; the next one was taken by Molly
+sunset.jpg
+</font></pre>
+
+<p>
+Notice that the semicolon (;) can be used for entering comments,
+which may even occur on a line following the filename. Blank lines
+can be inserted at will. The referenced JPEG files can be located
+anywhere on your system, through the use of fully-qualified names
+(specifying drive letter and directory hierarchy); either forward or
+backward slashes can be used for the directory separators.
+Unqualified names -- such as "sunset.jpg" on the last line -- are
+assumed to live in the current directory. 
+
+<p>
+The format is therefore flexible, but note that each filename must
+appear on its own line, and it must start in the first column!
+
+<p>
+If it so happens that all the relevant JPEG files are in the current
+directory, then a quick method is available for generating the list
+file: simply type the command
+
+<pre>
+    dir /B *.jpg > jpegs.lst
+</pre>
+
+<p>
+This lists the JPEG files, one per line. You would then edit this
+file to reflect the viewing ordering you prefer. 
+
+<p>
+Given a listfile, created by whatever means, ana480 is invoked upon
+it by the command line:
+
+<pre>
+    ana480 jpegs.lst 
+</pre>
+
+<p>
+and it will produce the converted JPEG files. In this example, with
+three original files, the output will consist of precisely three
+files named nuon_001.jpg, nuon_002.jpg, and nuon_003.jpg. The
+association is based on the ordering of files in "jpegs.lst":
+
+<pre>
+    c:\trip\PIC00034.JPG ------------------> nuon_001.jpg
+    d:/photos/summer_01/freds_cat.jpg -----> nuon_002.jpg
+    sunset.jpg ----------------------------> nuon_003.jpg
+</pre>
+
+<p>
+The original files are not altered; the nuon_xxx.jpg files are
+created in the current directory, and are suitable for use in the
+slide show application. These are the files to be copied to the
+Slide-Show\jpegfiles directory, using drag-and-drop in
+the Windows Explorer, or by a command such as
+
+<pre>
+    copy nuon_???.jpg \vmlabs\sample\Slide-Show\jpegfiles
+</pre>
+
+<p> Note the explicit form <tt><b>nuon_???.jpg</b></tt> for the source
+files; this is to avoid copying your originals as well, which would
+happen if they reside in the same directory and the simpler
+<tt><b>copy *.jpg ...</b></tt> is used.
+
+
+<h3>3. Creating the "jpegfiles.lst" file in the Slide-Show directory</h3>
+
+<p>
+Once the nuon_xxx.jpg files are in the Slide-Show\jpegfiles
+directory, you can create the "jpegfiles.lst" in the Slide-Show
+directory by a simple method. At the command line, cd to the
+Slide-Show directory and type
+
+<pre>
+    dir /B /ON jpegfiles\*.jpg > jpegfiles.lst
+</pre>
+
+<p>
+The /B asks for a "basic" listing, with only the filenames (no dates
+or sizes); the /ON requests alphabetic ordering, to make sure that
+your file comes out with the contents looking like
+
+<pre>
+    nuon_001.jpg
+    nuon_002.jpg
+    nuon_003.jpg
+</pre>
+
+<p>
+and so on, for as many files as there are. Since the numerical
+ordering created by the ana480 (or ana240) executable corresponds to
+the preferred ordering as specified in your original list file, that
+is the ordering you wish to preserve here.
+
+
+<h3>4. Preparation of MIDI files</h3>
+
+<p>
+This is much simpler than preparation of the JPEG files. The NUON
+Synth requires that its MIDI files be in Format 0. If you know that
+your MIDI files are Format 0, then no further steps are required;
+they will work as they are.
+
+<p>
+Many MIDI files are in Format 1, and these will not work with the Synth.
+(They won't sound wrong -- they just won't sound at all!) One of the
+utilities in the vmlabs\bin folder is mergemf.exe, which exists just
+for the purpose of converting Format 1 MIDI files to Format 0. It is
+invoked from the command line: for example,
+
+<pre>
+    mergemf OriginalFile.mid NewFile.mid
+</pre>
+
+<p>
+will create NewFile.mid as a Format 0 version of OriginalFile.mid.
+This works even if OriginalFile.mid happens to be a Format 0 file;
+the operation is then unnecessary, but harmless. Do it if you're not
+sure -- the original file is unaltered as long as the output filename
+is different or specified in a different directory.
+
+<p> The final Format 0 MIDI files must be placed in the
+Slide-Show\midifiles directory, and you can copy them there after
+running the conversions shown above. If it simplifies things, you can
+use the mergemf tool to place each converted MIDI file there
+directly, with invocations like
+
+<pre>
+    mergemf MyFile.mid c:\vmlabs\sample\Slide-Show\midifiles\MyFile.mid 
+</pre>
+
+<p>
+Substitute the correct path to the midifiles directory, if it's
+different on your machine.
+
+
+<h3>5. Creating the "midifiles.lst" file in the Slide-Show directory</h3>
+
+<p>
+This can be done in many ways, but one convenient approach is to cd
+to the Slide-Show directory and type
+
+<pre>
+    dir /B midifiles\*.mid > midifiles.lst
+</pre>
+
+<p>
+The resulting "midifiles.lst" file will probably want editing in
+which you move the lines around to define the performance ordering.
+This is a list file, and so blank lines and comments (following a
+semicolon) are allowed. For example, the "midifiles.lst" file for the
+sample slide show reads:
+
+<pre><font color="blue">;;; An all-Bach recital
+
+; from the Well Tempered Clavier, Book II
+fugue_15_book2.mid   ; harpsichord
+
+LittleGMinorFugue.mid   ; Clarinet (mostly: Tuba for low notes)
+
+; From the Musical Offering
+Ricercare_3.mid ; voiced for violin, recorder, and harpsichord
+
+fugue_10.mid    ; the only two-voice fugue in the WTC
+
+PassacagliaAndFugue.mid ; on the accordion!
+</font></pre>
+
+<p>
+Of course, you might have created this file entirely manually,
+starting with a list of known MIDI file names and deciding in advance
+what ordering works best.
+
+
+<h3>6. Building the app</h3>
+
+<p> At this stage, you're ready to build the NUON.CD file. cd to
+the Slide-Show\build directory and fire off the command
+
+<pre>
+    gmake
+</pre>
+
+<p>
+That is normally sufficient, even when rebuilding after making
+changes, but there is here an unusual exception: after any change to
+the contents of the Slide-Show\jpegfiles or Slide-Show\midifiles
+directories, it is necessary to invoke
+
+<pre>
+    gmake clean
+</pre>
+
+<p>
+<b>before</b> invoking <tt>gmake</tt> to rebuild NUON.CD.
+
+<p> Once NUON.CD is built, it is important to make note of its size.
+If it is over 4.5MB (about 4,700,000 bytes -- here mega is 1024^2,
+not 10^6), then reduction is in order. The first thing to try is
+revisiting step 2, on the creation of the nuon_xxx.jpg files.  These
+were made with a command line like
+
+<pre>
+    ana480 jpegs.lst
+</pre>
+
+<p>
+which is actually equivalent to typing
+
+<pre>
+    ana480 jpegs.lst 95
+</pre>
+
+<p>
+The second, optional, argument is the JPEG quality factor, and
+controls the degree of compression in making the nuon_xxx.jpg files.
+The quality factor is an integer in the range 0 to 100; the default
+value of 95 is a high quality setting, and higher values would result
+in larger file sizes with improvements that could probably not be
+detected on a TV monitor.
+
+<p>
+Make a note of the collective size of the nuon_xxx.jpg files, say by
+typing 
+
+<pre>
+    dir nuon_???.jpg
+</pre>
+
+<p>
+which reports the cumulative byte size. Now delete those files
+
+<pre>
+    del nuon_???.jpg
+</pre>
+
+<p> (<b>caution:</b> not<tt> "del *.jpg"</tt> which could clobber your
+originals!) and try again with a smaller value of the quality factor,
+e.g.
+
+<pre>
+    ana480 jpegs.lst 80
+</pre>
+
+<p>
+Check the new cumulative byte size, and see if the reduction is what
+you need. Let me illustrate with round numbers, just to make it easy
+to follow. Say your original NUON.CD file is 5,000,000 bytes. This is
+too big by about 300,000 bytes, which is the trimming down you need
+to achieve by lowering the quality factor. 
+
+<p>
+Suppose (again, using round numbers) that the original nuon_xxx.jpg
+files show a cumulative size of 3,800,000; we need to bring it down
+to 3,500,000 or less. The idea is to find the highest quality setting
+that achieves this, and a few experiements are all you need.
+Remember, the original (default) quality factor was 95. Suppose that
+by trying 80 you get a total size of 2,800,000 -- this is well under
+3,500,000 and suggests trying again with a higher quality factor.
+Perhaps using 90 gives a total size of 3,600,000 -- just a tad too
+big. Now try 88 or 89 and you'll be there. Better to be under than
+right on the button, since NUON aligns the files and this introduces
+a small amount of padding.
+
+<p>
+On one slide show with 103 images (at 480-lines) and no MIDI, I had
+to go to a quality factor of 75. The results might have shown
+degradation on a good computer monitor, but on the TV they looked
+fine. 
+
+<p>
+If the method just described is insufficient, and you really want to
+keep all the images in the slide show, then there are two
+alternatives. The first is to abandon MIDI accompaniment (assuming
+you've been using it). The MIDI files aren't the problem -- hours of
+MIDI come in very small MIDI files -- but the General MIDI wavetable
+data of the NUON Synth is by itself 1.5MB. Setting MIDIPLAY = 0 in
+"user.dat" gives you back more than that amount of space for image
+files.
+
+<p>
+The other alternative is to switch to low resolution mode (HIRES = 0
+in step 1). Depending on the kind of images you're using, viewing at
+240-line resolution might be quite acceptable. Remember that you have
+to change the HIRES setting to 0 and reconvert the JPEG originals,
+this time using ana240.exe:
+
+<pre>
+    ana240 jpegs.lst
+</pre>
+
+<p>
+Hopefully you don't have to start lowering the quality factor here!
+
+<p>
+<b>Reminder:</b> after copying the reduced nuon_xxx.jpg files
+to the Slide-Show\jpegfiles directory, be sure to invoke 
+
+<pre>
+    gmake clean
+</pre>
+
+<p>
+before rebuilding NUON.CD.
+
+
+<h3>7. Creating the Table of Contents</h3>
+
+<p>
+You may use the list files as a starting point, but the idea is to
+produce a numbered list of both images and music so that
+the user can go directly to a desired selection in Manual mode.
+
+<p> The <a href="../release/TableOfContents.html">Table of
+Contents</a> for the sample slide show is found in the release
+folder, and will serve as a complete example.
+
+<a name="conclusion">
+<h2>Conclusion: putting it all together for release</h2>
+
+<p> At the end of the build, the NUON.CD file is copied to the
+release folder. Along with the <a href="../release/QuickInstructions.html"> 
+Quick Instructions</a> and your <a href="../release/TableOfContents.html"> 
+Table Of Contents</a> file, this folder then contains the essentials you 
+need to distribute your slide show.
+
+<p>
+Electronic distribution is simplest -- for example, ZIP the contents
+of the release folder and attach a note about burning NUON.CD onto
+the root directory of a blank CD-R.
+
+<p>
+If you make the CD-Rs yourself, you might want to print an insert
+that includes the instructions and your Table of Contents. The
+<a href="../release/QuickInstructions.html"> Quick
+Instructions</a> document is intentionally brief, but the alternative
+text below is briefer, and may be a better choice if space is
+limited. It simplifies the explanation by stating explicitly the
+allowable ranges for picture and MIDI file index:
+
+<pre><font color="blue">    To control the slide show manually, hit STOP.
+
+    To go to a particular slide, key in its number (1 to 33) and hit
+    ENTER (or RIGHT). 
+
+    To go to the next slide, just hit ENTER or RIGHT. To get back the
+    previous slide, hit LEFT.
+
+    To go to a particular song, key in its number (1 to 5) and hit
+    UP. 
+
+    To go to the next song, just hit UP. To restart the previous
+    song, hit DOWN.
+
+    To restart the slide show, hit PLAY.
+
+    To restart the slide show with a different viewing time per
+    slide, key in the desired number of seconds per slide and then
+    hit PLAY. For example, 6 - 0 - PLAY gives you one minute per 
+    slide.
+</font></pre>
+
+<p>
+This uses the number of slides and MIDI files from the sample; <b>put
+your own numbers in place of these</b>. In the absence of MIDI, the
+obvious deletions can be made from the above or from release folder's
+<a href="../release/QuickInstructions.html">Quick Instructions</a> document.
+
+
+
+</body>
+</html>

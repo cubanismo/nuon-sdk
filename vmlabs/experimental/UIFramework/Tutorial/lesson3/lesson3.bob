@@ -1,0 +1,14 @@
+define chooseWidget( choice, correct, trueWidget, falseWidget )
+{
+	if( choice == correct )
+	{
+		falseWidget.Hide();
+		trueWidget.Show(true);
+		trueWidget.SetFocus();
+	}
+	else
+	{
+		trueWidget.Hide();
+		falseWidget.Show(true);
+	}
+}

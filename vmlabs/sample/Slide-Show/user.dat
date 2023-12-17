@@ -1,0 +1,10 @@
+# SlideShow app configuration data. Edit only as directed.
+
+# for MIDI playback, set MIDIPLAY to 1. Set it to 0 for no MIDI playback.
+MIDIPLAY = 1
+
+# for 480-line images, set HIRES to 1. For 240-line images, set it to 0.
+HIRES = 1
+
+# specify the number of seconds to hold each image onscreen
+VIEWTIME = 10

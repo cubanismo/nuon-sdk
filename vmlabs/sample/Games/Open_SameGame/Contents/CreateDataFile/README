@@ -1,0 +1,78 @@
+
+
+
+DESCRIPTION:
+
+  The program Cat_files takes a set of files and concatenates them
+  together into one large file named output.dat.  These files are
+  stored, not compressed.  Cat_files will concatenate up to a maximum
+  of 192 files.
+
+  TECHNICAL DETAILS: The first 6K of output.dat is the Index which
+    lists the name, size, and location of each file.  The size and
+    location are stored in big-endian format. The size of the Index is
+    hardcoded, it currently restricts us to a max of 192 files.  After
+    the Index come the files.  Each file is padded with zeros so that
+    the next file starts at a location which is a multiple of 2K.
+
+  The xtract module, consisting of xtract.h and xtract.c contains
+  functions which work on output.dat: reading the Index and extracting
+  a file from output.dat.  A modified version of this module has
+  already been incorporated into SameGame; so you do *not* need the
+  xtract module found in this directory in order to make SameGame
+  work.
+
+
+ 
+NOTE:  
+
+  You will need the Cat_files program in order to create the data
+  file, sg.dat, which SameGame reads in at compile time.  You do
+  *not* need the program xtract as SameGame already has a modified
+  version of the xtract module in its source code.
+
+
+
+USAGE:
+
+  Cat_files FILENAME1 FILENAME2 ...
+
+
+
+EXAMPLE:
+
+  If you have made changes to the artwork or sound or configure file
+  in the Colors directory, then you will have to create a new data
+  file, sg.dat.
+
+  Type  make  in this directory to create Cat_files.  Copy Cat_files
+  to ../Colors and go into the Colors directory.  Then type:
+
+     Cat_files sg.cnf Mat0.tga Mat1.tga Mat2.tga animate.tga background.tga extra.tga tiles.tga title_pic.tga bigdelete.raw bigdeleteall.raw bonus.raw changetile.raw click.raw nobonus.raw
+
+  This will produce a datafile called output.dat.  Replace sg.dat with this
+  new datafile.
+
+
+
+COMPILING: 
+
+  Type  make  or  make Cat_files  to compile the concatenation program
+  Cat_files.  And type  make Xtract  to compile the extraction program.
+
+  Type  make clean  to remove all those pesky *.o files.   Type 
+  make realclean  to remove the *.o files and the executables.
+
+
+FILES:
+
+  In this directory you will find:
+      Makefile
+      README       (this file)
+      cat_files.c  (the source for Cat_files)
+      xtract.c
+      xtract.h
+      xtract_main.c
+
+
+

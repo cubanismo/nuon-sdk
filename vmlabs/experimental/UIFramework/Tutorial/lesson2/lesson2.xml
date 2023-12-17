@@ -1,0 +1,31 @@
+<!-- Lesson 2 A Geography Quiz -->
+<snml>
+  <page width="720" height="480" first-focus="answer">
+    <text-box 	name="question" 
+    			left="80" 
+    			top="50" 
+    			width="500"
+    			height="60" 
+    			back-color="yellow">
+      <text-style name="Q" size="30" />
+      <text-line left="10" base="40" text-style="Q">The Capital of Uzbekistan is?</text-line>
+    </text-box>
+
+    <text-menu name="answer" left="300" top="120" width="240" height="220" 
+    back-color="white" select-line="1" select-style="hilite">
+      <text-style name="normal" size="40" color="steelblue" />
+      <text-style name="hilite" size="40" color="#CD5C5C" />
+
+      <text-line left="0" base="50" text-style = "normal">Islamabad</text-line>
+      <text-line left="0" base="100" text-style = "normal">Ashkabad</text-line>
+      <text-line left="0" base="150" text-style = "normal">Tashkent</text-line>
+      <text-line left="0" base="200" text-style = "normal">Dushambe</text-line>
+      <text-line left="0" base="250" text-style = "normal">Kabul</text-line>
+    </text-menu>
+
+    <text-box name="next" left="80" top="360" width="500" height="70" back-color="yellow">
+      <text-line left="10" base="40" text-style="Q">Next Question</text-line>
+    </text-box>
+  </page>
+</snml>
+

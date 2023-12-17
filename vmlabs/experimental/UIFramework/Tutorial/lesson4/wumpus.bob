@@ -1,0 +1,390 @@
+// Hunt the Wumpus!
+// Based on a game by Gregory Yob.
+// Published in "More Basic Computer Games"
+// Edited by David H. Ahl
+// Copyright (c) 1979 by Creative Computing
+
+map1 = \[
+	nil,
+	\[ 2, 5, 8], // 1
+	\[ 1, 3,10], // 2
+	\[ 2, 4,12], // 3
+	\[ 3, 5,14], // 4
+	\[ 1, 4, 6], // 5
+	\[ 5, 7,15], // 6
+	\[ 6, 8,17], // 7
+	\[ 1, 7, 9], // 8
+	\[ 8,10,18], // 9
+	\[ 2, 9,11], // 10
+	\[10,12,19], // 11
+	\[ 3,11,13], // 12
+	\[12,14,20], // 13
+	\[ 4,13,15], // 14
+	\[ 6,14,16], // 15
+	\[15,17,20], // 16
+	\[ 7,16,18], // 17
+	\[ 9,17,19], // 18
+	\[11,18,20], // 19
+	\[13,16,19]  // 20
+];
+
+arrowPathWidgets = \[
+	widgets.path1,
+	widgets.path2,
+	widgets.path3,
+	widgets.path4,
+	widgets.path5
+];
+
+infoWidgets = \[
+	widgets.info1,
+	widgets.info2,
+	widgets.info3
+];
+
+game = nil;
+
+///////////
+// Hazard
+///////////
+
+Hazard = new Object();
+
+define Hazard.initialize(cave)
+{
+	this.location = cave;
+	cave.AddHazard(this);
+	return this;
+}
+
+define Hazard.Move(cave)
+{
+    if (this.location != cave) {
+		this.location.RemoveHazard(this);
+		this.location = cave;
+		cave.AddHazard(this);
+	}
+	return this;
+}
+
+///////////
+// Wumpus
+///////////
+
+Wumpus = new Hazard;
+
+define Wumpus.Bump(game)
+{
+	local cave = this.location;
+	local dir = rand(4);
+	local newCave;
+
+	switch (dir) {
+	case 0:
+	case 1:
+	case 2:
+		widgets.info4.value = "... Oops! Bumped a Wumpus!";
+		this.Move(game.caves[cave.RandomExit()]);
+		break;
+	case 3:
+		game.Over("Tsk Tsk Tsk - Wumpus got you!");
+		break;
+	}
+}
+
+///////////
+// Pit
+///////////
+
+Pit = new Hazard;
+
+define Pit.Bump(game)
+{
+	game.Over("YYYIIIIEEEE . . . Fell in pit!");
+}
+
+///////////
+// Bats
+///////////
+
+Bats = new Hazard;
+
+define Bats.Bump(game)
+{
+	widgets.info4.value = "ZAP--Super Bat Snatch! Elsewhereville for you!";
+	game.playerCave = game.RandomCave();
+}
+
+///////////
+// Cave
+///////////
+
+Cave = new Object();
+
+define Cave.initialize(n,exits)
+{
+	this.number = n;
+	this.exits = exits;
+	this.hazards = nil;
+	return this;
+}
+
+define Cave.AddHazard(hazard)
+{
+	hazard.next = this.hazards;
+	this.hazards = hazard;
+	return this;
+}
+
+define Cave.HazardPresent(hazardType)
+{
+    local hazard = this.hazards;
+	while (hazard) {
+		if (hazard.Class() == hazardType)
+		    return true;
+		hazard = hazard.next;
+	}
+	return false;
+}
+
+define Cave.RemoveHazard(hazard)
+{
+    local h = this.hazards;
+	local prev = nil;
+	while (h) {
+		if (h == hazard) {
+			if (prev)
+				prev.next = h.next;
+			else
+				this.hazards = h.next;
+		    return true;
+		}
+		prev = h;
+		h = h.next;
+	}
+	return false;
+}
+
+define Cave.Adjacent(n)
+{
+	local i;
+	for (i = 0; i < 3; ++i)
+	    if (this.exits[i] == n)
+			return true;
+	return false;
+}
+
+define Cave.RandomExit()
+{
+	return this.exits[rand(3)];
+}
+
+///////////
+// Game
+///////////
+
+Game = new Object();
+
+define Game.initialize(map)
+{
+	local nCaves = map.size - 1;
+	local n;
+
+	this.caves = new Vector(map.size);
+	this.nCaves = nCaves;
+	
+	for (n = 1; n <= nCaves; ++n)
+		this.caves[n] = new Cave(n,map[n]);
+
+	this.AddHazard(Wumpus);
+	this.AddHazard(Pit);
+	this.AddHazard(Pit);
+	this.AddHazard(Bats);
+	this.AddHazard(Bats);
+
+	this.playerCave = this.EmptyCave();
+	this.nArrows = 5;
+
+	return this;
+}
+
+define Game.Cave(n)
+{
+	return this.caves[n];
+}
+
+define Game.RandomCave()
+{
+	return this.caves[rand(this.nCaves) + 1];
+}
+
+define Game.EmptyCave()
+{
+	local cave;
+	do {
+		cave = this.RandomCave();
+	} while (cave.hazards);
+	return cave;
+}
+
+define Game.AddHazard(hazardType)
+{
+	local cave = this.RandomCave();
+	return new hazardType(cave);
+}
+
+define Game.DescribeLocation()
+{
+	local currentCave = this.playerCave;
+	local nextInfo = 0;
+	local wumpusP = false;
+	local batsP = false;
+	local pitP = false;
+	local i;
+	
+	// describe the cave and exits
+	widgets.cave.value = "You are in room " + toString(currentCave.number);
+	widgets.exit1.value = toString(currentCave.exits[0]);
+	widgets.exit2.value = toString(currentCave.exits[1]);
+	widgets.exit3.value = toString(currentCave.exits[2]);
+
+	// show the number of arrows remaining
+	this.UpdateArrows();
+	
+	// check for hazards
+	for (i = 0; i < 3; ++i) {
+	    local neighboringCave = this.caves[currentCave.exits[i]];
+		if (neighboringCave.HazardPresent(Wumpus))
+			wumpusP = true;
+		if (neighboringCave.HazardPresent(Pit))
+			pitP = true;
+		if (neighboringCave.HazardPresent(Bats))
+			batsP = true;
+	}
+
+	// describe hazards
+	if (wumpusP)
+		infoWidgets[nextInfo++].value = "I smell a Wumpus!";
+	if (pitP)
+		infoWidgets[nextInfo++].value = "I feel a draft!";
+	if (batsP)
+		infoWidgets[nextInfo++].value = "Bats nearby!";
+
+	// clear remaining info lines
+	while (nextInfo < infoWidgets.size)
+		infoWidgets[nextInfo++].value = "";
+}
+
+define Game.UpdateArrows()
+{
+	switch (this.nArrows) {
+	case 0:
+		widgets.arrows.value = "Shoot: No arrows";
+		break;
+	case 1:
+		widgets.arrows.value = "Shoot: You have 1 arrow";
+		break;
+	default:
+		widgets.arrows.value = "Shoot: You have " + toString(this.nArrows) + " arrows";
+		break;
+	}
+}
+	
+define Game.Travel(dir)
+{
+    this.EnterCave(this.caves[this.playerCave.exits[dir]]);
+}
+
+define Game.EnterCave(newCave)
+{
+	local hazard = newCave.hazards;
+	while (hazard) {
+	    hazard.Bump(this);
+		hazard = hazard.next;
+	}
+	this.playerCave = newCave;
+	this.DescribeLocation();
+}
+
+define Game.Over(reason)
+{
+	widgets.info4.value = reason;
+	widgets.info4.SetFocus();
+}
+
+define Game.Shoot()
+{
+	local i;
+
+	// make sure there are arrows left
+	if (this.nArrows > 0) {
+		local path,hit;
+		
+		// assume nothing is hit
+		hit = false;
+
+		// make the path vector
+		path = new Vector();
+
+		// get the arrow path
+		for (i = 0; i < arrowPathWidgets.size; ++i) {
+			local caveStr;
+			if ((caveStr = arrowPathWidgets[i].value) != "")
+				path.Push(caveStr.toInteger());
+		}
+
+		// shoot the arrow
+		cave = this.playerCave;
+		while (path.size > 0) {
+		    local n;
+			
+			// get the next cave the arrow should enter
+			n = path.PopFront();
+			
+			// make sure it is adjacent to the current cave
+			if (!cave.Adjacent(n))
+				n = cave.RandomExit();
+			cave = this.Cave(n);
+
+			// is the wumpus here?
+			if (cave.HazardPresent(Wumpus)) {
+				this.Over("Aha! You got the wumpus!");
+				hit = true;
+			}
+
+			// is the player here?
+			if (cave == this.playerCave) {
+				this.Over("Ouch! Arrow got you!");
+				hit = true;
+			}
+		}
+
+		// check to see if anything was hit
+		if (!hit)
+			widgets.info4.value = "Missed!";
+
+		// use up an arrow
+		--this.nArrows;
+		this.UpdateArrows();
+	}
+
+	// out of arrows
+	else
+		widgets.info4.value = "You're out of arrows!";
+
+	// clear the path
+	for (i = 0; i < arrowPathWidgets.size; ++i)
+		arrowPathWidgets[i].value = "";
+}
+
+define StartGame()
+{
+	// make a new game
+	game = new Game(map1);
+	
+	// describe the starting location
+	game.DescribeLocation();
+
+	// start the game
+	widgets.exit1.SetFocus();
+}

@@ -1,0 +1,8 @@
+<!-- Comment - my first NUON app -->
+<snml>
+	<page width="720" height="480" first-focus="tom">
+			<text-box name="tom" left="50" top="100" width="400" height="100">
+				<text-line left="0" base="50">Hello World</text-line>
+			</text-box>
+	</page>  
+</snml>

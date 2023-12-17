@@ -1,0 +1,257 @@
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * NOTICE: VM Labs permits you to use, modify, and distribute this file
+ * in accordance with the terms of the VM Labs license agreement
+ * accompanying it. If you have received this file from a source other
+ * than VM Labs, then your use, modification, or distribution of it
+ * requires the prior written permission of VM Labs.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}
+/*
+ * Test of printf functions and PC file server
+ *
+ * See MAKEFILE for info on using MLOAD file server option
+ *
+ * Copyright (c) 1998 VM Labs, Inc.  All rights reserved.
+ * Confidential and Proprietary Information of VM Labs, Inc.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <nuon/mediaio.h>
+
+
+int main(void)
+{
+int mediahandle, blocksize;
+
+	mediahandle = _MediaOpen(MEDIA_BOOT_DEVICE, "printf.c", 0, &blocksize );
+	printf( "mediahandle = %d, blocksize = %d\n", mediahandle, blocksize );
+	exit(0);
+	return 0;
+}

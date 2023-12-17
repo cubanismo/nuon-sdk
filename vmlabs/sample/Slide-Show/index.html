@@ -1,0 +1,130 @@
+<html>
+
+<head>
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\Slide-Show</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>October 24, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<h4><u>Slide Show App -- overview</u></h4>
+
+<p>The slide show app is offered as a customizable tool for producing
+slide shows based on JPEG images and, optionally, MIDI music files.
+The sample can be built as is, and will demonstrate such a slide
+show. Of course, what's interesting is the possibility of
+substituting your own image and music files, and the documentation
+strives to clearly explain the steps for doing just that.</p>
+
+<p>A good place to start is in the doc folder, with the <a
+href="doc/UsersGuide.html"> User's Guide</a>. This will explain how the
+slide show behaves to a user -- starting in a fully-automatic playing
+mode, but allowing entry to a manual mode with controls for random
+access to slides or MIDI files, or sequential access (forward or
+backward) for each. One can restart the automatic slide show with the
+PLAY button, optionally with a new viewing-time per slide.</p>
+
+<p>If this sounds intriguing, try building and running the sample
+slide show.  cd to the build directory and type "gmake"; this will
+produce a NUON.CD file that gets copied to the release directory,
+which also contains the <a href="release/TableOfContents.html">
+Table of Contents</a> for this particular slide
+show. Burning the NUON.CD file onto the root directory of a blank
+CD-R will allow you to play the show on an N501 or later NUON DVD
+player.</p>
+
+<p><b>Note:</b> the loading process on the N501 takes about a minute, and
+toward the end of it, the screen display may be partially overwritten
+with "hash". This is harmless, and just means that the frame buffer,
+containing the on screen image, has been overwritten by the loaded
+application. In a few seconds you'll see the warning splash screen,
+and can hit ENTER on the remote to begin.</p>
+
+<p>Actually building your own slide show will require careful reading
+of the <a href="doc/AuthorsGuide.html"> Author's Guide</a> in the doc
+folder, and reasonable comfort with command-line interactions --
+though not much more than you needed to type "gmake" and build the
+sample slide show. Certainly you don't have to be a programmer; what's
+required is patience for following directions, and a willingness to
+ask for help if you get into difficulties.</p>
+
+<p>Finally, enthusiastic programmers may wish to study the code in
+the build and utils directories and make improvements in the slide
+show's capabilities. Or, they may be inspired to put a GUI front end
+on the entire process, which could simplify the operation
+enormously.</p>
+
+
+<h4><u>Slide Show App -- confessions</u></h4>
+
+<p>We agree that building a slide show should be carried out through
+graphical operations, such as dragging JPEG and MIDI files into
+target windows, filling out a dialog box to select options, and
+firing off the whole operation with one final mouse-click on a "build
+slide show" button. In fact, one of the check-box options should
+include burning a blank CD-R with the finished NUON.CD file, assuming
+the hardware is there to support it. We hope to supply such a GUI
+front end in a subsequent release, though it's possible that someone
+out there will beat us to it with a much better job than we could do.</p>
+
+<p>The <a href="doc/AuthorsGuide.html">Author's Guide</a> gives a
+detailed discussion of coping with the possible need to squeeze the
+slide show into a 4.5MB NUON.CD file. This need seems quite
+ludicrous -- the machine will read that file from a 650MB
+CD-R and then ignore all the other real estate on the same disc! This
+is one of those "historical" (hysterical?)  problems that will soon
+get fixed, but we didn't want to hold up release of the NUON SDK on
+that account.</p>
+
+<p>How serious a limtitation is this?</p>
+
+<p>The sample slide show, with 33 pictures and 5 MIDI selections, is
+well within the limits referred to; another slide show I made had
+twice as many images and nearly two-hours of MIDI accompaniment. A
+third slide show, without MIDI, had 103 pictures and could have
+handled more. All images referred to are at the "high resolution"
+setting of 480-lines; there is also a 240-line setting you can choose,
+in which the practical number of images goes up by about a factor of
+four. </p>
+
+<p>So, you ought to be able to get something interesting up while
+waiting for a less restrictive version to arrive.</p>
+
+<p>Lastly, it remains to acknowledge the bare-bones nature of the
+slide show app. It was thrown together in a few weeks and lacks
+amenities such as title screens, crossfades, thumbnails with
+navigation capability (as in DVD menus), and on-screen confirmation
+of keypad entry, particularly for entering numbers that are used for
+navigation and resetting the per-image viewing time.</p>
+
+<p>Shortcomings aside, we hope that you can have some fun with this, as
+we ourselves have done.</p>
+
+<hr>
+<p align="left"><a href="../../readme.html#Anchor-Where-35326">Click here if you 
+  need more assistance</a>.</p>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080" bgcolor="white">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs Sample Code</h3>
+
+    </td>
+    <td>
+
+      <h3 align="right"><b>\vmlabs\sample\Games\Open_SameGame\Contents</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>October 10, 2001</b>
+    </td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">
+Within the Contents directory we find the sounds and artwork files
+needed to play SameGame.  For example, both the Colors and Shapes
+directories contain the artwork, sound, and configuration files needed
+to play that particular flavor/version of SameGame.
+</p>
+
+<p align="left">
+The artwork files which *must* be present are: background.tga,
+extra.tga, tiles.tga, and title_pic.tga.  If the game uses mats, each
+of these is stored in Mat0.tga, Mat1.tga, Mat2.tga, etc.  If the game
+uses animation then animate.tga must be present. See <a
+href="Readme.Art">Readme.Art</a> for details about artwork.
+</p>
+
+<p align="left">
+As well, each of the Colors and Shapes directories *must* contain a
+configuration file sg.cnf.  The configuration files for Colors and
+Shapes are different.  They are heavily commented and the various
+different SameGame features are explained.
+
+</p>
+
+<p align="left">
+SameGame looks for the following sound files: click.raw,
+changetile.raw, bigdelete.raw, bigdeleteall.raw, bonus.raw, and
+nobonus.raw.  If SameGame can't find or load one of these files, it
+will not try to play it during the game.  Thus a particular sound
+effect can be effectively turned off by removing the corresponding
+.raw file from the directory.  See <a href="Readme.Snd">Readme.Snd</a>
+for details about sound.
+</p>
+
+<p align="left">
+SameGame also has the capacity to animate a group just before it
+disappears. To add animation, create the necessary artwork in
+animate.tga, which must be a 352x272 pixel picture and set the
+NUM_ANIM_STEPS variable in sg.cnf appropriately.  More information is
+found in <a href="Readme.Ani">Readme.Ani</a>.  Colors SameGame has
+animation.  Animation is an optional feature for SameGame.
+</p>
+
+<p align="left">
+To create a new version of SameGame you will need to have at least the
+four artwork .tga files plus a configuration file.  (Mats and sound effects
+are nice too, but the game will run without them.)  The sg.cnf files
+accompanying the Shapes and Colors versions of SameGame are heavily
+commented and so can act as a prototype for any new configuration file.
+</p>
+
+<p align="left">
+Once you have all the files you need, you must create a datafile
+sg.dat using the Cat_files tool found in the CreateDataFile directory.
+The file <a href="Readme.Dat">Readme.Dat</a> gives a quick overview
+and <a href="CreateDataFile/README">CreateDataFile/README</a> gives
+instructions on how to do this.
+</p>
+
+<p align="left">
+Once you have a datafile, copy it up into the directory containing all
+the source code.  Type  make  to create sg.cof.  Both the Colors and the
+Shapes version of SameGame come with a ready made datafile.
+</p>
+
+
+<div align="center">
+  <table border="1" width="720" cellspacing="0" cellpadding="4">
+    <tr> 
+      <td width="15%"><b><font color="#000080">Directory</font></b></td>
+      <td width="85%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr> <td width="15%">CreateDataFile</td> <td width="85%">Directory
+      which contains the source code to make the Cat_files program
+      which is needed to create a datafile. Look at <a
+      href="Readme.Dat">Readme.Dat</a> for a quick overview on
+      datafiles and look at <a
+      href="CreateDataFile/README">CreateDataFile/README</a> for more
+      detailed instructions. </td>
+    </tr>
+    <tr>
+      <td width="15%">Colors</td>
+      <td width="85%">The directory which contains the configuration
+      file, artwork, and sounds required to play the Colors version of
+      SameGame.  Colors SameGame has background pictures which are
+      uncovered when removing tiles.  This version also animates the
+      tiles which are removed.</td>
+    </tr>
+    <tr> 
+      <td width="15%">Shapes</td>
+      <td width="85%">The directory which contains the configuration
+      file, artwork, and sounds required to play the Shapes version of
+      SameGame.  Shapes SameGame has a much larger playing field than
+      Colors and so probably provides more challenging gameplay.  Having
+      a larger playing field forces the tiles to be smaller and the
+      artwork to be simpler.  Shapes SameGame does not have background
+      pictures; indeed the tiles have areas of transparency and it is
+      possible to view the gray background behind the tiles.</td>
+    </tr>
+  </table>
+</div>
+<div align="center"></div>
+<p>&nbsp;</p>
+
+
+
+<p align="left">&nbsp;</p>
+</body>
+</html>
+

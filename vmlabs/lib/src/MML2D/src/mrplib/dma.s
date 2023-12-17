@@ -1,0 +1,243 @@
+
+/*Copyright (C) 1996-2001 VM Labs, Inc. 
+
+ NOTICE: VM Labs permits you to use, modify, and distribute this file
+ in accordance with the terms of the VM Labs license agreement
+ accompanying it. If you have received this file from a source other
+ than VM Labs, then your use, modification, or distribution of it
+ requires the prior written permission of VM Labs.
+
+All rights reserved.
+*/
+
+
+    .module dma
+
+;==============================================================
+	.segment	data
+;==============================================================
+	dma__cmd: .dc.s 0
+
+	.export dma__cmd
+    .export dma_go
+    .export dma_wait
+    .export dma_finished
+    .export dma_write
+    .export dma_read
+
+    .export dmastuff    
+    .export dma_count    
+    .export dma_len    
+    .export dma_base    
+    .export dma_xpos    
+    .export dma_ypos    
+
+;==============================================================
+;	.segment instruction_ram
+	.segment text
+;==============================================================
+
+; dmastuff.  Various useful DMA routines.
+;
+; dma.s - useful DMA thangs.
+;
+; this version (20/11/97) is hacked for "paranoid" DMA - that is, dma_go
+; actually waits for dma_finished, before and after the DMA it sets up.
+; This is coz DMA has changed a lot since I wrote much of my stuff
+; so I am running with all DMA optimization disallowed until I get the time
+; to optimise for new-stylee DMA.
+;
+;
+; Uses a common DMA-info structure that I use a lot in my graphics code.
+; This is a single vector that I refer to as dmastuff, with the following format:
+;
+; dma_xpos = Current X address for dma writes.  16:16
+; dma_ypos = Current Y address for dma writes.  16:16
+; dma_len = Length of the DMA transfer.  Integer.
+; dma_base = The internal address of the DMA transfer.
+;
+; the DMA_GO routine also expects the existence of a DMA command buffer in local ram, called
+; dma__cmd, and assumes that you have already placed the external base address of the
+; DMA transfer in the second long of that buffer (since it doesn't get changed as much as
+; the rest).
+
+; Here's where I usually define the dma stuff to be:
+
+	dmastuff = v3
+	dma_count = r14
+	dma_len = r14
+	dma_base = r15
+	dma_xpos = r12
+	dma_ypos = r13
+
+dma_go:
+
+; This is useful in doing scanline-oriented DMAs.
+;
+; Waits for DMA idle, then builds a DMA command out of the info in dmastuff, and puts
+; it on dmacptr.  The dma is linear, not bilinear (the "y" dimension is limited to 1)
+; although it *is* a pixel DMA.  
+;
+; You should call this routine having ld_io'd dmactl into r0 on the way.
+
+	nop
+    bits    #4,>>#0,r0
+	bra	ne,dma_go				;wait for all DMA to cease
+	ld_s	mdmactl,r0			;delay slot
+	nop
+	push	v0
+//	mv_s	#dma__cmd,r2			;Base of dma command struct in RAM
+	mv_s	#dma__cmd,r2
+	ld_s	(r2),r2
+	nop
+{
+	st_s	r1,(r2)					;set dma_cmd...
+	add	#8,r2						;skip base address - that is set previously
+}
+	lsr	#16,dma_xpos,r1
+	lsl	#16,dma_len,r3
+	or	r3,r1
+{
+	st_s	r1,(r2)					;set XPOS and XLEN
+	lsr	#16,dma_ypos,r1
+}
+	add	#4,r2
+	or	#2,<>#-15,r1
+{
+	st_s	r1,(r2)					;set YPOS and YLEN
+	add	#4,r2
+}
+{
+	st_s	dma_base,(r2)			;built dma command
+	sub	#16,r2						;r2 now points at base...
+}
+{
+	st_s	r2,mdmacptr			;start dma transfer
+}									; you'd have to watch out for mv_s'es after that POP.
+
+; to make dma_go totally safe it does a wait-for-complete before returning.
+
+safedma:
+
+    ld_s    mdmactl,r0
+safe_t:
+    nop
+    bits    #4,>>#0,r0
+    bra ne,safedma,nop    
+
+	pop	v0
+	nop								
+
+dma_wait:
+
+; Wait for DMA pending flag to go clear.
+;
+; You should call this routine having ld_io'd dmactl into r0 on the way.
+
+
+	ld_s	mdmactl,r0
+    nop
+	btst	#4,r0
+	bra	ne,dma_wait,nop
+
+; WARNING
+; there are no NOPs after this rts to save space - the and of r0 and bra of the
+; following routine do no harm.
+
+null:	rts				
+	
+dma_finished:
+
+; Wait 'till all DMA has actually finished
+;
+; You should call this routine having ld_io'd dmactl into r0 on the way.
+
+	ld_s	mdmactl,r0
+	nop
+    bits #4,>>#0,r0
+	bra	ne,dma_finished,nop
+	rts
+	nop	
+  	nop
+
+
+
+dma_write:
+
+; This routine and dma_read are useful for grabbing blocks of longwords.
+;
+; Write r0 longs from internal address (r2) to external address (r1)
+;
+; Assumes that you have already done dma pending/terminated checking!
+
+    push    v0,rz
+    mv_s    r0,r3       ;preserve r0
+dod0:
+    mv_s    #64,r0
+    sub r0,r3    
+    bra ge,dod1,nop
+    add r3,r0
+dod1:
+	jsr	_dma            ;launch the dma
+	push	v1
+	lsl	#16,r0
+
+    jsr dma_wait        ;wait until ready for new cmd
+    add #256,r1			
+    add #256,r2
+    pop v1
+    cmp #0,r3
+    bra gt,dod0,nop
+    pop v0,rz
+    nop
+    rts t,nop
+    
+
+
+dma_read:
+
+; Read r0 longs  from external ram address (r1) to internal ram address (r2).
+;
+; Assumes that you have already done dma pending/terminated checking!
+
+    push    v0,rz
+    mv_s    r0,r3
+dod2:
+    mv_s    #64,r0
+    sub r0,r3
+    bra ge,dod3,nop
+    add r3,r0
+dod3:
+    jsr _dma        
+{
+	push v1			
+	lsl	#16,r0
+}
+	bset	#13,r0			;read longs command
+    jsr dma_wait        ;wait until ready for new cmd
+    add #256,r1			
+    add #256,r2
+    pop v1
+    cmp #0,r3
+    bra gt,dod2,nop
+    pop v0,rz
+    nop
+    rts t,nop
+
+
+
+_dma:
+//	mv_s	#dma__cmd,r4
+	mv_s	#dma__cmd,r4
+	ld_s	(r4),r4
+	nop
+
+	st_v	v0,(r4)			;cmd for read longs
+	st_s	r4,mdmacptr
+	rts
+	nop
+	nop
+;	st_v	v0,(r4)			;cmd for read longs
+;	st_s	r4,mdmacptr
+;	pop	v1					;NOTE that this pop is still happening the first tick after we get back!
+

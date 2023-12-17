@@ -1,0 +1,28 @@
+
+SameGame can now read art, config, and sound files out of a single
+data file.  The name (and path if necessary) of this data file is
+defined in DATA_FILE in sg.h.  It's usually defined to be sg.dat.  To
+switch between reading art and sounds from the Contents folder (or
+whatever path is giving in sg.cnf) and reading art and sounds from a
+data file, change the value of USE_DATA_FILE in sg.h.
+
+Note: if running SameGame from a CD-RW or CD-R, one must use a
+data file.
+
+These data files are created by the program Cat_files which stores a
+list of files (each file padded with zeros so that it's size is a mult
+of 2K, where 2K is one sector on a DVD) in output.dat; as well as, an
+Index of these files.  The module xtract.c and xtract.h contains
+functions which can access data files created by Cat_files and which
+can extract files from it.  These xtract ftns have been incorporated
+into SameGame.
+
+
+Currently I store the files in sg.dat in following order:
+
+sg.cnf, Mat*.tga, background.tga, extra.tga, tiles.tga, 
+title_pic.tga, animate.tga, *.raw
+
+Order probably isn't that important, though it might be good to have
+the Mats near the beginning of the dat file as SameGame will be
+looking for them over and over again.

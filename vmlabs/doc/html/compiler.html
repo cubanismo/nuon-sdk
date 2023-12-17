@@ -1,0 +1,203 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>C/C++ Compiler Changes</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+          <p align="center"><b>September 11, 2001</b> 
+        </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">C/C++ Compiler Changes</h1>
+
+<hr>
+
+<h2 align="center">Most Recent Changes</h2>
+
+<div align="center"> 
+  <p align="left"><font size="+1">The compiler is now based on <i><b> gcc 2.95.3</b></i> 
+    rather than on <b><i>egcs</i></b>. This has a number of effects: </font></p>
+</div>
+<div align="left"> 
+  <ul>
+    <li><font size="+1">Generally better code generation.<br>
+      </font></li>
+    <li><font size="+1"> The C++ interfaces have changed somewhat, and C++ libraries 
+      compiled with the old compiler may not work properly with the new compiler 
+      (i.e. C++ libraries should be recompiled).<br>
+      </font></li>
+    <li><font size="+1">The C++ compiler is more rigorous about enforcing the 
+      ANSI C++ standard; some things that used to be warnings with the new compiler 
+      will now be errors. </font></li>
+    <li><font size="+1">The exception handling has changed and will require a 
+      recompile of all exception-using code. You can no longer use the <font color="#0000FF">-fomit-frame-pointer</font> 
+      option when compiling code with exception handling.</font></li>
+    <li>&quot;<font size="+1">merlin&quot; is no longer defined; use &quot;nuon&quot; 
+      instead.</font></li>
+    <li><font size="+1">The compiler now uses <span class="Filename"><i>collect2</i></span> 
+      instead of <i>vmld</i> as the linker. <i>collect2</i> is needed when using:</font> 
+      <ul>
+        <li><font size="+1"> exceptions</font></li>
+        <li><font size="+1">templates that are compiled with the <span class="UserInput"><font color="#0000FF">-frepo</font></span> 
+          option (which should be used when compiling templates).</font></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div align="left"> 
+  <p><font size="+1">NUON specific changes in this version include: </font></p>
+</div>
+<ul>
+  <li> <font size="+1"> 
+    <div align="left"><font color="#0000FF">-mpe3</font> and <font color="#0000FF" size="+1">-mpe3</font> 
+      are now the default.<br>
+    </div>
+    </font></li>
+  <font size="+1"> 
+  <li> 
+    <div align="left">There is now a <font color="#0000FF" >-malignfuncs</font> 
+      directive which forces functions to be aligned on cache line boundaries 
+      (64 bytes). For some programs this may result in better performance.&nbsp;</div>
+  </li>
+  <li> 
+    <div align="left">Shifts and logical operations (and adds) are now combined 
+      by the compiler into one instruction (where possible). Also, the new mgcc 
+      doesn't always put function addresses into registers (sometimes it emits 
+      a direct "jsr foo&quot;).<br>
+    </div>
+  </li>
+  <li> 
+    <div align="left">With the old compiler, the best code was generally produced 
+      with "CFLAGS = -Os". With the new compiler, using "CFLAGS = -O3 -mreopt-more 
+      -fomit-frame-pointer" will often produce faster code. </div>
+  </li>
+  </font>
+</ul>
+<font size="+1"> 
+<div align="left"></div>
+<hr>
+</font>
+<h2 align="center">Older Changes</h2>
+<font size="+1">
+<ul>
+  <li>You may now specify the address of the program stack by 
+    defining a variable named &quot;<code>_ _ stack_top</code>&quot; which contains 
+    the desired address.&nbsp; That's two leading underscores if you define the 
+    symbol in assembly language, or just one if you define it in C/C++ code.<br>
+    <br>
+    You can set a fixed address in your BSS space or define a new segment and 
+    point at it.&nbsp; Note that this must be done at compile/link time, since 
+    the stack will already be set before your <code>main()</code> function is 
+    called.</li>
+</ul>
+</font>
+
+<ul>
+<big>
+
+  <li><font size="+1">Any const qualified data is now allocated in the text segment, 
+    for those foolish enough to run out of ROM.<br>
+    </font></li>
+  <li><font size="+1">Jump tables for switch statements are now located in the 
+    text segment instead of the data segment.<br>
+    </font></li>
+  <li><font size="+1">The command line that the compiler passes to the assembler 
+    has changed, removing an occasional error in code generated with -mreopt*<br>
+    </font></li>
+  <li><font size="+1">You can get Aries-specific code generation with -maries.&nbsp; 
+    The main difference is that certain branch instructions are handled more efficiently, 
+    removing a workaround for a bug on OZ-based hardware.<br>
+    </font></li>
+  <li><font size="+1">The _FixedMul builtin function has been added to the C &amp; 
+    C++ compilers. </font></li>
+  </big>
+</ul>
+<ul>
+  <big>
+  <li><font size="+1">The problem with the &quot;virtual&quot; keyword in C++ 
+    classes has been fixed. &nbsp; Virtual functions should now work properly.<br>
+    </font></li>
+  <li><font size="+1">The compiler formerly aligned all long word variables to 
+    a vector (16-byte) boundary. &nbsp; This has been fixed.<br>
+    </font></li>
+  </big> 
+  <li>
+    <p align="left"><font size="+1"><big>Some things regarding structure member 
+      alignment have been changed. &nbsp; Use the PACKED modifier to prevent the 
+      compiler from attempting to align structure members:</big></font></p>
+    <div align="center">
+      <center>
+        <table border="0" cellpadding="10" cellspacing="10"
+    width="600">
+      <tr>
+        <td valign="top">// This is 5 bytes long with PACKED<br>
+        <br>
+        <br>
+        typedef struct<br>
+        {<br>
+        &nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp; x;<br>
+        &nbsp;&nbsp;&nbsp; long&nbsp;&nbsp;&nbsp; y;<br>
+        } PACKED weird_xy;</td>
+        <td>// This is 8 bytes long because compiler<br>
+        // aligns &quot;y&quot; member to long address<br>
+        <br>
+        typedef struct<br>
+        {<br>
+        &nbsp;&nbsp;&nbsp; char&nbsp;&nbsp;&nbsp; x;<br>
+        &nbsp;&nbsp;&nbsp; long&nbsp;&nbsp;&nbsp; y;<br>
+        }&nbsp; weird_xy<br>
+        </td>
+      </tr>
+    </table>
+    </center></div></li>
+</ul>
+
+<hr>
+
+<h2 align="center">Known Problems</h2>
+
+<ul>
+  <li><font size="+1">Using the <font color="#0000FF">-fomit-frame-pointer</font> 
+    flag will break the exception handling; stack unwinding requires the presence 
+    of a frame pointer.</font></li>
+  <li> <font size="+1"> There is a register allocation bug in the reload pass 
+    of the compiler. This can cause the compiler to crash when compiling some 
+    functions with a lot of local variables, particularly with <font color="#0000FF" size="+1">-O2</font> 
+    and better optimization. Using a lower optimization level will usually fix 
+    this. (This bug seems to be a general <b><i> gcc 2.95.3 </i></b>bug that is 
+    not NUON-specific.) </font></li>
+</ul>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080" bgcolor="white">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs Sample Code</h3>
+
+    </td>
+    <td>
+
+      <h3 align="right"><b>\vmlabs\sample\Games\Open_SameGame</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>December 18, 2001</b> 
+    </td>
+  </tr>
+</table>
+<hr>
+<p align="left">Welcome to SameGame, a simple yet mesmerizing game where you delete 
+  groups of tiles for points. The larger the group, the more points you earn! 
+  Removing all the tiles on the screen wins you a bonus too! </p>
+<p align="left">A group is two or more tiles of the same design or colour which 
+  touch on either the left, right, top or bottom. Deleting a group causes the 
+  images above that group to drop down, forming new groups. If you find these 
+  last two sentences confusing, watch SameGame in Demo mode and all well become 
+  clear to you! </p>
+<p align="left">SameGame has three levels of play. In Normal mode you have 3 different 
+  types of tiles; whereas, Challenge and Ultimate modes have 4 different types 
+  of tiles. Since playing with 4 different tiles is much trickier than with 3 
+  tiles, Challenge mode starts you off with two special tiles (randomly placed) 
+  which are switchable; this will help you in your quest to clear the entire screen! 
+</p>
+<p align="left">If you are using the joypad, use the D-pad to move your cursor 
+  over the various groups and press A to delete the highlighted group. Pressing 
+  B when pointing at a special tile changes that tile. Pressing Start will exit 
+  the current game or demo. </p>
+<p align="left">If you are using the IR remote, use the Enter button to delete 
+  the highlighted group, use the Exit button to change a special tile, and press 
+  Play to exit the current game or demo. Use the Up/Down or Left/Right to move 
+  your cursor.</p>
+<div align="center">
+  <table border="1" width="720" cellspacing="0" cellpadding="4">
+    <tr> 
+      <td width="15%"><b><font color="#000080">Filename</font></b></td>
+      <td width="85%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr> 
+      <td width="15%">sg.dat</td>
+      <td width="85%">A data file which contains the artwork, sounds,
+      and config file for SameGame.
+      This file can be copied from Contents/Colors/sg.dat (default) 
+        or Contents/Shapes/sg.dat.</td>
+    </tr>
+    <tr>
+      <td width="15%">Contents</td>
+      <td width="85%">A directory that contains the sounds and artwork files needed 
+        to play SameGame. Also contains CreateDataFile directory which
+      houses the program which creates the data file sg.dat.  See 
+      <a href="Contents/index2.html">Contents/index2.html</a> 
+        for more information.</td>
+    </tr>
+    <tr> 
+      <td width="15%">Makefile</td>
+      <td width="85%">Makefile for building and running sample program.</td>
+    </tr>
+  </table>
+</div>
+<div align="center"></div>
+<p>&nbsp;</p>
+
+<p>To Compile SameGame:</p>
+<ol>
+  <li> There are two versions of SameGame: Colors and Shapes. Set the Makefile 
+    variable GAME_TYPE to COLORS or SHAPES depending on which version you would 
+    like to build. The makefile will then copy either Contents/Colors/sg.dat or 
+    Contents/Shapes/sg.dat to this directory. (sg.dat is a data file for SameGame 
+    which contains a config file as well as all artwork and sounds.) By default, 
+    the SHAPES version will be used.</li>
+  <li> Type "gmake". This should produce sg.cof, cd_app.cof and NUON.CD. (Type 
+    "gmake clean" to remove all those pesky .o files.)</li>
+</ol>
+
+<p>To Run SameGame:</p>
+<ol>
+  <li> To play SameGame on your NUON N501 player you must: 
+    <ul>
+      <li>Using your own CD writer software on a personal computer, write NUON.CD 
+        to the root directory of a CD-R or CD-RW. "Root directory" means the top 
+        directory. NUON.CD cannot be inside any other directory or folder on the 
+        CD. The disc must use the ISO9660 disc format. Joliet extensions are not 
+        required but will work OK. </li>
+      <li>Place the newly written CD-R or CD-RW into your NUON player. </li>
+      <li>After NUON.CD has loaded, you will see an message screen. Press A or 
+        Enter to load Colors SameGame. Press B or Exit to quit. (If you are using 
+        the IR remote, use the Enter or Exit button. If using the joypad, use 
+        the A or B button.)</li>
+    </ul>
+  </li>
+  <li>To play SameGame on your developer system, type &quot;gmake load&quot;.</li>
+</ol>
+<p>&nbsp;</p>
+<p align="left">&nbsp;</p>
+</body>
+</html>

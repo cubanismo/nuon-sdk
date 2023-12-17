@@ -1,0 +1,1908 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./readme_files/filelist.xml">
+<link rel=Edit-Time-Data href="./readme_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Readme for the NUON SDK</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>stuchinsky</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>tbienz</o:LastAuthor>
+  <o:Revision>3</o:Revision>
+  <o:TotalTime>334</o:TotalTime>
+  <o:Created>2001-12-21T18:51:00Z</o:Created>
+  <o:LastSaved>2001-12-21T18:53:00Z</o:LastSaved>
+  <o:Pages>5</o:Pages>
+  <o:Words>1765</o:Words>
+  <o:Characters>10065</o:Characters>
+  <o:Company>VM Labs, Inc.</o:Company>
+  <o:Lines>83</o:Lines>
+  <o:Paragraphs>20</o:Paragraphs>
+  <o:CharactersWithSpaces>12360</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+h1
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	mso-font-kerning:18.0pt;
+	font-weight:bold;}
+h2
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	font-weight:bold;}
+p.MsoListBullet, li.MsoListBullet, div.MsoListBullet
+	{mso-style-update:auto;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.25in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	mso-list:l1 level1 lfo3;
+	tab-stops:list .25in;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+p.MsoListNumber, li.MsoListNumber, div.MsoListNumber
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.25in;
+	margin-bottom:.0001pt;
+	text-indent:-.25in;
+	mso-pagination:widow-orphan;
+	mso-list:l0 level1 lfo6;
+	tab-stops:list .25in;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+a:link, span.MsoHyperlink
+	{color:green;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+code
+	{mso-ascii-font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";}
+kbd
+	{mso-ascii-font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:-120;
+	mso-list-type:simple;
+	mso-list-template-ids:-1632228880;}
+@list l0:level1
+	{mso-level-style-link:"List Number";
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	margin-left:.25in;
+	text-indent:-.25in;}
+@list l1
+	{mso-list-id:-119;
+	mso-list-type:simple;
+	mso-list-template-ids:-1224585582;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-style-link:"List Bullet";
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	margin-left:.25in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2
+	{mso-list-id:105776049;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1613486142 -1509503106 -1804205026 1379678022 -859951134 -2128441492 -970043338 -1097702122 -1725430976 -252964928;}
+@list l3
+	{mso-list-id:1022705459;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1786099928 784239082 1533311586 1811155450 280392836 1612323548 -254262874 166232350 -25775358 -940666388;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l4
+	{mso-list-id:1427725510;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1198850538 1457157272 1629814610 -1841368110 2088124754 1382842274 205393474 1257412180 -1462472800 -1103170354;}
+@list l4:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l5
+	{mso-list-id:1430932038;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1602240772 -1890257796 -1119580178 868111096 2137307856 1052124024 32253760 225507210 483835616 163846014;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link=green vlink=navy style='tab-interval:.5in'
+alink="#FF0000">
+
+<div class=Section1>
+
+<p align=center style='text-align:center'><img width=120 height=54
+id="_x0000_i1025" src="doc\images\nuon_logo_3.gif" border=0></p>
+
+<h1 align=center style='text-align:center'><span style='font-size:13.5pt'>README
+for Release 2 of the NUON SDK</span></h1>
+
+<p align=center style='text-align:center'><b>19 December 2001</b></p>
+
+<p align=center style='text-align:center'><b>Copyright &copy; 1997-2001<br>
+VM Labs, Inc.<br>
+All Rights Reserved</b></p>
+
+<h1 align=center style='text-align:center'><span style='font-size:12.0pt'>This
+file contains </span><span style='font-size:12.0pt;color:red'>EXTREMELY
+IMPORTANT</span><span style='font-size:12.0pt'> information.</span><br>
+<span style='font-size:12.0pt'>Please read it carefully.</span></h1>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2>Contents:</h2>
+
+<ul type=disc>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Introduction-49575">Introduction </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a href="#WhatsNew">What&#8217;s
+     new in this release</a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Overview-47857">Overview and directory structure</a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Configuring-47857">Configuring the SDK</a> </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Supported-11481">Supported development platforms </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Supported-35882">Supported DVD players and firmware versions
+     </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a href="#Anchor-14210">A
+     historical note on terminology </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Overview-23240">Overview of the development process </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a
+     href="#Anchor-Limitations-3800">Limitations</a> </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a href="#Anchor-Where-35326">Where
+     to go for help </a></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l3 level1 lfo9;tab-stops:list .5in'><a href="#Anchor-Where-35326">Where
+     to go from here</a> </li>
+</ul>
+
+<h2><a name=Anchor-Introduction-49575></a>Introduction</h2>
+
+<p>Welcome to the second release of the NUON SDK. This SDK will allow you to
+write NUON programs on your PC, burn them onto CD-R's or DVD-R's, and run them
+on your NUON DVD player. </p>
+
+<p>This SDK is still undergoing development. We have not yet had a chance to
+smooth out all the rough spots in the SDK. We intend to update and upgrade this
+SDK regularly, and look forward to receiving your comments about it. </p>
+
+<h2><a name=WhatsNew></a>What&#8217;s new in this release</h2>
+
+<p>This section describes the changes since Release 1 of the NUON SDK.</p>
+
+<h3>Main changes:<span style='font-size:12.0pt;mso-bidi-font-size:10.0pt'><o:p></o:p></span></h3>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Added an &#8220;experimental&#8221; directory containing code we&#8217;re
+working on and thought you&#8217;d be interested in, but which is not yet finished or
+tested. We do not guarantee that this code will continue to be available in the
+future, or will be supported. <span style='mso-bidi-font-size:10.0pt;
+color:windowtext'>In this release, the &#8220;experimental&#8221; directory contains tools,
+documentation, and examples for a UI framework that allows you to create NUON
+applications using only a markup language and scripting. No C or assembly programming
+is required.</span></p>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Updated CreateNuonCD application to fix a bug in memory
+allocation that could result in a fragmented heap when your app is launched.</p>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Removed mml2d support for lines and ovals, since these
+were unreliable.</p>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Added a sprite library and its associated header file,
+sample code (Chomp and VMBalls4), and documentation.</p>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Added several code samples.</p>
+
+<p class=MsoListBullet><![if !supportLists]><span style='font-family:Symbol'>&middot;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Removed video/safearea code sample.</p>
+
+<h3>Details:</h3>
+
+<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;
+ border:none;mso-border-alt:solid windowtext .5pt;mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3>File</h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3>New</h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3>Updated</h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3>Removed</h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3>Description</h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>vmlabs\experimental\*.*</span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;color:black;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;color:black;
+  font-weight:normal'>Experimental UI framework</span><span style='color:black'><o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>vmlabs\bin\CreateNuonCD.exe</span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Version
+  1.08. Fixes a bug: When launching your app, loader program was not freeing
+  the SDRAM that had been allocated for its frame buffer.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>vmlabs\bin\llama</span>
+  </h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Version
+  2.84. Fixes bugs: &quot;breakpoint&quot; and &quot;halt&quot; instructions no
+  longer give an<span style="mso-spacerun: yes">&nbsp; </span>&quot;instruction
+  with no effect&quot; warning.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>vmlabs\lib\*.a</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Rebuilt
+  all libraries with new llama version 2.84.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>librombios.a
+  <o:p></o:p></span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p>Updated to version 3.0.0.88</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>libpe.a<o:p></o:p></span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p>Updated to version 3.0.0.88</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>libmml2d.a
+  <o:p></o:p></span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p>Updated to version 2.28,<b> </b>fixed compiler warnings</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>libsprite.a</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Sprite
+  library<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>libterm.a<o:p></o:p></span></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  16bpp, 8bpp and 4bpp support.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/sprite.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Sprite
+  library interfaces and constants<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/bios.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  low level file access functions<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/mediaio.h </p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3>-</h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/mml2d.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3>-</h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/mpe.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3>-</h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/sysinfo.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  TV output types<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>include/nuon/ioctl.h</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>-<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/m3dl/Alpha-Blending/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>How
+  to control and object&#8217;s transparency.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/m3dl/Background/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>How
+  to draw a large background image.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/m3dl/Transparency/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>How
+  to specify transparent colors in an image.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/Audio/PlayWav/Makefile </p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Minor
+  capitalization changes.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/Audio/PlayWav/pcmdata.s </p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Minor
+  changes<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/Slide-Show/utils/Makefile</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Minor
+  capitalization changes.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/mml2d/Test2/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>How
+  to draw a variety of objects<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/Sprites/VMBalls4/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>How
+  to use Sprite library<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>Sample/Games/Chomp/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Game
+  showing how to use Sprite library<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/mml2d/life/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Removed
+  lines and ovals, since mml2d no longer supports these.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>sample/Terminal-Emulator/Sky</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Changes
+  in termemu project.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>Sample/Video/safearea/*.*</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span><span
+  style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Sample
+  used broken mml2d calls.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><span style='mso-bidi-font-size:10.0pt;color:windowtext'>Outline-Text/txdemo/*.*</span></p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Removed
+  lines and ovals, since mml2d no longer supports these.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:10.0pt;
+  font-family:Arial;color:windowtext'><o:p></o:p></span></p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>Doc/sprite.pdf</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;</span></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:13.0pt;
+  font-family:Wingdings'><o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Documentation
+  for sprite library.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>doc/bios.pdf </p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  description of<span style="mso-spacerun: yes">&nbsp; </span>NUON file
+  operations, added FindName doc, describe the true restrictions on the frame
+  buffer and subwindow width.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>doc/html/samples/mml2d_samples.html</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>-<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>doc/html/samples/video_samples.html</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>-<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>doc/html/onlinedocumentation.html</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  additional links<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>doc/De-Re-NUON.pdf</p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Added
+  more details about making CD's<o:p></o:p></span></h3>
+  </td>
+ </tr>
+ <tr>
+  <td width=248 valign=top style='width:186.3pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><span style='mso-bidi-font-size:10.0pt;color:windowtext'>doc/mml2d.pdf</span></p>
+  </td>
+  <td width=51 valign=top style='width:38.35pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+  </td>
+  <td width=82 valign=top style='width:61.5pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:13.0pt;font-family:Wingdings'>&uuml;<o:p></o:p></span></h3>
+  </td>
+  <td width=87 valign=top style='width:65.55pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><![if !supportEmptyParas]>&nbsp;<![endif]><span style='font-size:12.0pt;
+  mso-bidi-font-size:13.5pt;font-weight:normal'><o:p></o:p></span></h3>
+  </td>
+  <td width=250 valign=top style='width:187.5pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-weight:normal'>Lines
+  and ovals no longer supported, and have been removed from documentation.<o:p></o:p></span></h3>
+  </td>
+ </tr>
+</table>
+
+<h2><a name=Anchor-Overview-47857></a>Overview and directory structure</h2>
+
+<p>The NUON SDK contains sample code, libraries, header files, tools, and documentation.
+This SDK allows you to write NUON applications in C, C++, and NUON assembler.
+The SDK contains the following directories:</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>bin</span></b></code>
+- A variety of tools (compiler, assembler, linker,...)</p>
+
+<p><b>doc</b> - Documentation, in a mixture of formats; HTML, PDF, text, and
+Windows help. You need to have a PDF viewer such as the Adobe Acrobat Reader
+installed in order to view the PDF files. If you do not have a PDF viewer, you
+can download the Adobe Acrobat Reader from: <a
+href="http://www.adobe.com/products/acrobat/readstep.html">http://www.adobe.com/products/acrobat/readstep.html</a></p>
+
+<p><b>experimental</b> &#8211; Experimental code we&#8217;re working on. We thought you
+might be interested in the code in this directory, but it is not finished nor
+is it tested. We make no commitment to support or continue providing the code
+in the future.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>fonts</span></b></code>
+- Fonts used in the SDK.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>include</span></b></code>
+- Header files for NUON programming.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>lib</span></b></code>
+- A variety of libraries for sound, 2-D graphics, 3-D graphics, image
+processing, and utility functions. Documentation for the libraries is in the <code><span
+style='font-size:10.0pt;font-family:"Courier New"'>docs</span></code>
+directory. Source code is provided for some of the libraries. Library source
+code is in the <kbd><span style='font-size:10.0pt;font-family:"Courier New"'>lib\src</span></kbd>
+directory.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>media</span></b></code>
+- Images used in samples.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>sample</span></b></code>
+- Source code for a number of sample applications. The samples illustrate
+various aspects of NUON programming (2-D graphics, 3-D graphics, sound, games).
+Documentation for each sample is in the same directory as the sample's source
+code, while the <code><span style='font-size:10.0pt;font-family:"Courier New"'>doc</span></code>
+directory contains an overview of all categories of samples.</p>
+
+<p><code><b><span style='font-size:10.0pt;font-family:"Courier New"'>util</span></b></code>
+- Standard NUON makefile definitions.</p>
+
+<h2><a name=Anchor-Configuring-47857></a>Configuring the SDK</h2>
+
+<p>The NUON SDK is self-configuring. You should not need to do any manual
+configuration after installing it. Nevertheless, if you encounter problems, it
+is useful to know what configuration the SDK requires: </p>
+
+<ul type=disc>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l4 level1 lfo12;tab-stops:list .5in'>The value of the <code><span
+     style='font-size:10.0pt;font-family:"Courier New"'>vmlabs</span></code>
+     environment variable is set to the location of the SDK's root directory.
+     If you install your SDK in the default location (<code><span
+     style='font-size:10.0pt;font-family:"Courier New"'>c:\vmlabs</span></code>),
+     the value is &quot;<code><span style='font-size:10.0pt;font-family:"Courier New"'>vmlabs=c:\vmlabs</span></code>&quot;</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l4 level1 lfo12;tab-stops:list .5in'>The SDK's <code><span
+     style='font-size:10.0pt;font-family:"Courier New"'>bin</span></code>
+     directory is added to your path. If you install your SDK in the default
+     location (<code><span style='font-size:10.0pt;font-family:"Courier New"'>c:\vmlabs</span></code>),
+     &quot;<code><span style='font-size:10.0pt;font-family:"Courier New"'>c:\vmlabs\bin</span></code>&quot;
+     is added to your path.</li>
+</ul>
+
+<h2><a name=Anchor-Supported-11481></a>Supported development platforms</h2>
+
+<p>Windows 2000 is the only officially supported development platform for this
+SDK. We only build the code samples and test the tools under Windows 2000. We
+do not guarantee that this SDK can be used successfully on anything except
+Windows 2000. Nevertheless, it should be possible to develop on Windows NT 4
+and Windows 98, but you might have to make changes to the sample code (<em>e.g.</em>,
+modify makefiles).</p>
+
+<h2><a name=Anchor-Supported-35882></a>Supported DVD players and firmware
+versions</h2>
+
+<p>This SDK supports only the Samsung DVD-N501. In addition, you must be
+running firmware version 51 or higher on your Samsung DVD-N501. To determine
+the firmware version you currently have, and to download a newer version if
+necessary, please visit Samsung's website at: <a
+href="http://samsungelectronics.com/dvdp/nuon/n501.html">http://samsungelectronics.com/dvdp/nuon/n501.html</a>
+(if this link does not activate properly when you click on it, simply cut it
+and paste it into your web browser).</p>
+
+<h2><a name=Anchor-14210></a>A historical note on terminology</h2>
+
+<p>Prior to the announcement of the NUON name in October 1998, VM Labs used the
+name &quot;Merlin&quot; to refer to the underlying technology. We have mostly
+switched over to &quot;NUON&quot;, but you will probably still find references
+to &quot;Merlin&quot; in sample programs, source code, and other documentation.
+Please keep in mind that &quot;NUON&quot; and &quot;Merlin&quot; refer to the
+same thing.</p>
+
+<h2><a name=Anchor-Overview-23240></a>Overview of the development process</h2>
+
+<ol start=1 type=1>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Write source code on the PC using
+     your favorite text editor </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Compile source code using <code><span
+     style='font-size:10.0pt;font-family:"Courier New"'>mgcc</span></code> (for
+     C and C++) or <code><span style='font-size:10.0pt;font-family:"Courier New"'>llama</span></code>
+     (for NUON assembler)</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Link the application using <code><span
+     style='font-size:10.0pt;font-family:"Courier New"'>collect2</span></code></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Strip symbols from the
+     application using <code><span style='font-size:10.0pt;font-family:"Courier New"'>coffpack</span></code></li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Convert the executable to a
+     runnable format (a <span style='font-family:"Courier New"'>NUON.CD</span>
+     file) using the <code><span style='font-size:10.0pt;font-family:"Courier New"'>CreateNuonCD</span></code>
+     tool</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Burn a disc (CD-R, CD-RW, or
+     DVD-R) using your own CD/DVD writer software on a personal computer. Write
+     <span style='font-family:"Courier New"'>NUON.CD</span> to the root
+     directory of the disc. &quot;Root directory&quot; means the top directory;
+     <span style='font-family:"Courier New"'>NUON.CD</span> cannot be inside
+     any other directory or folder on the disc. For CD-R and CD-RW, the disc
+     must use the ISO9660 disc format. Joliet extensions are not required but
+     will work.</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l2 level1 lfo15;tab-stops:list .5in'>Run the program on your NUON
+     DVD player by inserting the disc into it </li>
+</ol>
+
+<h2><a name=Anchor-Limitations-3800></a>Limitations</h2>
+
+<p>There are several limitations regarding applications developed using this
+SDK:</p>
+
+<ol start=1 type=1>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l5 level1 lfo18;tab-stops:list .5in'>The total size of your
+     application plus its data cannot exceed 4.5 MB when you use CD-R (or
+     CD-RW) as your media. This limitation does not exist if you are using
+     DVD-R. We are working to remove this limitation in the future. Please note
+     that if you exceed approximately 3.5 MB, the SAMSUNG screen may become a
+     little corrupted before loading your application -- this is harmless, and
+     can be ignored.</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l5 level1 lfo18;tab-stops:list .5in'>The only way to debug your
+     application on a DVD-N501 is to use <code><span style='font-size:10.0pt;
+     font-family:"Courier New"'>printf</span></code>'s to the screen.
+     Currently, the only way to get better debugging support is by using a NUON
+     Development System, which is available only to members of VM Labs'
+     developers' program (See &quot;<a href="#Anchor-Where-35326">Where to go
+     for help</a>&quot; for further information). We are working on a way to
+     provide somewhat better debugging on a DVD-N501, but we cannot promise
+     when and if this solution will become available. </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l5 level1 lfo18;tab-stops:list .5in'>All applications developed
+     using this SDK will display a warning message each time they are run.
+     Developers who wish to eliminate this warning for their application should
+     contact VM Labs for information and pricing on our Certification and
+     Licensing programs. After your program has passed certification it is <em>authenticated</em>.
+     Only authenticated applications bypass the warning message. </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l5 level1 lfo18;tab-stops:list .5in'>We support only single
+     session discs. Multi-session discs are currently unreliable. </li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l5 level1 lfo18;tab-stops:list .5in'>Empirically, CD-RW discs are
+     much less reliable than CD-R discs. Anecdotal evidence indicates that
+     different brands or colors of CD-RW discs differ greatly in their
+     reliability.</li>
+</ol>
+
+<h2><a name=Anchor-Where-35326></a>Where to go for help</h2>
+
+<p>Although we do not provide direct one-to-one support for this SDK, we are
+hosting a discussion list for SDK users, and an FAQ for this SDK and NUON programming.
+Please visit VM Labs' developers website at <a href="http://dev.nuon.tv">http//dev.nuon.tv</a>.</p>
+
+<p>Commercial developers who require a higher level of support, or wish to
+obtain a NUON development system in order to do more debugging, should contact
+VM Labs at <code><span style='font-size:10.0pt;font-family:"Courier New"'><a
+href="mailto:DeveloperPrograms@dev.nuon.tv">DeveloperPrograms@dev.nuon.tv</a></span></code>
+to get more information, and pricing, for our developers' program.</p>
+
+<p>Developers who are interested in VM Labs' marketing programs (program
+certification, NUON logo licensing, etc.) should contact VM Labs at<code><span
+style='font-size:10.0pt;font-family:"Courier New"'> <a
+href="mailto:Licensing@dev.nuon.tv">Licensing@dev.nuon.tv</a></span></code>.</p>
+
+<p>Comments on this SDK, and requests for enhancements to it, are welcomed at <a
+href="mailto:sdkcomments@dev.nuon.tv">sdkcomments@dev.nuon.tv</a>.</p>
+
+<h2>Where to go from here</h2>
+
+<p>For more information about the contents of this SDK, please see the
+following documents:</p>
+
+<table border=0 cellpadding=0 width=251 style='width:188.25pt;mso-cellspacing:
+ 1.5pt;mso-padding-alt:0in 0in 0in 0in'>
+ <tr>
+  <td style='padding:0in 0in 0in 0in'>
+  <p class=MsoNormal align=center style='text-align:center'><a
+  href="doc\html\onlinedocumentation.html">Documentation Overview</a></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:0in 0in 0in 0in'>
+  <p class=MsoNormal align=center style='text-align:center'><a
+  href="doc\html\samplecode.html">Sample Code Overview</a></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:0in 0in 0in 0in'>
+  <p class=MsoNormal align=center style='text-align:center'><a
+  href="doc\html\library-overview.html">NUON Libraries Overview</a></p>
+  </td>
+ </tr>
+</table>
+
+<h3><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></h3>
+
+<p class=MsoNormal><span style='color:windowtext'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

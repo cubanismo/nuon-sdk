@@ -1,0 +1,170 @@
+<nml>
+
+<script src='scripts/wumpus.bbo'/>
+
+<textStyle name='labels'
+		   font='fonts/system.ttf'
+		   color='goldenrod'
+		   size='24'/>
+
+<textStyle name='info'
+		   font='fonts/system.ttf'
+		   color='cadetBlue'
+		   size='24'/>
+
+<textStyle name='warning'
+		   font='fonts/system.ttf'
+		   color='red'
+		   size='24'/>
+
+<textStyle name='caveNumber'
+		   font='fonts/system.ttf'
+		   color='black'
+		   size='24'/>
+
+<textStyle name='hltCaveNumber'
+		   font='fonts/system.ttf'
+		   color='black'
+		   bgColor='lightblue'
+		   size='24'/>
+
+<body width='720' height='480' bgColor='peachPuff' onLoad='StartGame()'>
+
+<widget name='cave' type='text'
+		x='100' y='40' width='250' height='28'
+		textStyle='labels'/>
+
+<widget name='exits' type='text'
+		x='100' y='80' width='200' height='28'
+		textStyle='labels'
+		value='Tunnels lead to:'/>
+
+<group x='140' y='108' width='170' height='38'>
+
+<widget name='exit1' type='text'
+		x='10' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightTextStyle='hltCaveNumber' 
+		left='exit3'
+		right='exit2'
+		down='path1'
+		onClick='game.Travel(0)'
+		align='center'/>
+
+<widget name='exit2' type='text'
+		x='65' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightTextStyle='hltCaveNumber' 
+		left='exit1'
+		right='exit3'
+		down='path1'
+		onClick='game.Travel(1)'
+		align='center'/>
+
+<widget name='exit3' type='text'
+		x='120' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightTextStyle='hltCaveNumber' 
+		left='exit2'
+		right='exit1'
+		down='path1'
+		onClick='game.Travel(2)'
+		align='center'/>
+
+</group>
+
+<widget name='arrows' type='text'
+		x='100' y='168' width='240' height='28'
+		textStyle='labels'/>
+
+<group x='140' y='196' width='170' height='38'>
+
+<widget name='path1' type='text'
+		x='10' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightFrame='true'
+		frameColor='yellow'
+		bgColor='lightblue'
+		maxLength='2'
+		left='path5'
+		right='path2'
+		up='exit1'
+		onClick='game.Shoot()'
+		align='center'/>
+
+<widget name='path2' type='text'
+		x='65' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightFrame='true'
+		frameColor='yellow'
+		bgColor='lightblue'
+		maxLength='2'
+		left='path1'
+		right='path3'
+		up='exit1'
+		onClick='game.Shoot()'
+		align='center'/>
+
+<widget name='path3' type='text'
+		x='120' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightFrame='true'
+		frameColor='yellow'
+		bgColor='lightblue'
+		maxLength='2'
+		left='path2'
+		right='path4'
+		up='exit1'
+		onClick='game.Shoot()'
+		align='center'/>
+
+<widget name='path4' type='text'
+		x='175' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightFrame='true'
+		frameColor='yellow'
+		bgColor='lightblue'
+		maxLength='2'
+		left='path3'
+		right='path5'
+		up='exit1'
+		onClick='game.Shoot()'
+		align='center'/>
+
+<widget name='path5' type='text'
+		x='230' y='10' width='40' height='28'
+		textStyle='caveNumber' 
+		highlightFrame='true'
+		frameColor='yellow'
+		bgColor='lightblue'
+		maxLength='2'
+		left='path4'
+		right='path1'
+		up='exit1'
+		onClick='game.Shoot()'
+		align='center'/>
+
+</group>
+
+<widget name='info1' type='text'
+		x='100' y='256' width='600' height='30'
+		textStyle='info' 
+		highlightTextStyle='hltCaveNumber' 
+		onClick='StartGame()'/>
+
+<widget name='info2' type='text'
+		x='100' y='296' width='600' height='30'
+		textStyle='info'/>
+
+<widget name='info3' type='text'
+		x='100' y='336' width='600' height='30'
+		textStyle='info'/>
+
+<widget name='info4' type='text'
+		x='100' y='376' width='600' height='30'
+		textStyle='info' 
+		highlightTextStyle='warning' 
+		onClick='topFrame.LoadPage("startup.npg")'/>
+
+</body>
+</nml>

@@ -1,0 +1,47 @@
+#
+# Makefile for "2dballs" sample
+# Copyright (c) 2000-2001 VM Labs, Inc. All rights reserved.
+#
+# NOTICE: VM Labs permits you to use, modify, and distribute this file
+# in accordance with the terms of the VM Labs license agreement
+# accompanying it. If you have received this file from a source other
+# than VM Labs, then your use, modification, or distribution of it
+# requires the prior written permission of VM Labs.
+#
+########################
+
+include $(VMLABS)/util/nuon_build_tools.mk
+
+########################
+
+DEFINES =
+CFLAGS = -O3 -g -mreopt $(DEFINES) -Wall 
+LDFLAGS = -Xlinker -b -Xlinker bol.mbm
+
+########################
+
+OBJ = main.o
+
+LIBS = -lm3dl -lmutil
+
+NUON.CD: cd_app.cof
+	CreateNuonCD
+
+cd_app.cof: 2dballs.cof
+	coffpack -o cd_app.cof 2dballs.cof
+
+2dballs.cof: $(OBJ)
+	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LIBS)
+
+########################
+
+load: 2dballs.cof
+	mload -! -w -w -w -w -p3 -n 2dballs.cof -r -m
+
+load2: 2dballs.cof
+	mload -! -w -w -w -w -p3 -n -fs $< -r -m
+	
+clean:
+	-$(RM) *.cof
+	-$(RM) *.o
+	-$(RM) NUON.CD

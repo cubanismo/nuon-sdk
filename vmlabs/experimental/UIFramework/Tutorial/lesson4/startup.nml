@@ -1,0 +1,60 @@
+<nml>
+
+<textStyle name='welcome'
+		   font='fonts/system.ttf'
+		   color='black'
+		   size='30'/>
+
+<textStyle name='credits'
+		   font='fonts/system.ttf'
+		   color='black'
+		   size='20'/>
+
+<textStyle name='prompt'
+		   font='fonts/system.ttf'
+		   color='goldenrod'
+		   size='24'/>
+
+<body width='720' height='480' bgColor='peachPuff' start='start'>
+
+<group x='20' y='10'>
+
+<widget type='text'
+		textStyle='welcome' 
+		x='80'
+		y='40'
+		width='250'
+		height='30'
+		align='left'
+        value='Welcome to "Hunt the Wumpus!"'/>
+
+<widget type='text'
+		textStyle='credits' 
+		x='80'
+		y='80'
+		width='250'
+		height='20'
+		align='left'
+        value='Based on a game by Gregory Yob.'/>
+
+<widget name='pic'
+		type='image'
+        src='images/wumpus.gif'
+        x='80'
+        y='120'/>
+
+<widget name='start'
+        type='text'
+		highlightTextStyle='prompt' 
+		x='80'
+		y='300'
+		width='250'
+		height='24'
+		align='left'
+        onClick='topFrame.LoadPage("pages/wumpus.npg")'
+        value='Press Enter to Start the Game...'/>
+
+</group>
+
+</body>
+</nml>

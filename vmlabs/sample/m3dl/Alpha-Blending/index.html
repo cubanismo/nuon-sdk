@@ -1,0 +1,104 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\M3dl\Alpha-Blending</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>March 2, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This program demonstrates how the alpha channel of an object's
+color values can be used to control the opacity of the object.</p>
+
+<p align="left">A gray rectangle is drawn in front of a black and white
+checkerboard pattern.&nbsp; Using the controller, the user can manipulate the
+color values and alpha channel value for each corner of the object.</p>
+
+<ul>
+  <li>
+    <p align="left">D-PAD Left / Right = Move counter-clockwise or clockwise to
+    next corner.</li>
+  <li>
+    <p align="left">D-PAD Up / Down = Cycle through value being adjusted (Red,
+    Green, Blue, Alpha)</li>
+  <li>
+    <p align="left">Left Shoulder&nbsp; = Decrease current value by 1 (wrap
+    around when reach either end)</li>
+  <li>
+    <p align="left">Right Shoulder = Increase current value by 1 (wrap around
+    when reach either end)</li>
+  <li>
+    <p align="left">C-Up = Change current value to maximum</li>
+  <li>
+    <p align="left">C-Down = Change current value to minimum</li>
+  <li>
+    <p align="left">C-Right = Increase current value by 32 (wrap around when
+    reach either end)</li>
+  <li>
+    <p align="left">C-Left = Decrease current value by 32 (wrap around when
+    reach either end)</li>
+</ul>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">ckrbd.bmp</td>
+      <td width="50%">Bitmap for checker board background.&nbsp; We use a large
+        full-screen bitmap because you may wish to alter it to include different
+        colors or detailed textures so that you can see the effect.&nbsp; This
+        file is converted to the proper format as part of the program build
+        process.</td>
+    </tr>
+    <tr>
+      <td width="50%">datafile.s</td>
+      <td width="50%">Assembly file that includes sample images as binary data.</td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+    <tr>
+      <td width="50%">transparency.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+    <tr>
+      <td width="50%">transparency.h</td>
+      <td width="50%">Contains a variety of definitions used throughout the
+        program</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<hr>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./index_files/filelist.xml">
+<link rel=Edit-Time-Data href="./index_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>VM Labs SDK Sample Code</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>stuchinsky</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>stuchinsky</o:LastAuthor>
+  <o:Revision>3</o:Revision>
+  <o:TotalTime>16</o:TotalTime>
+  <o:Created>2001-10-08T23:42:00Z</o:Created>
+  <o:LastSaved>2001-10-08T23:43:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>125</o:Words>
+  <o:Characters>716</o:Characters>
+  <o:Company>VM Labs, Inc.</o:Company>
+  <o:Lines>5</o:Lines>
+  <o:Paragraphs>1</o:Paragraphs>
+  <o:CharactersWithSpaces>879</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+h3
+	{color:black;}
+a:link, span.MsoHyperlink
+	{color:green;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=green vlink=navy style='tab-interval:.5in' alink="#FF0000" bgcolor="white">
+
+<div class=Section1>
+
+<table border=0 cellpadding=0 width="100%" style='width:100.0%;mso-cellspacing:
+ 1.5pt;mso-padding-alt:1.5pt 1.5pt 1.5pt 1.5pt'>
+ <tr>
+  <td style='padding:1.5pt 1.5pt 1.5pt 1.5pt'>
+  <h3>VM Labs SDK Sample Code</h3>
+  </td>
+  <td style='padding:1.5pt 1.5pt 1.5pt 1.5pt'>
+        <h3 align=right style='text-align:right'>\vmlabs\sample\Terminal-Emulator\Sky</h3>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:1.5pt 1.5pt 1.5pt 1.5pt'>
+  <p>&nbsp;<b>Copyright © 1997-2001 VM Labs, Inc.&nbsp; All Rights Reserved</b></p>
+  </td>
+  <td style='padding:1.5pt 1.5pt 1.5pt 1.5pt'>
+        <p align=right style='text-align:right'><b>October 24, 2001</b></p>
+  </td>
+ </tr>
+</table>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+  <p>This program draws a sky on the screen.</p>
+
+<div align=center>
+
+    <table border=1 cellspacing=0 cellpadding=0 width=500 style='width:375.0pt;
+ mso-cellspacing:0in;mso-padding-alt:3.0pt 3.0pt 3.0pt 3.0pt'>
+      <tr> 
+        <td width="39%" style='width:50.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal><b><span style='color:navy'>Filename</span></b></p>
+        </td>
+        <td width="61%" style='width:75.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal><b><span style='color:navy'>Description</span></b></p>
+        </td>
+      </tr>
+      <tr> 
+        <td width="39%" style='width:50.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal>drawsky.c</p>
+        </td>
+        <td width="61%" style='width:50.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal>Main program code for sample.</p>
+        </td>
+      </tr>
+      <tr> 
+        <td width="39%"> 
+          <p>sky.s</p>
+          </td>
+        <td width="61%">
+          <p>Assembly language code for sky background.</p>
+        </td>
+      </tr>
+      <tr> 
+        <td width="39%" style='width:50.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal>makefile</p>
+        </td>
+        <td width="61%" style='width:50.0%;padding:3.0pt 3.0pt 3.0pt 3.0pt'> 
+          <p class=MsoNormal>MAKEFILE for building and running sample program.</p>
+        </td>
+      </tr>
+    </table>
+
+</div>
+
+<p>&nbsp;</p>
+			<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+		</div>
+
+</body>
+
+</html>

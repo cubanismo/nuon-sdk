@@ -1,0 +1,96 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\Sprites\VMBalls4</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>December 20, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This is the 4th major revision example of ball sprites flying around the TV
+screen.&nbsp; This version has been revised to use the new LIBSPRITE library,
+taking advantage of this library's ability to scale and rotate the sprite image.</p>
+
+<p align="left">The program generates a display list of sprites.&nbsp; It uses
+DMA to display a background image that contains a
+stylized version of the VM Labs logo, and then draws the display list of sprites
+on top of that.&nbsp; The sprites move around the screen, rotating at different
+speeds, and increasing and decreasing in size.</p>
+
+<p align="left">The ball sprite data is 32 bits, and the alpha channel is used
+to determine which portions of the sprite are transparent.</p>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">graphics.c</td>
+      <td width="50%">A variety of graphics routines.</td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+    <tr>
+      <td width="50%">proto.h</td>
+      <td width="50%">Function prototypes used by program.</td>
+    </tr>
+    <tr>
+      <td width="50%">sprite.s</td>
+      <td width="50%">Assembly language module that does binary include of image
+        data.</td>
+    </tr>
+    <tr>
+      <td width="50%">vball.raw</td>
+      <td width="50%">Raw RGB image file (32*32) for ball sprite.&nbsp;
+        Converted into YCRCB format when program build is done.</td>
+    </tr>
+    <tr>
+      <td width="50%">vmballs.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+    <tr>
+      <td width="50%">vmballs.h</td>
+      <td width="50%">Contains a variety of definitions used throughout the
+        program</td>
+    </tr>
+    <tr>
+      <td width="50%">vmlogo.raw</td>
+      <td width="50%">Raw RGB image file (360*240) for background image.&nbsp;
+        Converted into YCRCB format when program build is done.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>
+<hr>
+</body>
+</html>

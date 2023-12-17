@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080" bgcolor="white">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\mml2d\life</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>October 9, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This is an implementation of the game of life invented by 
+John H. Conway.  This description is from Scientific American
+April 1999 p. 41 42 by Mark Alpert : "In the game, you start with a
+pattern of checkers on the grid -- these
+represent the 'live' cells.  You then remove each checker that has one
+or no neighboring checkers or four or more neighbors (these cells
+'die' from loneliness or overcrowding).  Checkers with two or three
+neighbors remain on the board.  In addition, new cells are 'born' -- a
+checker is added to each empty space that is adjacent to exactly three
+checkers.  By applying these rules repeatedly, one can create an
+amazing variety of Life forms, including 'gliders' and 'spaceships'
+that steadily move across the grid."</p>
+
+<p align="left">In this VMLabs implementation, a trial stops when the number of 
+  live cells drops below a threshold. The age of an active cell is shown by its 
+  color. Each new trial uses a square for active cells.</p>
+ 
+<p align="left">The cells are displayed in the main plane. A translucent
+rectangle with the word NUON is overlaid in the graphics plane.</p> 
+
+<div align="center">
+  <center>
+    <table border="1" width="500" cellspacing="0" cellpadding="4">
+      <tr> 
+        <td width="50%"><b><font color="#000080">Filename</font></b></td>
+        <td width="75%"><b><font color="#000080">Description</font></b></td>
+      </tr>
+      <tr> 
+        <td width="50%">makefile</td>
+        <td width="50%">MAKEFILE for building and running sample program.</td>
+      </tr>
+      <tr> 
+        <td width="50%">life.c</td>
+        <td width="50%">Main program code for sample.</td>
+      </tr>
+      <tr> 
+        <td width="50%">auxvid.c</td>
+        <td width="50%">Video setup auxiliary functions for MML2D</td>
+      </tr>
+      <tr> 
+        <td width="50%">auxvid.h</td>
+        <td width="50%">Header file for <b>auxvid.c</b></td>
+      </tr>
+      <tr> 
+        <td width="50%">aux2d.c</td>
+        <td width="50%">This contains a variety of auxiliary functions for accessing 
+          the MML2D library capabilities.</td>
+      </tr>
+      <tr> 
+        <td width="50%">aux2d.h</td>
+        <td width="50%">Header file for <b>aux2d.c</b></td>
+      </tr>
+    </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+		<hr>
+	</body>
+</html>

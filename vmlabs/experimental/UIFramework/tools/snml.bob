@@ -1,0 +1,14 @@
+
+//
+// These functions are acessors that translate canonical nml fields
+// into authoring language fields.
+//
+define get_selected_line( text_menu )
+{
+	return text_menu.value;
+}
+
+define load_page( page_name )
+{
+	frame.LoadPage( "page_name" );
+}

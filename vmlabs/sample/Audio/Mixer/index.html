@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080" bgcolor="white">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\audio\Mixer</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left">&nbsp;<b>Copyright © 1998-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>March 2, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This sample demonstrates how to the audio mixer functions to
+change the volume of a sound that is already playing. The program plays a MIDI
+sequence using the NUON Synth, and at the same time also plays a simple
+audio tone that loops endlessly.&nbsp; The user may use the joystick buttons to
+lower or raise the volume and adjust the panning for the PCM sample.</p>
+
+<p align="left">The mixer functions work in a similar fashion when using the
+LIBNISE library, except that you control the output of streaming audio rather
+than the NUON Synth.</p>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+    <tr>
+      <td width="50%">mixer.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+    <tr>
+      <td width="50%">pcmdata.s</td>
+      <td width="50%">Assembler source that includes the PCM audio data file and
+        MIDI sequence data file as binary images.</td>
+    </tr>
+    <tr>
+      <td width="50%">sin500.pcm</td>
+      <td width="50%">Data file containing raw PCM-encoded data of a 500hz sine
+        wave.</td>
+    </tr>
+    <tr>
+        <td width="50%">LittleGMinorFugue.mid</td>
+      <td width="50%">MIDI sequence file</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+		<hr>
+	</body>
+</html>

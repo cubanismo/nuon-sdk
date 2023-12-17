@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<snml>
+	<script src='scripts/snml.bbo'/>
+	<script src='scripts/lesson3.bbo'/>
+  <page width="720" height="480" first-focus="answer">
+		<on-load>widgets.right.Hide();widgets.right.HideBackground();widgets.wrong.Hide(true);</on-load>
+    <text-box 	name="question" 
+    			left="80" 
+    			top="50" 
+    			width="500"
+    			height="60" 
+    			back-color="yellow">
+      <text-style name="Q" size="30" color="black"/>
+      <text-line left="10" base="40" text-style="Q">The Capital of Uzbekistan is?</text-line>
+    </text-box>
+
+    <text-menu name="answer" left="300" top="120" width="240" height="220" 
+    back-color="white" select-line="1" select-style="hilite">
+			<on-click>chooseWidget(get_selected_line(widgets.answer), 3, widgets.right, widgets.wrong)</on-click>
+      <text-style name="normal" size="40" color="steelblue" />
+      <text-style name="hilite" size="40" color="indianred" />
+      <text-line left="0" base="50" text-style = "normal">Islamabad</text-line>
+
+      <text-line left="0" base="100" text-style = "normal">Ashkabad</text-line>
+
+      <text-line left="0" base="150" text-style = "normal">Tashkent</text-line>
+
+      <text-line left="0" base="200" text-style = "normal">Dushambe</text-line>
+    </text-menu>
+
+    <text-box name='right' left='80' top="360" width="540" height="70" back-color="yellow">
+      <text-line left="10" base="40" text-style="Q">Correct! - Click for Next Question</text-line>
+			<on-click>frame.LoadPage("pages/question2.npg")</on-click>
+    </text-box>
+    <text-box name="wrong" left="80" top="360" width="540" height="70" back-color="red">
+      <text-line left="10" base="40" text-style="Q">Wrong! - Try Again</text-line>
+    </text-box>
+   </page>
+</snml>
+

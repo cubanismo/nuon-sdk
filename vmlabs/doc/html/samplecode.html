@@ -1,0 +1,245 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./samplecode_files/filelist.xml">
+<link rel=Edit-Time-Data href="./samplecode_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>NUON SDK Sample Code Overview</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>tbienz</o:Author>
+  <o:LastAuthor>tbienz</o:LastAuthor>
+  <o:Revision>3</o:Revision>
+  <o:TotalTime>5</o:TotalTime>
+  <o:Created>2001-12-20T00:27:00Z</o:Created>
+  <o:LastSaved>2001-12-21T19:08:00Z</o:LastSaved>
+  <o:Pages>2</o:Pages>
+  <o:Words>435</o:Words>
+  <o:Characters>2483</o:Characters>
+  <o:Company>VM Labs, Inc.</o:Company>
+  <o:Lines>20</o:Lines>
+  <o:Paragraphs>4</o:Paragraphs>
+  <o:CharactersWithSpaces>3049</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+h1
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	mso-font-kerning:18.0pt;
+	font-weight:bold;}
+h2
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:green;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link=green vlink=navy style='tab-interval:.5in'
+alink="#FF0000">
+
+<div class=Section1>
+
+<p class=MsoNormal align=center style='text-align:center'><img width=120
+height=54 id="_x0000_i1025" src="..\images\nuon_logo_3.gif" border=0></p>
+
+<h1 align=center style='text-align:center'>NUON SDK Sample Code Overview</h1>
+
+<p align=center style='text-align:center'><b>19 December 2001</b></p>
+
+<p align=center style='text-align:center'><b>Copyright &copy; 1997-2001<br>
+VM Labs, Inc.<br>
+All Rights Reserved</b></p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2>Contents</h2>
+
+<p><a href="#Anchor-Overview-11481">Overview</a></p>
+
+<p><a href="#Anchor-Notes-49575">Notes About MAKEFILEs</a></p>
+
+<p><a href="#Anchor-Samples-47857">Categories of samples</a></p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2><a name=Anchor-Overview-11481></a>Overview</h2>
+
+<p>This SDK contains a variety of code samples. The majority of the samples can
+be compiled with the tools in this SDK, and executed on your NUON DVD
+player.&nbsp; A few samples are incomplete in some way and are provided merely
+so you can examine the source code.</p>
+
+<p>All of the sample code in the NUON are located in the SDK's SAMPLE
+directory.&nbsp; Inside that directory are a number of subdirectories; one for
+each category of samples.&nbsp; The individual code samples are subdirectories
+within the category directories. Each sample demonstrates a particular concept,
+such as how to use a certain NUON library, or how to use the SDK tools in a
+particular way.</p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2><a name=Anchor-Notes-49575></a>Notes about MAKEFILEs for samples</h2>
+
+<p>The MAKEFILEs use a special include file named <b>NUON_BUILD_TOOLS.MK</b>.&nbsp;
+This file is located in the SDK's <b>UTIL</b> directory and contains macro
+definitions and build rules that are required by virtually all NUON software
+projects.</p>
+
+<p>The <b>NUON_BUILD_TOOLS.MK</b> file is used by all of the samples, but you
+do not have to use it for your own projects.&nbsp; If you do use it, please be
+aware that the contents may change in future releases of the SDK.</p>
+
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+
+<h2><a name=Anchor-Samples-47857></a>Categories of samples</h2>
+
+<p>Click on any of the links below for details about the samples in that
+category:</p>
+
+<p><a href="samples\agl_samples.html">AGL</a></p>
+
+<p><a href="samples\audio_samples.html">Audio</a></p>
+
+<p><a href="samples\bios_samples.html">BIOS Functions</a></p>
+
+<p><a href="samples\diagnostic_samples.html">Diagnostics</a></p>
+
+<p><a href="samples\controller_samples.html">Game Controllers</a></p>
+
+<p><a href="samples\games_samples.html">Games</a></p>
+
+<p><a href="samples\graphics_samples.html">Graphics</a></p>
+
+<p><a href="..\..\sample\Hello-World\index.html">Hello World</a></p>
+
+<p><a href="samples\jpeg_samples.html">JPEG</a></p>
+
+<p><a href="samples\m3dl_samples.html">M3DL Graphics Library</a></p>
+
+<p><a href="samples\mediaaccess_samples.html">Media Access</a></p>
+
+<p><a href="samples\mgl_samples.html">mGL Graphics Library</a></p>
+
+<p><a href="samples\misc_samples.html">Miscellaneous</a></p>
+
+<p><a href="samples\mml2d_samples.html">MML2D Graphics Library</a></p>
+
+<p><a href="samples\mml3d_samples.html">MML3D Graphics Library</a></p>
+
+<p><a href="samples\multiprocessor_samples.html">Multiprocessor</a></p>
+
+<p><a href="samples\nuonprogramming_samples.html">NUON Programming Series</a></p>
+
+<p><a href="samples\outlinetext_samples.html">Outline Text</a></p>
+
+<p><a href="samples\slideshow_samples.html">Slide Show</a></p>
+
+<p><a href="samples\sprites_samples.html">Sprites</a></p>
+
+<p><a href="samples\termemu_samples.html">Terminal Emulator</a></p>
+
+<p><a href="samples\video_samples.html">Video</a></p>
+
+</div>
+
+</body>
+
+</html>
