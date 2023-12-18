@@ -1,0 +1,13 @@
+*.o
+*.cof
+*.ycrcb
+*~
+NUON.CD
+
+# Special-case some SDK-provided object files
+!/vmlabs/lib/gcrt0p.o
+!/vmlabs/lib/crt0p.o
+!/vmlabs/lib/crt0.o
+!/vmlabs/lib/gcrt0.o
+!/vmlabs/lib/src/MML2D/src/mltxt/font.o
+!/vmlabs/lib/crtend.o

@@ -275,4 +275,6 @@ release: src includes
 	@-$(MKDIR) $(RELEASE_DIR)/lib
 	$(CP) $(RELEASE_LIBS) $(RELEASE_DIR)/lib
 
-
+clean:
+	-$(RM) libjpeg.a
+	-$(RM) *.o

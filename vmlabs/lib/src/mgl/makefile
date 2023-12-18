@@ -82,4 +82,6 @@ release: includes src
 	@-$(MKDIR) $(RELEASE_ROOT)/lib
 	$(CP) -p $(RELEASE_LIBS) $(RELEASE_ROOT)/lib
 
-
+clean:
+	-$(RM) libmgl.a
+	-$(RM) *.o

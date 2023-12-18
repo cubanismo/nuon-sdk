@@ -65,4 +65,5 @@ load2: cd_app.cof
 clean:
 	-$(RM) *.o
 	-$(RM) *.cof
+	-$(RM) sg.dat
 	-$(RM) NUON.CD

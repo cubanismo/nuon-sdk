@@ -99,3 +99,6 @@ release: src includes
 	@-$(MKDIR) $(RELEASE_DIR)/lib
 	$(CP) -p $(RELEASE_LIBS) $(RELEASE_DIR)/lib
 
+clean:
+	-$(RM) libmml3d.a
+	-$(RM) *.o

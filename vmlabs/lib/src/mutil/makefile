@@ -77,3 +77,6 @@ release: src includes
 export:
 	@echo Nothing to export for mutil.
 
+clean:
+	-$(RM) libmutil.a
+	-$(RM) *.o

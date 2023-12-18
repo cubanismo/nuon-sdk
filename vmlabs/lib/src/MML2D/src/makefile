@@ -106,3 +106,8 @@ src:
 release: src includes
 	@-$(MKDIR) $(RELEASE_LIB)
 	$(CP) $(LIBMML2D_A) $(LIBMLTXT_A) $(RELEASE_LIB)
+
+clean:
+	-$(RM) Mlsource/libmml2d.a
+	-$(RM) mltxt/libmltxt.a
+	-$(RM) *.o
