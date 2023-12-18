@@ -1,0 +1,147 @@
+============
+ libsprite2
+============
+
+This is an updated sprite library.  I've tweaked a few things from the
+original in hopes of making it faster.  Full credit goes to Andreas
+Binner for creating the library in the first place.
+
+Here are the changes:
+  o Removed PACKED attribute from sprite structures, resulting in 
+    more efficient C-to-assembly translation by the compiler.
+  o Added SPRCreateAndAddSprite() that can be used instead of calling
+    SPRCreateSprite() and SPRAddSprite() individually.
+  o Added SPRRemoveAndDeleteSprite() that can be used instead of
+    calling SPRRemoveSprite() and SPRDeleteSprite() individually.
+  o Added flag to allow double buffering of the sprite structures.
+    See below for details.
+  o Added flag to change the search criteria when inserting a new
+    sprite into the display list.  See below for details.
+  o Moved screen clearing from the C code on MPE3 to the renderers on
+    the other MPEs.  See below for details.
+  o Added "prev" element to PriorityQueueMember structure.  This
+    speeds up SPRRemoveSprite() and SPRDeleteSprite().
+
+Changes to the renderers, which are run on client MPEs:
+  o Removed some unused data structures, saving a significant amount
+    of DTRAM.
+  o Added code to check for scale factor of 1.0 in order to skip the
+    reciprocal routines.
+
+==============
+ Installation
+==============
+
+To install the library, copy libsprite2.a to your $VMLABS/lib 
+directory and sprite2.h to your $VMLABS/include/nuon directory.  In
+your makefile use -lsprite2 in place of -lsprite in your linker
+options.  Finally, any place in your source files that you previously
+referenced sprite.h you'll want to change it to sprite2.h.
+
+One more change.  When you call SPRInit() you need to pass in an
+additional parameter at the end.  This is the flags parameter, and 
+when set to zero the library will be functionally identical to the 
+old library.  To take advantage of the new features, pass in the
+appropriate flags to this new parameter.  See the details below.
+
+=========
+ DETAILS
+=========
+
+------------------------------------
+  New search criteria for SPRAdd()
+------------------------------------
+Previously when calling SPRAddSprite(), the library would search the 
+display list for other sprites with the same priority.  It would then 
+add the new sprite *after* the sprites of the same priority.  This 
+means the program had to traverse more of the display list to find the 
+insertion point.
+
+Now you can optionally make the library insert the new sprite *before*
+the sprites of the same priority.
+
+For instance, suppose you had the following display list.  Sprites are
+shown with letters and their priorities in parentheses:
+
+  A(1) -> B(2) -> C(2) -> D(2) -> E(2) -> F(5) -> G(9)
+
+You want to add H(2).  With the original sprite library it would 
+insert after all sprites the the same priority, so after E(2):
+
+  A(1) -> B(2) -> C(2) -> D(2) -> E(2) -> H(2) -> F(5) -> G(9)
+                                          ^^^
+
+With the new library it would insert it earlier.
+
+  A(1) -> H(2) -> B(2) -> C(2) -> D(2) -> E(2) -> F(5) -> G(9)
+          ^^^
+
+Admittedly this is only really useful if you do a lot of calls to
+SPRAddSprite() and SPRRemoveSprite().  Most programs will not see a
+benefit from this option.
+
+A side effect of this option is that the sprites of the same
+priority will be drawn in reverse order compared with before.  Sprites
+of different priority will still be drawn in correct order.  The
+assumption is that when you have multiple sprites of indentical 
+priority you don't really care what order they are drawn.
+
+To use this feature, pass in SPR_FLAG_ADD_REVERSE to the "flags"
+parameter when calling SPRInit().  Multiple flags can be logically
+OR'ed together.
+
+    SPRInit(0, 2, 16, SPR_FLAG_ADD_REVERSE);
+
+-------------------------------------
+  Double buffering sprite structure
+-------------------------------------
+Previously when your program called SPRDraw() it could not change any
+sprite attributes until the renderers were finished, confirmed by a
+call to SPRWait().
+
+Now you can optionally have the library make a copy of all sprites and
+pass those to the renderers.  You are then free to alter the 
+originals, which allows both the main program and the renderers run 
+freely at the same time.
+
+To use this feature, pass in SPR_FLAG_DOUBLE_BUFFER to the "flags"
+parameter when calling SPRInit().  Multiple flags can be logically
+OR'ed together.
+
+    SPRInit(0, 2, 16, SPR_FLAG_DOUBLE_BUFFER);
+
+Once you do this you can then remove any SPRWait() calls after 
+SPRDraw().  Or if you used to pass in a "1" to the "wait" parameter
+to SPRDraw() you can now pass zero instead.
+
+------------------------------
+  Renderers clear the screen
+------------------------------
+The first parameter passed to SPRDraw() tells the library whether to
+clear the screen or not before starting rendering.  The original 
+library clears the sprite in C code on MPE3.  It does this efficiently 
+by doing DMAs of 8x8 blocks.  However, this is still not as fast as if
+the renderers themselves did the dirty work.
+
+The new library moves the clearing duties to the renderers.  When
+combined with the double buffering above this allows the main program
+to continue executing program code rather than waiting for DMAs to
+finish.
+
+To use this feature, pass in SPR_FLAG_CLEAR_FAST to the "flags"
+parameter when calling SPRInit().  Multiple flags can be logically
+OR'ed together.
+
+    SPRInit(0, 2, 16, SPR_FLAG_CLEAR_FAST);
+
+There's really no reason not to use this flag.  The only reason it is
+optional is just in case there is a bug in the new code.
+
+
+==================
+  Change History
+==================
+2003-05-14
+----------
+o Fixed comm handler to only return -1 when handling a sprite packet.
+o Optimized "rot8" to be 13 cycles max rather than 36.  Gotta love VLIW.
