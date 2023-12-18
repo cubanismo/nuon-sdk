@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 3</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 3</H1><P>
+
+For the next example, find the "cls2.moo" include and change it into "cls3.moo".  Assemble and
+run it.  You should see the good old llama, against a background that now smoothly changes colour
+through colourspace.  The changes to the object are quite trivial to achieve this - we are just
+using three waveforms instead of only one - but let's have a butchers at the object, just to be
+sure...<P>  
+
+<PRE>
+
+;
+; cls3.moo = a MacrOObject that
+; clears a block of screen.
+;
+; This one has three wave variables.
+
+cl_s3:
+
+	.dc.s	0		    ;Prev
+	.dc.s	0			;Next
+	.dc.s	$30000		;length of param block (3 vectors)
+   	.dc.s	0           ;param address, if not local
+
+	.dc.s	0	        ;Address of ranges table, if not local
+	.dc.s	0	        ;this'll be where the command string is, if not local
+	.dc.s	clsobj      ;here's the proto
+	.dc.s	0
+
+    .dc.s   cl_s3_end-cl_s3   ;total object size
+    .dc.s   0,0,0
+    
+    .dc.s   0,0,0,0
+
+</PRE>
+The header is unchanged, except that in long 3, we now specify 3 variable parameters.
+<PRE>
+
+; Now, here are vectors describing the waves.
+
+    .dc.s   0       ;This is the base phase.
+    .dc.s   0       ;This is the phase offset.
+    .dc.s   $a000 ;This is the wave's speed.
+    .dc.s   2       ;This is the Type - a Sine wave.
+
+    .dc.s   0       ;This is the base phase.
+    .dc.s   0       ;This is the phase offset.
+    .dc.s   $f000 ;This is the wave's speed.
+    .dc.s   2       ;This is the Type - a Sine wave.
+
+    .dc.s   0       ;This is the base phase.
+    .dc.s   0       ;This is the phase offset.
+    .dc.s   $16000 ;This is the wave's speed.
+    .dc.s   2       ;This is the Type - a Sine wave.
+
+</PRE>
+And here are the three waveform definitions.  They are all sinewaves; only the speeds are
+different.
+<PRE>
+
+; This Object now has a local Ranges table.
+
+    .dc.s   0       ;Zero is always udeful.
+    .dc.s   $14     ;This is the minimum colour value.
+    .dc.s   $f0     ;This is the maximum.
+    .dc.s   $0       ;No other ranges are defined yet.
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+
+</PRE>
+The Ranges table is exactly as it was before.
+<PRE>
+         
+; This Object also has a local command string.
+
+    .ascii  "A[12]=c0"    
+    .ascii  "B[12]=c1"    
+    .ascii  "C[12]=c2:"    
+
+	.align.v
+
+cl_s3_end:
+
+</PRE>
+Finally, here is the command string.  As you can see, the main difference is that now we
+evaluate three waveforms, A, B and C, instead of just A, as in the previous example.  The
+range used for each is the same - $14 to $f0 - yielding values that are legal for the byte-size Y, Cr and
+Cb fields of parameter "c" in the destination structure.  The result of making all three waves run
+at different speeds is the continuously changing background colour that you see.  Examine the hex values in
+the third long of the first OLR object, to verify that they are indeed changing according to the waves.<P>
+
+Next up, we're going to get to grips with that llama, and introduce a new type of variable parameter - the
+positional parameter.  Check out the <A HREF="hlob4.htm">next example</A>.<P>
+
+</BODY>
+</HTML>
+
+</BODY>
+</HTML>

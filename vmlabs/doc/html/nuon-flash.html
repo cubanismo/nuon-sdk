@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: nuon-flash.html,v 1.11 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Flashing 
+  your dev system with <font face="Courier New, Courier, mono">nuon-flash</font></B></FONT></FONT></FONT></P>
+<p><!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --><p></p>
+<table width="100%" border="0">
+  <tr>
+    <td><img src="images/nuon-flash-1.jpg" align="left" alt="Main nuon-flash window."></td>
+    <td>
+      <p><span class="Filename">nuon-flash</span> is a GUI based utility that 
+        can simplify flashing your dev system. It is especially useful if you 
+        need to switch frequently between the flash images shipped with the SDK 
+        and a component that you are currently developing.</p>
+      <p>The current version of <span class="Filename">nuon-flash</span>, 0.05, 
+        is a Beta version. Most functions are stable and reliable, but there may 
+        still be some rough edges in the operation or interface.</p>
+      <p>&nbsp;</p>
+</td>
+  </tr>
+</table>
+<p>Because <span class="Filename">nuon-flash</span> is still under development, 
+  the windows and text displayed when you use the tool may vary from those shown 
+  in this document. As well, the screen captures shown here may not be 100% stylistically 
+  consistent with each other.</p>
+<h2>Invoking <font face="Courier New, Courier, mono">nuon-flash</font></h2>
+<p>After installing the SDK, you can invoke <span class="Filename">nuon-flash</span> 
+  from any command prompt under Windows or Linux by simply typing <span class="UserInput">nuon-flash</span>.</p>
+<h3>tcl/tk</h3>
+<p><span class="Filename">nuon-flash</span> requires tcl/tk version 8.1 or later. 
+  This should not be a problem on Linux systems.</p>
+<p>Under Windows, you must have the tk's <span class="Filename">wish</span> program 
+  installed in <span class="Filename">C:\Program Files\tcl\bin\</span>. You are 
+  required to have either the 8.1 version (<span class="Filename">wish81.exe</span>) 
+  or the 8.3 version (<span class="Filename">wish83.exe</span>) in this directory.</p>
+<h2>Interface Overview</h2>
+<p><span class="Filename">nuon-flash</span>'s interface window consists of 3 main 
+  panels:</p>
+<ul>
+  <li>the option selections;</li>
+  <li>the control buttons;</li>
+  <li>the feedback area.</li>
+</ul>
+<p><img src="images/nuon-flash-2.jpg" alt="Window with areas called out"></p>
+<p>The option selections control what <span class="Filename">nuon-flash</span> 
+  will do to your dev system.</p>
+<p>The control buttons invoke the various functions of <span class="Filename">nuon-flash</span>.</p>
+<p>The feeback area tells you what <span class="Filename">nuon-flash</span> is 
+  up to.</p>
+<h3>The Option Selections</h3>
+<p>The option selections are in the upper panel of the nuon-flash interface. They 
+  control:</p>
+<ul>
+  <li>the configuration of software to be installed on the dev system;</li>
+  <li>which components will be downloaded to the dev system; and</li>
+  <li>what <span class="Filename">nuon-flash</span> will do during the flash process.</li>
+</ul>
+<h4>Configuration options</h4>
+<p>The first four rows of options control the software configuration. Options 
+  are available for developer download, system hardware configuration, video output 
+  configuration, and GUI.</p>
+<p><font face="Verdana, Arial, Helvetica, sans-serif">Developer:</font> selecting 
+  the <font face="Verdana, Arial, Helvetica, sans-serif">Yes</font> option for 
+  the configuration will download software that boots to the developer GUI. If 
+  you select <font face="Verdana, Arial, Helvetica, sans-serif">No</font> for 
+  this option, the downloaded software will boot directly to the player. This 
+  option defaults to <font face="Verdana, Arial, Helvetica, sans-serif">Yes</font>.</p>
+<p><font face="Verdana, Arial, Helvetica, sans-serif">System: </font>Select the 
+  option corresponding to your hardware: <font face="Verdana, Arial, Helvetica, sans-serif">Clear 
+  case</font> (aka &quot;heavy metal&quot;), <font face="Verdana, Arial, Helvetica, sans-serif">White 
+  box</font> (typical dev system, the one in a modified PC desktop case), or <font face="Verdana, Arial, Helvetica, sans-serif">Rev 
+  6</font>. Note that only rev 5 development systems are supported with this release 
+  of <span class="Filename">nuon-flash</span>; the rev 6 hardware is not supported 
+  in this release, and the option cannot be selected. This option defaults to 
+  <font face="Verdana, Arial, Helvetica, sans-serif">White box</font>.</p>
+<p><font face="Verdana, Arial, Helvetica, sans-serif">Video: </font>If you select 
+  <font face="Verdana, Arial, Helvetica, sans-serif">NTSC</font>, <span class="Filename">nuon-flash 
+  </span>will download firmware to support NTSC output, and configure your dev 
+  system settings appropriately. If you select <font face="Verdana, Arial, Helvetica, sans-serif">PAL</font>, 
+  <span class="Filename">nuon-flash</span> will download firmware to support PAL 
+  video output, and configure your dev system settings appropriately. This option 
+  defaults to <font face="Verdana, Arial, Helvetica, sans-serif">NTSC</font>.</p>
+<p><font face="Verdana, Arial, Helvetica, sans-serif">GUI: </font>The only supported 
+  GUI at this time is the &quot;Euro&quot; GUI. This option defaults to <font face="Verdana, Arial, Helvetica, sans-serif">Euro</font> 
+  - no selection is currently possible for this option.</p>
+<h4>Component options</h4>
+<p>The <font face="Verdana, Arial, Helvetica, sans-serif">Components:</font> option 
+  determines which firmware components will be loaded into your dev system by 
+  <span class="Filename">nuon-flash</span> when you push the <font face="Verdana, Arial, Helvetica, sans-serif">Flash</font> 
+  button. Selecting a component causes it to be loaded; deselecting the component 
+  means it will not be loaded. Available components are</p>
+<ul>
+  <li><font face="Verdana, Arial, Helvetica, sans-serif">HAL</font></li>
+  <li><font face="Verdana, Arial, Helvetica, sans-serif">BIOS</font></li>
+  <li><font face="Verdana, Arial, Helvetica, sans-serif">PE</font></li>
+  <li><font face="Verdana, Arial, Helvetica, sans-serif">GUI</font></li>
+</ul>
+<p>By default, all the components are selected.</p>
+<h4>Flash process options</h4>
+<h5>The ROM/Flash jumper</h5>
+<table width="100%" border="0">
+  <tr> 
+    <td align="right" valign="top"><img src="images/nuon-flash-3.jpg" alt="Jumper switch pause window."></td>
+    <td rowspan="2" align="left" valign="top"> 
+      <p>The first thing nuon-flash does when flashing your dev system is issue 
+        a reset command (<span class="Teletype">mload -!</span>). If you select 
+        the <font face="Verdana, Arial, Helvetica, sans-serif" size="-1">Pause 
+        to let me switch the ROM/Flash jumper option</font>, <span class="Filename">nuon-flash</span> 
+        will display a dialog window and suspend the flashing process until you 
+        click <font face="Verdana, Arial, Helvetica, sans-serif" size="-1">OK</font>. 
+        This option is for when you accidentally flash an invalid boot image into 
+        the system, and need to restore boot image.</p>
+      </td>
+  </tr>
+  <tr> 
+    <td valign="top" align="right">
+      <div align="center"><font size="-1">The image shown may vary from the appearance 
+        on your system.</font></div>
+    </td>
+  </tr>
+</table>
+This option is unselected by default.
+<h5>VMLABS_LOCAL</h5>
+<p>By default, <span class="Filename">nuon-flash</span> looks in the directory 
+  indicated by your <span class="Teletype">VMLABS</span> environment variable 
+  for the files to be downloaded. If you select the<font face="Verdana, Arial, Helvetica, sans-serif"> 
+  Search VMLABS_LOCAL for files</font> option, <span class="Filename">nuon-flash</span> 
+  will first look for these files in the directory indicated by the <span class="Teletype">VMLABS_LOCAL</span> 
+  environment variable. If it does not find the files it needs there, it will 
+  then look in the directory indicated by <span class="Teletype">VMLABS</span>.</p>
+<p>This option is unselected by default.</p>
+<p>Note that if you do not have the <span class="Teletype">VMLABS_LOCAL</span> 
+  environment variable defined, you will not be able to select this option.</p>
+<h3>The Control Buttons</h3>
+<p>There are four control buttons for <span class="Filename">nuon-flash</span>: 
+  <font face="Verdana, Arial, Helvetica, sans-serif">Reset</font>, <font face="Verdana, Arial, Helvetica, sans-serif">Flash</font>, 
+  <font face="Verdana, Arial, Helvetica, sans-serif">Defaults</font>, and <font face="Verdana, Arial, Helvetica, sans-serif">Quit</font>.</p>
+<h4>Reset</h4>
+<p>Pushing the <font face="Verdana, Arial, Helvetica, sans-serif">Reset</font> 
+  button causes <span class="Filename">nuon-flash </span>to issue a reset command 
+  (<span class="Teletype">mload -!</span>) to your dev system.</p>
+<h4>Flash</h4>
+<p>Pushing the <font face="Verdana, Arial, Helvetica, sans-serif">Flash</font> 
+  button initiates the process of flashing your dev system. <span class="Filename">nuon-flash</span> 
+  will search for the component files required by your selected configuration 
+  options. It will then display a confirmation window, describing the components 
+  to be installed (along with other possible configuration options).</p>
+<table width="100%" border="0">
+  <tr> 
+    <td width="43%" align="right" valign="top"><img src="images/nuon-flash-confirm.jpg" alt="Download confirmation window."></td>
+    <td rowspan="2"> 
+      <p>After reviewing the information, you may:</p>
+      <ul>
+        <li>click <font face="Verdana, Arial, Helvetica, sans-serif">OK</font> 
+          to proceed with the flashing process</li>
+      </ul>
+      <p>or</p>
+      <ul>
+        <li>click <font face="Verdana, Arial, Helvetica, sans-serif">Cancel</font> 
+          to terminate the process and return to the main <span class="Filename">nuon-flash</span> 
+          window.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top" align="right"><font size="-1">The window you see will vary 
+      from this one depending on your operating system and the options/components 
+      you have selected to flash.</font></td>
+  </tr>
+</table>
+<p>If you choose to proceed with the flash process, <span class="Filename">nuon-flash</span> 
+  will next reset your dev system. If you have selected the <font face="Verdana, Arial, Helvetica, sans-serif">Pause 
+  to let me switch the ROM/Flash jumper</font> option, the process will be paused 
+  at this point (see above).</p>
+<p><span class="Filename">nuon-flash</span> will then proceed to download the 
+  <span class="Filename">flashRcv</span> application to your dev system, and then 
+  pass <span class="Filename">flashRcv</span> the files to be installed. Progress 
+  of the download and flash process is tracked both in the <span class="Filename">nuon-flash</span> 
+  message area and on the monitor attached to your dev system.</p>
+<p>When the process is complete, <font face="Verdana, Arial, Helvetica, sans-serif">Done.</font> 
+  is displayed in the message area.</p>
+<p>During the flash process, the control buttons are disabled. This is to prevent 
+  inadvertant corruption of the flash image, such as might happen if you exited 
+  <span class="Filename">nuon-flash</span> or reset the dev system in the middle 
+  of the flash process. Once the flash process is complete, the control buttons 
+  are re-enabled.</p>
+<h4>Defaults</h4>
+<p>Pushing the <font face="Verdana, Arial, Helvetica, sans-serif">Defaults</font> 
+  button causes <span class="Filename">nuon-flash</span> to reset all the options 
+  to their default values.</p>
+<h4>Quit</h4>
+<p>Pushing the <font face="Verdana, Arial, Helvetica, sans-serif">Quit</font> 
+  button will exit <span class="Filename">nuon-flash</span>.</p>
+<h3>The Message Area</h3>
+<p>The Message Area is where nuon-flash displays feedback about the flash process. 
+  Normally, messages are displayed on a grey background. Error and warning messages 
+  are displayed on bright yellow and pale yellow backgrounds, respectively.</p>
+<table border="0">
+  <tr>
+    <td> 
+      <div align="right"><img src="images/nuon-flash-normal.jpg" alt="Normal message on grey background."></div>
+    </td>
+    <td align="left" valign="top">Normal message.</td>
+  </tr>
+  <tr>
+    <td> 
+      <div align="right"><img src="images/nuon-flash-error.jpg" alt="Error message on yellow back ground."></div>
+    </td>
+    <td align="left" valign="top">Error message.</td>
+  </tr>
+  <tr>
+    <td height="24"> 
+      <div align="right"><img src="images/nuon-flash-warning.jpg" alt="Warning message on light yellow background."></div>
+    </td>
+    <td align="left" valign="top" height="24">Warning message.</td>
+  </tr>
+</table>
+<p>Note that the exact appearance of the message area may vary slightly from the 
+  images shown, depending on your OS and workstation configuration.</p>
+<hr>
+<span class="Copyright"><span class="Copyright">Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">May 
+8, 2001</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>. 
+</span> </span> <!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright"><BR>
+</P>
+</BODY>
+</HTML>

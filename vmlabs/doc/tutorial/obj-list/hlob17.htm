@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 17</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 17</H1><P>
+
+For this example, you should be looking at the white "lunar lander" style spaceship.  Although its characteristics
+are very similar to the almost-Asteroids ship presented in the last example, the implementation is slightly
+different in that it uses a Command String function called <I>conditional assignment</I>.<P>
+
+Most of the object definition is straightforward, so for the purposes of this example, we will just look at the
+relevant bits of the definition, which is in <B>ship6.moo</B>:<PRE>
+
+; Variables
+
+    .dc.s   lland       ;Polyline definition
+    .dc.s   $f0808000   ;Colour     
+    .dc.s   $00100010   ;Scale   
+    .dc.s   $8000       ;Phase offset to make thrust vector correct
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000002   ;sine   (stopped)
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000003   ;cos    (stopped)
+
+    .dc.s   $b00000     ;xpos
+    .dc.s   0           ;vel
+    .dc.s   $ffe0       ;fr
+    .dc.s   $80000201   ;lim, type (bounce)
+
+    .dc.s   $780000     ;ypos
+    .dc.s   0           ;vel
+    .dc.s   $ffe0       ;fr
+    .dc.s   $80000302   ;lim, type (max)
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $cfc0
+    .dc.s   $80000078   ;Used to make thrust
+    
+    .dc.s   0,$200,0,0  ;Storage and 'G'
+
+</PRE>Here are the variables - A is mostly used for storage of constants, B and C are the directional waveforms, D and E are
+the positional variables, and F is used to make the Thrust.<PRE>
+
+; Range table
+
+	.dc.s	0
+	.dc.s	$1680000    ;max X	
+	.dc.s	$c00000     ;max Y
+	.dc.s	-$400     ;min angle inc
+	.dc.s	$400      ;max angle inc
+	.dc.s	-$f0000     ;min velocity inc
+	.dc.s	$f0000      ;max velocity inc
+	.dc.s	-$7fff0000
+	.dc.s	$7fff0000
+	.dc.s	-$f0000,$f0000,0,0,0,0,0
+
+; Command section
+
+    .ascii  "A0=h"              ;set address of polyline in object
+    .ascii  "A1=c"              ;set colour in d
+    .ascii  "c=d"               ;set colour in c
+    .ascii  "A2=e"              ;set scale
+
+</PRE>Just setting the constants out of A.<PRE>
+
+    .ascii  "@x[34]+G0=G0"      ;set rotate angle from stick in G0
+    .ascii  "G0=g"              ;set angle in object
+
+</PRE>So far, so usual.  An angle is updated in G0, and assigned to the rotate angle g in the OLR object definition.<PRE>  
+
+    .ascii  "G0*@0?C1"          ;if button 0 pressed, set phase of C to G0
+</PRE>And here is the conditional assign.  We already know from the last example that "@0" evaluates to zero if the primary firebutton
+is not pressed.  The "?" behaves exactly the same as "=", <I>if</I> the current value is not zero.  If the current value is zero, then
+<I>everything is skipped up to the next ";" character, and execution restarts with the first character after the ";"</I>.  So in this example,
+if the FIRE button is not pressed, the value in C1 is left unmolested, <I>and</I> the following two statements are skipped.<PRE>	
+    .ascii  "g+A3=B1"           ;if the button is pressed. set phase of B from angle + constant A3
+    .ascii  "@y[56]+F1=F1;"     ;if the button is pressed, inc velocity; end of conditional.
+</PRE>Provided the button was pressed, the second directional wave phase is set, and the Thrust level is incremented according to the Y-axis position
+of the joystick.<PRE>
+    .ascii  "F1*B[9:]+D1=D1"    ;increase X-velocity from sine
+    .ascii  "F1*C[9:]+E1=E1"    ;increase Y-velocity from cosine
+</PRE>As before, the X and Y velocities are incremented according to the current thrust direction and magnitude.  The range statements look a little
+weird, but for ease of interpretation, I just subtract ascii "0" from each range byte to make the index into the range-table.  So to index values
+greater than ranges(9), you have to stick in the relevant ASCII character; ":" follows "9", hence the odd-looking statements.  I had thought of using
+alpha indices in the range statements, which would be more than enough sensible indices for a 16-entru ranges table;  but since alpha indices are used
+extensively for other stuff I stuck with numeric.  If it really bugs people I will change it...<PRE> 
+    .ascii  "G1+E1=E1"          ;grav!
+</PRE>The constant at G1 is added to E1, the Y positional variable's Velocity field, to simulate "gravity".<PRE>
+     .ascii  "D0!=a<"            ;set X position
+    .ascii  "E0!=a>:"           ;set Y-position and finish
+</PRE>Finally, X and Y are set as per usual.<P>    
+
+The next ship in the demo is the pure white, proper Asteroids ship.  It behaves like a proper Asteroids ship should; I shall leave it as an exercise
+for you to have a look at its definition (which is in <B>ship1.moo</B>).  There is nothing in there which has not already been explained.<P>
+
+It is possible to use the command string to deposit values in external memory.  Although for any significant mungeing, you'd probably write a snippet
+of real MPE code to manipulate memory, for the odd little bit of tweakage, using the command string is quite handy.  In the <A HREF="hlob18.htm">next example</A>, I will add a slight
+modification to the Lunar Lander ship.<P> 
+
+</BODY>
+</HTML>

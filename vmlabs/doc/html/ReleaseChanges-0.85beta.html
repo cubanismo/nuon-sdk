@@ -1,0 +1,419 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges-0.85beta.html,v 1.4 2001/03/03 02:44:31 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK Release 0.85 Beta<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">February 12</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2001</sdfield></b></font></font></font></p>
+<hr>
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<div align="center"> 
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td>The following changes are mandatory for the SDK release. 
+        <ul>
+          <li>You <b>must</b> upgrade your debug stub to version 4.9.3. See the 
+            <a href="DebugStubInfo.html"><i>Debug Stub Info</i></a> document for 
+            details on how to do this.</li>
+        </ul>
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You <b>should</b> upgrade your flash ROM to the latest firmware 
+            versions (included in this release). See the <a href="FlashROMInfo.html"><i>Flash 
+            ROM Info</i></a> document for details on how to do this. <font color="#990000"><b>Be 
+            aware that this upgrade will disable the oldstyle joysticks!</b></font> 
+            If you require a joystick for your development and/or testing, you 
+            have 3 options: 
+            <ol>
+              <li>continue to use the old BIOS (from the 0.80 SDK);</li>
+              <li>you can obtain a new style joystick from <a href="mailto:georgec@vmlabs.com">George 
+                Campbell</a> before proceeding; or,</li>
+              <li>you can use the joystick that is packed in with a Samsung Extiva-1.</li>
+            </ol>
+            <p>See the <a href="JoystickInfo.html">Joystick Info</a> document 
+              for more information.</p>
+          </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for SDK Release.</P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=125> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=301> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=342> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Scripts, Executables 
+        and Documentation</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"><span class="Filename">sample</span> directory moved</td>
+    <td class="Text">The sample directory has been moved out of the doc directory, 
+      as requested.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>GCC 2.95.2</p>
+    </td>
+    <td class="Text"> 
+      <p>Updated Documentation:</p>
+      <ul>
+        <li><a href="./compiler.html">Summary of changes</a></li>
+        <li><a href="./gcc.hlp">gcc.hlp</a> for Windows users</li>
+        <li>gcc.info and cpp.info for Linux users</li>
+        <li><a href="./gcc.pdf">gcc.pdf</a></li>
+        <li><a href="./Hitchhikers.pdf">Hitchhiker's guide</a></li>
+      </ul>
+      <p>Added <span class="Filename">collect2</span> executable for Windows and 
+        Linux.</p>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Llama 2.74</td>
+    <td class="Text"> 
+      <p>See:</p>
+      <ul>
+        <li><a href="./html/llama_notes.html">Summary of Changes</a></li>
+        <li><a href="./llama.pdf">llama.pdf</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Linker 2.9.10</p>
+      <ul>
+        <li><span class="Filename">vmstrip</span></li>
+        <li><span class="Filename">zcoff</span></li>
+        <li><span class="Filename">vmld</span></li>
+        <li><span class="Filename">vmdump</span></li>
+        <li><span class="Filename">dump</span></li>
+        <li><span class="Filename">h2i</span></li>
+        <li><span class="Filename">coffdump</span></li>
+      </ul>
+    </td>
+    <td class="Text"> 
+      <ul>
+        <li>Library can be linked without '-l'; mentioning libfoo.a is identical 
+          to -lfoo. (However, this has not yet been implemented in mgcc.)</li>
+        <li>Supports aligned common symbols needed for Llama 2.74</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated the following Windows executables:</p>
+      <ul>
+        <li><span class="Filename">mkdir.exe</span></li>
+        <li class="Filename">sh.exe</li>
+      </ul>
+    </td>
+    <td class="Text"> 
+      <p>These executables are from a royalty-free set of Win32 gnu utilities 
+        provided at <a href="http://www.edv.agrar.tu-muenchen.de/%7Esyring/win32/UnxUtils.html">http://www.edv.agrar.tumuenchen.de/~syring/win32/UnxUtils.html 
+        </a></p>
+      <p>We also include <span class="Filename">cat.exe, less.exe, gawk.exe, echo.exe, 
+        m4.exe, diff.exe, touch.exe, which.exe, sed.exe, rmdir.exe, rm.exe, mv.exe, 
+        ls.exe, grep.exe, find.exe, chmod.exe, <span class="Text">and</span> cp.exe</span> 
+        from the above link. </p>
+      <p>Aliases for your the <span class="Filename">sh.exe</span> file can be 
+        set in <span class="Filename">$HOME\.zshenv</span>. This is very useful 
+        for making DOS command-like aliases out of shell commands, which is needed 
+        for the m3dl samples:</p>
+      <p class="UserInput">alias erase=&quot;rm -rf&quot;</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated <span class="Filename">vml_make.mk</span> and <span class="Filename">vml_make_targets.mk. 
+        </span></p>
+      <p>New <span class="Filename">vml_make_clean.mk</span> file.</p>
+    </td>
+    <td class="Text"> 
+      <p class="Text">See new <a href="./MakefileFragments.pdf">Makefile Fragments 
+        documentation</a>.</p>
+      <p class="Filename">vml_make_targets.mk</p>
+      <ul>
+        <li>Split clean command into its own file</li>
+        <li>Uses your $VMLABS_LOCAL/util directory if it exists instead of this 
+          file.</li>
+        <li>&quot;makecof&quot; target now correctly uses the LOCAL_LIB_PATH variable.</li>
+        <li>Added &quot;sdkrelease&quot; and &quot;no-target&quot; targets.</li>
+      </ul>
+      <p class="Filename">vml_make_clean.mk</p>
+      <ul>
+        <li>OBJDIR is now defined correctly</li>
+      </ul>
+      <p class="Filename">vml_make.mk</p>
+      <ul>
+        <li>Define ISEP, DIFF, AWK, SDK_VERSION, SDK_RELEASE_INFO, QUOTED_VERSION, 
+          QUOTED_RELEASE_INFO </li>
+        <li>Uses your $VMLABS_LOCAL/util directory if it exists instead of this 
+          file.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">install_linux</span> script.</td>
+    <td class="Text"> 
+      <p>Fixes some minor bugs. </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">user-setup</span> script.</td>
+    <td class="Text"> 
+      <p>Sets the vmlabs environment in .bash_profile instead of .bashrc. Please 
+        remove any reference to .vmlabs from .bashrc.</p>
+      <p>Fixes bug, now correctly sets the $VMLABS_LOCAL PATH before the $VMLABS 
+        PATH.</p>
+      <p>Now sets the LD_LIBRARY_PATH environment.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Added <span class="Filename">bin/windows/createrom.exe <span class="Text">and</span> 
+      bin/linux/createrom </span></td>
+    <td class="Text"> 
+      <p>Used to generate flash images, i.e.:</p>
+      <p class="UserInput">createrom -o extiva2.bin extiva2.rom </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Removed <span class="Filename">bin/windows/vmmpo.exe <span class="Text">and</span> 
+      bin/linux/vmmpo </span></td>
+    <td class="Text">No longer used.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Removed <span class="Filename">bin/windows/gosynth.bat, </span> 
+      <span class="Filename">bin/windows/loadwave.bat, bin/windows/logo.pcx</span></td>
+    <td class="Text">No longer used.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated Flash ROM binaries.</td>
+    <td class="Text">See <a href="./FlashROMInfo.html">Flash Rom Documentation</a>.</td>
+  </tr>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Libraries and Include 
+        files</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">lib</span> directory.</TD>
+    <TD class="Text">Now includes the source code in <span class="Filename">lib/src</span> 
+      for libraries: 
+      <ul>
+        <li>MML2D - includes the mrplib and mltxt source </li>
+        <li>MML3D</li>
+        <li>mgl</li>
+        <li>mutil</li>
+        <li>jpeg</li>
+        <li>m3dl</li>
+      </ul>
+      <p>See the <a href="./LibraryUpdates.html">Library Updates documentation</a>.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">include <span class="Text">directory</span></span>.</TD>
+    <TD class="Text">See the <a href="./IncludeFileUpdates.html">Include File 
+      Updates documentation</a>.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Platforms Tested</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center">Windows 98, Windows NT/2000, Red Hat Linux 6.2</div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Known Problems</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Firmware Problems</TD>
+    <TD class="Text"> 
+      <ul>
+        <li>PAL version: 
+          <ul>
+            <li>PAL version doesn't work correctly with the player. Movies, video 
+              games and cd VLM images are distorted with wavy lines displayed 
+              on top. This bug is being looked at and will be resolved as soon 
+              as possible.</li>
+            <li>After flashing your system to PAL mode, the Flash Programming 
+              window will be distorted when you flash the PAL/NTSC boot images 
+              again. Your boot images are being loaded into your system though; 
+              please use the output displayed on the terminal window to determine 
+              if the boot images were flashed correctly. This will be fixed in 
+              a future release.</li>
+          </ul>
+        </li>
+        <li>There is a problem playing &quot;enhanced&quot; audio cd's; they may 
+          take awhile before they begin to play. This bug is being looked into 
+          and will be resolved as soon as possible.</li>
+      </ul>
+      <p>&nbsp;</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Puffin Problems</TD>
+    <TD class="Text">On Windows 98/2000, Puffin is not working correctly with 
+      Day5 (<span class="Filename">bright.d</span>) of the tutorial; it doesn't 
+      load the <span class="Filename">dmademo.cof</span> file into the dev system. 
+      This bug is being looked at and will be fixed as soon as possible. It works 
+      correctly on Windows NT. On Linux, it loads the cof file but then core dumps.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text"> 
+      <p>Windows Unix Utilities problems:</p>
+      <ul>
+        <li><span class="Filename">find.exe</span></li>
+        <li><span class="Filename">which.exe</span></li>
+        <li><span class="Filename">mkdir.exe</span></li>
+      </ul>
+    </TD>
+    <TD class="Text"> 
+      <ul>
+        <li><span class="Filename">find.exe</span> gets confused by upper case 
+          letters; just use lower case to find a file.</li>
+        <li><span class="Filename">which.exe</span> needs the extension .exe specified 
+          executable that you are trying to find the path of.</li>
+        <li><span class="UserInput">mkdir -p</span> option doesn't work from the 
+          DOS window. Use <span class="UserInput">vm_mkdir</span> instead</li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text"> 
+      <p>Windows 98 Unix Utilities Problems.</p>
+      <ul>
+        <li><span class="Filename">cp.exe</span></li>
+        <li><span class="Filename">sh.exe</span></li>
+      </ul>
+    </TD>
+    <TD class="Text"> 
+      <ul>
+        <li><span class="Filename">cp.exe</span> has problems copying files over 
+          existing files with the same name. This problem doesn't happen on Windows 
+          2000/NT. <span class="Text">Workarounds for the problems:</span> 
+          <ul>
+            <li class="Text">Get <span class="Filename">cp.exe</span> from another 
+              set of unix utilities; i.e. <a href="http://www.mkssoftware.com/products/tk/ds_tkdev.asp">MKS</a> 
+              or <a href="http://www.cygwin.com/">cygwin</a>. We have the MKS 
+              cp.exe for internal VMLABS use at \\mammoth\NUON\MKS</li>
+            <li class="Text">Upgrade your operating system to Windows 2000/NT</li>
+          </ul>
+        </li>
+      </ul>
+      <ul>
+        <li class="Filename">sh.exe <span class="Text">has problems interacting 
+          with Makefiles that use shell commands. It works correctly on Windows 
+          2000/NT. </span><span class="Text">Workarounds for the problems:</span> 
+          <ul>
+            <li class="Text">remove sh.exe from your $VMLABS/bin directory. If 
+              you are still having problems building, get <span class="Filename">sh.exe</span> 
+              from another set of unix utilities; i.e. <a href="http://www.mkssoftware.com/products/tk/ds_tkdev.asp">MKS</a> 
+              or <a href="http://www.cygwin.com/">cygwin</a>. We have the MKS 
+              sh.exe for internal VMLABS use at \\mammoth\NUON\MKS</li>
+            <li class="Text">Upgrade your operating system to Windows 2000/NT</li>
+          </ul>
+        </li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/linux/mgcc</TD>
+    <TD class="Text">Uses hardcoded paths to libraries before using your specified 
+      library paths.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/windows/sendmidi.exe</TD>
+    <TD class="Text">Needs to be updated to use TCL81.dll. Currently it uses TCL80.dll.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<p>For changes to the SDK .84 release, please see <a href="./ReleaseChanges-0.84.html">ReleaseChanges-0.84.html</a>. 
+</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">&nbsp;</P>
+</BODY>
+</HTML>

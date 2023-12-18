@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 16</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 16</H1><P>
+<B><I>
+Almost but Not Quite the Classic Asteroids Ship</I></B><P>
+
+Somewhere in the cluster of ships, you will notice a yellow ship in the shape of the classic Asteroids
+spaceship.  Play with it and observe its behaviour - you'll need to use the primary Fire button to
+activate Thrust and (unlike a classic Asteroids ship) the degree and sign of the thrust is determined
+by the Y-axis position of the joystick.  Confirm that if you're not thrusting, the ship can be reoriented
+without actually changing its velocity vector, and that when you do thrust, the new velocity vector is pretty
+much as you would expect.<P>
+
+The definition for this almost-Asteroids ship is in <B>ship5.moo</B>, and we will inspect the entrails here to see how
+it works:<PRE>
+; Variables
+
+ 	.dc.s   $c000       ;A is used mostly for storage
+    .dc.s   $0          
+    .dc.s   $0000       
+    .dc.s   $2000000    ;Acceleration, added when button is pressed
+
+ 	.dc.s   $b00000     ;X Position 16:16
+    .dc.s   $000        ;Velocity
+    .dc.s   $ff00       ;Friction
+    .dc.s   $80000123   ;Mode (Positional, Limits [2:3], Wrap 
+
+ 	.dc.s   $780000     ;Y Position 16:16
+    .dc.s   $000        ;Velocity
+    .dc.s   $ff00       ;Friction
+    .dc.s   $80000224   ;Mode (Positional, Limits [2:4], Bounce 
+
+    .dc.s   0,0,0,$2    ;Sine wave used to generate X accel component
+
+    .dc.s   0,0,0,$2    ;Sine wave used to generate Y accel component
+
+</PRE>Actually this ship predates most of the other examples; I hadn't defined a Cosine wave-type at the time
+I made this, which is why both the "steering" waveforms are of the Sine type.  The basic idea is similar though -
+one vector holding some constants, two positional variables, and two sinusoidal ones for steering the ship.  Note
+also that the Friction is set to less than 1.0 on the X and Y velocity variables.<P>
+I also note that I forgot to set the Waveform Stop bits on the steering waveforms - but since the wave speed
+multiplier is zero anyway, that doesn't actually matter.<PRE>
+
+; Ranges
+
+	.dc.s	-$7f0       ;Rotate speed limits
+	.dc.s	$7f0	
+	.dc.s	0
+	.dc.s	$1680000    ;X position max
+	.dc.s	$f00000     ;Y position max
+	.dc.s	-$20000
+	.dc.s	$20000
+	.dc.s	-$8000000   ;accel min
+	.dc.s	$8000000    ;accel max
+	.dc.s	0,0,0,0,0,0,0
+
+; Command
+
+    .ascii  "@x[01]+D1=D1"      ;add phase from joy X to D1
+    .ascii  "D1=g"              ;sets rotate angle from D1
+</PRE>This much you have seen before - maintaining a rotate angle in D1, setting it into <B>g</B> to rotate the
+image of the ship.<PRE>
+    .ascii  "D1+A0=E1"          ;set phase of E to phase of D offset by -1/4
+</PRE>Now the correct phases are set in the directional wave variables.<PRE>
+    .ascii  "@y[78]~*@0=A2"          ;add thrust to A2 (evaluates to 0 if button not pressed)
+</PRE>There are a couple of extra things here.  First there's that "~".  This command means "negate the current value".
+I'm negating the result of the "@y[78]", to get the correct sign for the Thrust value.  However, if the Fire button is not
+pressed, I don't want any Thrust at all, and that is what "*@0" accomplishes.  "@0" is a special value meaning "<A HREF="joybits.htm">joystick button 0</A>",
+in this case the primary FIRE button.  The value returns $7fffffff if the button is pressed, or 0 if it is not.  This value is
+multiplied with the current value (the "*" preceding "@0").  So the final result
+of this statement is the thrust level from "@y[78]+" if the button is pressed, and zero if it is not.<PRE>
+    .ascii  "A2*D[56]+B1=B1"          ;set X vel
+    .ascii  "A2*E[56]+C1=C1"          ;set Y vel
+</PRE>The difference from before here is that we are adding to the ship velocities, rather than setting them directly.  In effect,
+the thrust-level specifies an acceleration rather than an absolute velocity.  This means the ship behaves in a proper <I>Asteroids</I>ly
+manner, as God and Ed Logg intended.<PRE>
+    .ascii  "B0!=a<"            ;xpos = int of B's positional
+    .ascii  "C0!=a>:"           ;ypos = int of C's positional  
+</PRE>Finally the position is set from the positional variables, as per always.<P>
+
+Next up, we'll look at an alternative approach, which uses a command-string option that has not yet been used in the examples  - <A HREF="hlob17.htm">Conditional Assignment</A>.<P> 
+
+</BODY>
+</HTML>

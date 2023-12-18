@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 6</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 6</H1><P>
+
+Rignt, here's a quick one.  Change the .include "llama2.moo" to "llama3.moo" and re-assemble.
+You should see a llama that accelerates and bounces under "gravity".  This is a simple and
+straightforward modification to the previous object.  Check out the definition of "llama3.moo"...
+
+<PRE>
+
+;
+; llama3.moo = a MacrOObject that
+; defines a vector llama with simple
+; motion
+
+llm3:
+
+; header
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$03020000		;3 longs of local data, 2 variables
+	.dc.s	0			;Address of parameter block if not local
+
+</PRE>
+I've added one longword of additional local data.  Apart from that, everything is the same.
+<PRE>
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype to use
+	.dc.s	0				;no secondary data
+
+	.dc.s	llm3_end-llm3		;length
+	.dc.s	0				;init routine (called when object is first generated)
+	.dc.s	0,0
+
+	.dc.s	0,0,0,0
+
+; variables
+
+ 	.dc.s   $b00000     ;xpos
+    .dc.s   $10000      ;vel
+    .dc.s   $10000      ;fr.
+    .dc.s   $80000201   ;mode (bounce), limits
+
+ 	.dc.s   $200000     ;ypos
+    .dc.s   $0          ;vel
+    .dc.s   $ff40      ;fr.
+    .dc.s   $80000202   ;mode (bounce), limits
+
+</PRE>
+Notice that I have changed the "friction" value in the y-position motion vector; also,
+I have set the initial velocity to zero and started the llama off higher up the screen.
+The friction value is less than 1.0 in 16:16 fixed point format - so successive "bounces"
+will get less high until the llama comes to rest on the "ground".
+<PRE>
+
+; ranges
+
+    .dc.s   0,$1680000,$f00000,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+
+; local secondary data space
+
+    .dc.s   llama       ;vector list address
+    .dc.s   $01000100   ;scales
+    .dc.s   $600        ;constant to add to Y velocity    
+
+</PRE>
+I have added an extra constant here.  The magnitude of that third value determines how
+strong the "gravity" is.
+<PRE>
+
+; command
+
+    .ascii  "_c+B1=B1"  ;add _c to B1
+    .ascii  "A0!=a<"    ;set xpos
+    .ascii  "B0!=a>"    ;set ypos
+    .ascii  "_a=h"      ;set VL address
+    .ascii  "_b=e:"     ;set scales        
+
+    .align.v
+
+llm3_end:
+
+</PRE>
+The only difference to the command string from the previous object is the first line.
+In a positional variable, the velocity is held in the second longword of the vector.  So,
+by adding a constant value to the velocity we can produce acceleration - which is basically what gravity
+is.  There is a "+" operator that is used to add two values; so the "gravity" is produced by the statement
+"_c+B1=B1", which is interpreted as "get the third long out of the secondary data, add the value in the second
+long of the B vector, and stuff the result back in the second long of the B vector".<P>
+
+The result is a nice, bouncy llama.<P>
+
+In the next example, we'll combine the positional stuff we just did with some waveforms, to generate a nice,
+interesting, complex object path, to make a very <A HREF="hlob7.htm">wibbly llama</A>.
+<P>
+
+
+</BODY>
+</HTML>

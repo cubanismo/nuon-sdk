@@ -1,0 +1,371 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 9</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 9</H1><P>
+
+<B><I>Running Code on Other MPEs</I></B><P>
+
+Whereas the low-level object list renderer uses a clump of MPEs to render the screen,
+the high-level object list system runs on just one MPE while it traverses the HL
+object list.  Provided at least two MPEs have been allocated to the object list systems,
+that means there is at least one MPE going spare whilst the HL list is being traversed.<P>
+
+It is often useful to be able to run a piece of code that is associated with a particular
+object.  Many of my warp and cloudscape effects use small, 16x16 bitmaps called <I>source textures</I> as
+the "seed" for the effect.  By dynamically manipulating these source textures, the resultant display can
+be made to frob and ooze in a most satisfying manner.  We'll have a look at some of these effects in future
+examples.  Twiddling the source texture could be done by the OLR, but since the textures are so tiny, it is unlikely
+that any benefit would be obtained from running the code to do the tweaking on multiple MPEs using the OLR.  It would
+be better to be able to run the source-tile manipulation code before starting up the OLR, and in fact that is what can
+be done using the high-level object system.  We have already seen that an object can cause a small bit of local code to be
+run when it is first created; it is also possible to have code run every time that object is updated, and that code can be
+either local or on a remote MPE.<P>
+
+For the first example of running external code, we're gonna revert back to one of the very first examples.  You may want to
+change <B>ol_demo2.s</B> so that <B>initlist = basic_initlist</B> (and <B>drawloop = drawframe_hl</B> as well, but if you are on this example,
+then it probably is already correct), and re-assemble to remind yourself of what was going on.<P>
+
+Remember the OLR List Viewer, which allowed you to inspect the hex values of the first few objects in the OLR list?
+That is generated using Subtype 04 on <B>ol_warps.s</B>, which takes as one of its inputs, a character map in external
+memory.  If you load up the file <B>test.chm</B> in an editor, you can inspect the character map that is used for the OLR
+inspector.  The first sixteen longs define the palette LUT used on the character screen; the actual character map then follows,
+21 rows of 48 characters each.  Characters under 127 are displayed characters (where defined); if bit 8 is set in a character
+then bits 0-3 set the foreground colour from the palette LUT, and bits 4-6 set the background colour.  This is a simple serial-attribute
+character map, and although not particularly glamorous it is perfectly adequate for the odd bit of text for debugging and snooping.<P>
+
+Of course the character map can't update itself with the correct character codes to show the first five OLR objects in SDRAM.
+A little bit of code needs to do that; quite a simple task really - just read the values out of SDRAM, convert them to hex
+characters, and shove them in the right place on the character map that will be used by the OLR to draw the character screen.
+This task is ideal to run as an external task launched by the HL object list system, and the following code is what actually runs:<P>  
+
+<PRE>
+
+; olrlister.s
+;
+; show the contents of the first 5 OLR objects
+
+	.include	"merlin.i"
+    .include    "ol_demo.i"
+
+</PRE>The usual .includes for anything that is OLR-compliant.<PRE>
+
+    .segment    local_ram
+    
+_base = init_env
+
+ctr = _base
+mpenum = ctr+4
+logical_mpenum = mpenum+4
+memstat = logical_mpenum+4
+dest_screen = _base+16
+dest = dest_screen+4
+rzinf = dest_screen+16
+object = rzinf+16
+
+</PRE>The usual stuff for anything that is OLR-compliant.  At the very least, an
+external routine should maintain the integrity of the first 8 longs from <B>_base</B>, since
+the Status stored there is used by all the MPEs in the OL system, and completion of the external
+routine is flagged in longs 5-8 of Status.  If any of the other values are smashed, the HL object
+system will still run OK, but the OLR environment will need to be reloaded before starting up OLR.
+<PRE>
+
+RecipLUT = object+64
+SineLUT = RecipLUT+512
+RSqrtLUT = SineLUT+1024
+
+</PRE>If nothing but OLR and the HL object system have been running on the MPEs, and all objects
+flag their use of the math table space correctly, then bits 0-2 of <B>memstat</B> should correctly indicate
+which tables are still in RAM.  Often, though, the MPE will have been used for something else, so it is probably
+safest to assume that all the math tables are karked, if that is the case.  Whatever; this example doesn't need any
+math tables anyway.<PRE>
+
+dma__cmd = RSqrtLUT+768
+
+line_buffer = dma__cmd+32
+
+    .origin line_buffer+128
+
+membuf: .ds.s   80
+
+</PRE>All we need is a line-buffer, which will hold one line of the character-map at a time; and a memory
+buffer, to read in the memory block from SDRAM that we want to inspect.  Oh, and the usual bit of space for
+setting up DMA commands.<PRE>
+
+inspect = r20
+screenpos = r21
+obnum = r22
+
+    .segment instruction_ram
+    .origin $20300000
+
+
+    st_s    #($20100000+4*1024),sp
+    copy    r2,screenpos
+    copy    r3,r1
+    jsr dma_read
+    mv_s    #membuf,r2
+    mv_s    #80,r0
+    jsr dma_finished,nop
+    mv_s    #membuf,inspect    
+
+</PRE>First, read in the memory block we are looking at from SDRAM.  In case you are
+wondering where the values in r2 and r3 come from - the answer is that they come from
+the HL Object system, and are passed over when the external process is launched.  For now,
+I'll just tell you that r2 contains the external address of the character map, and r3 contains
+the address of the SDRAM to look at.<P>
+
+After the memory is loaded, the start of the memory buffer is loaded into <B>inspect</B>.<PRE>
+
+    add #112,screenpos
+    st_s    #20,rc0         ;number of lines
+    sub obnum,obnum
+
+</PRE>Firse <B>screenpos</B> is updated to point at the start of the first line to write data.  Adding
+112 skips the palette (64 bytes) and the title line (48 bytes).  <B>rc0</B> is set up for 20 lines of
+data, and <B>obnum</B>, which will be used to make the 2 digit object number at the start of each line,
+is initialised to 0.<PRE>
+     
+nuline:
+    
+    copy    screenpos,r1
+    jsr dma_read
+    mv_s    #12,r0
+    mv_s    #line_buffer,r2
+    jsr dma_finished,nop
+
+</PRE>One line of the character map is snarfed into line_buffer.<PRE>
+     
+; write the object number
+
+    mv_s    #line_buffer+5,r1
+    asr #2,obnum,r2
+    jsr heXer
+    lsl #24,r2
+    mv_s    #2,r3            
+
+</PRE>The routine <B>heXer</B> is used to write the object number to the two character
+locations starting at line_buffer+5.<PRE>
+     
+; write 4 hex numbers on this line
+
+    mv_s    #4,r0
+    mv_s    #line_buffer+9,r1
+hexl:
+    mv_s    #8,r3           ;no. of digits
+    ld_s    (inspect),r2    ;value to display
+    jsr heXer
+    add #4,inspect
+    nop
+    sub #1,r0
+    bra ne,hexl,nop
+
+</PRE>Four longwords are read in from <B>(inspect)</B>, and <B>heXer</B> is used to convert those into 8-digit hex
+numbers, starting at line_buffer+9.<PRE>
+
+; write out done line
+        
+    copy    screenpos,r1
+{
+    jsr dma_write
+    add #48,screenpos
+}    
+    mv_s    #12,r0
+    mv_s    #line_buffer,r2
+    jsr dma_finished,nop
+
+</PRE>The updated line is written back out to the character map.<PRE>
+
+    add #1,obnum            ;use this linecount to make the object-number    
+    dec rc0
+    bra c0ne,nuline,nop
+
+</PRE>Increment the line number, loop for all the lines.<PRE>
+
+; get MPE-number
+
+    ld_s    configa,r0
+    nop
+    bits    #4,>>#8,r0
+
+; flag completion externally (single MPE process)
+
+fin:
+
+    copy    r0,r4
+    sub r6,r6
+
+    st_s    r6,object
+    lsl #2,r4
+    mv_s    #status+16,r1
+    add r4,r1
+    jsr dma_write
+    mv_s    #object,r2
+    mv_s    #1,r0
+    jsr dma_finished,nop
+
+HaltMPE:
+
+	halt
+	nop
+	nop
+
+</PRE>Finally, flag completion and shut down the MPE.<PRE>
+
+heXer:
+
+; used to write out hex-numbers
+
+    push    v2,rz
+heX:    
+{
+    jsr wriB    
+    rot #28,r2,r12
+}    
+    lsl #4,r2
+    bits    #3,>>#0,r12    
+    sub #1,r3
+    bra ne,heX
+    add #1,r1
+    nop
+    add #1,r1
+    pop v2,rz
+    nop
+    rts
+
+</PRE>This simple routine writes out nybbles as hex numbers.  It assumes that characters 0-F are defined
+as their hex numeric equivalents.<PRE>
+
+wriB:
+
+; write byte r12 to the address at r1
+
+{
+    lsr #2,r1,r8
+    mv_s    r1,r9
+}                
+    lsl #2,r8
+{
+    ld_s    (r8),r10
+}
+    bits    #1,>>#0,r9      ;offset...
+{
+    mv_s    #$ffffff,r11
+    lsl #24,r12
+}
+    lsl #3,r9               ;offset*8
+    rot  r9,r11
+    ls  r9,r12
+    and r11,r10
+    rts
+    or  r12,r10
+    st_s    r10,(r8)
+                                 
+</PRE>And this routine is just a quick hack to let the hex conversion routine store bytes.</PRE>
+
+    .include "dma.s"
+
+</PRE>Finally the usual DMA gubbins is included, and that's about it.<P>
+
+Writing code to run externally is pretty simple, then - just don't mash the OLR data structure in local RAM if you
+can manage it, and you're basically OK to get up to whatever you want.  But how is the external routine invoked from the
+HL object system?  Well, take a look at the <B>olrlister.moo</B> object:<P>
+
+<PRE>
+
+;
+; olrlister.moo = a MacrOObject that
+; displays the first 5 OLR objects on a charactermap overlay.
+
+olrl_s:
+
+	.dc.s	0		    ;Prev
+	.dc.s	0			;Next
+	.dc.s	($02000080|lister)	    	;length of param block
+   	.dc.s	0           ;param address, if not local
+
+	.dc.s	null_ranges	    ;Address of ranges table, if not local
+	.dc.s	0	            ;this'll be where the command string is, if not local
+	.dc.s	chscreenobj          ;here's the proto
+	.dc.s	0
+
+    .dc.s   olrl_s_end-olrl_s   ;total object size
+    .dc.s   0,0,0
+    
+    .dc.s   0,0,0,0
+
+    .dc.s   charmap,ROLRam
+
+    .ascii  "_a=c"
+    .ascii  "_b=d:"
+
+	.align.v
+
+olrl_s_end:
+
+</PRE>It's a little tiny object, really; no variables to speak of, and only a couple of address setups to be done.
+Look at the third longword of the first vector, where, as well as the 2 longs of secondary storage being declared (there are
+a couple of constants stored there), there's something going on in the low byte.<P>
+
+Bits 0-7 of this longword define a routine that is called every time the object is updated, that is, once per frame, if the
+object is on an active object list.  If bit 7 is zero, then bits 0-6 make an index into the local routines table within
+<B>moo_cow.s</B> - which we already saw being used to generate the variations on the Llama object in the multiple object-initialisation
+demo.  If the code associated with an object is quite small, and does not take long to execute, then it is economical to shove
+it into <B>moo_cow.s</B> and call it locally.<P>
+
+If bit 7 is set, however, then bits 0-6 define an external routine number.  This is the number of the routine's position in the
+Routines table, and looking at the binaries included at the start of <B>ol_demo2.s</B> you can see where <B>lister</B> is defined.<P>
+
+<PRE>
+; function numbers
+;
+    warps = 0   
+    line = 1
+    hl_obj = 2
+    sourcetile = 3
+    sprite = 4
+    circle = 5
+    test = 6
+    olr = 6
+    lister = 7      ;now all I need are routines called Rimmer, Cat and Kryten
+
+binaries:     
+
+; here are the binary images of the available object routines.
+
+    .include    "ol_warps.hex"     ;various useful warps
+    .include    "ol_line.hex"       ;line/polyline
+    .include    "moo_cow.hex"       ;high level OL code
+    .include    "sourcetile.hex"    ;sourcetile pattern generator
+    .include    "ol_sprite.hex"     ;OL sprites
+    .include    "ol_circle.hex"     ;OL circles
+    .include    "test_ob.hex"       ;the OLR test object
+    .include    "olrlister.hex"     ;HL object that uses a charmapped screen to show the OL
+    .dc.s   $f00baaaa               ;function list terminator  
+</PRE>
+
+So, setting the low byte to ($xxxxxx80|lister) tells the HL object system to launch the <B>olrlister</B> code on a free MPE, once
+every time the object is updated.  The target MPE is chosen as the first idle MPE in the declared block of rendering MPEs.  So,
+if you had <B>n_mpes=3</B> and <B>base_mpe=1</B> with no other external processes running, the first external process would be loaded onto
+MPE2 (MPE1 would already be running the HL object system itself).  If another process were invoked before MPE2 were finished, it
+would go onto MPE3.  If all the MPEs in the block were busy then the HL object system would wait until one became free and it
+could launch the external process, before continuing.<P>
+
+Note that at present, this means that if <B>n_mpes</B> is set to 1, then any object list containing objects that use external routines will fail!
+In a future release I shall probably make a modification which will allow external processes to be run after the high-level OL routine has
+finished, using the same MPE, in the case where only one MPE is allocated to the OL systems.<P>
+
+It is useful for the HL object system to be able to pass parameters to the external routine that is being launched.  To this
+end, the first four longwords of local, OLR-object-creation space are passed to the remote routine, and appear in registers r0-r3
+when the routine begins to run.  In the case of this object, the small snippet of command string sets up the external address of
+the character map - <B>charmap</B> - and the address of the memory to inspect - <B>ROLRam</B> - in slots <B>c</B> and <B>d</B> of the generated
+OLR Character Map object.  They therefore show up in <B>r2</B> and <B>r3</B> of the external process, as noted in the example external process code.<P>
+
+Proceeding to the next example, we'll have a look at a more complex example of the kind of object that uses an external routine - in this case,
+the Source Tile generator that I mentioned back at the start of this page.  Along the way I'll show how the HL object waveform variables can be used
+to do framewize animation sequencing, and then we'll use a couple of the goodies tucked away in <B>ol_warps.s</B> to make some very pretty displays indeed.  <A HREF="hlob10.htm">Next please!</A>
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: biosver.html,v 1.23 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>BIOS 
+  Version Info</B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem -->If 
+you are running the fractals boot rom, you can use the biosver program to determine 
+the BIOS version you are currently running on your dev system. 
+<h2>Checking the BIOS version under Windows</h2>
+<p>cd to the NUON executable directory and run the <span class="Filename">biosver.bat 
+  </span>script. Once the information has printed, you may press control-c to 
+  terminate the program. You should see results such as the following:</p>
+<blockquote>
+  <p><span class="Teletype">N:\&gt;<span class="UserInput">cd %vmlabs%\bin\NUON</span></span></p>
+  <p><span class="Teletype">N:\SDK\bin\NUON><span class="UserInput">biosver</span><br>
+    Loading 'biosver.cof' into mpe 3<br>
+    Loaded in 0.148 seconds, 226162 bytes/second <br>
+    Starting mpe 3 <br>
+    Serving files (type control-c to exit)... <br>
+    BIOS: major_version = 0<br>
+    minor_version = 58<br>
+    vm_revision = 0<br>
+    date_string: Feb 10 2000 <br>
+    info_string: BIOS ROM version 0.58.00.00 for "vmlabs". Copyright (c)1998-2000 
+    VM Labs, Inc. All rights reserved.</span></p>
+  <p><span class="Teletype">N:\SDK\bin\NUON> </span></p>
+</blockquote>
+<p>This system is running an old version of the BIOS, and should be updated.</p>
+<h2>Checking the BIOS version under Linux</h2>
+<p>cd to the NUON executable directory and run the <span class="Filename">biosver.sh</span> 
+  script.</p>
+<blockquote> 
+  <p class="Teletype">[joeuser@trike ~]$ <span class="UserInput">cd $VMLABS/bin/NUON</span><br>
+    [joeuser@trike NUON]$ <span class="UserInput">biosver.sh</span> <br>
+    <span class="Teletype">Loading 'biosver.cof' into mpe 3<br>
+    Loaded in 0.148 seconds, 226162 bytes/second <br>
+    Starting mpe 3 <br>
+    Serving files (type control-c to exit)... <br>
+    BIOS: major_version = 0<br>
+    minor_version = 58<br>
+    vm_revision = 0<br>
+    date_string: Feb 10 2000 <br>
+    info_string: BIOS ROM version 0.58.00.00 for "vmlabs". Copyright (c)1998-2000 
+    VM Labs, Inc. All rights reserved.<br>
+    </span>Interrupt, aborting.<br>
+    [joeuser@trike NUON]$<FONT SIZE=3><FONT COLOR="#000000"><SPAN STYLE="background: transparent"> 
+    </SPAN></FONT></FONT></p>
+</blockquote>
+<p>This system is running an old version of the BIOS, and should be updated</p>
+<hr>
+<span class="Copyright"><span class="Copyright">Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">August 
+8, 2000</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>. 
+</span> </span> <!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright"><BR>
+</P>
+</BODY>
+</HTML>

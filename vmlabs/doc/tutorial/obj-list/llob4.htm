@@ -1,0 +1,266 @@
+<HTML>
+<HEAD>
+<TITLE>Adding new object types to the OLR</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Adding new object types to the OLR</B></H1><P>
+
+As I mentioned in the introduction to the OLR, it is actually very easy to add new
+object types to the OLR system, provided you work within certain constraints.  In order to
+show the basics of how to define a new object, I'll use as an example the extremely simple
+object, <B>test_ob</B>, that is included in the list of available objects from the previous example.<P>
+To enable the object, edit <B>simpleolr.s</B> and change the line "jsr drawframe,nop" to "jsr drawtestframe,nop".
+This causes the OL "test_ol" to be displayed.  If you run it, then you will see that the display is quite
+boring, consisting of nothing but a set of stripes.  This is the correct display for the test object.<P>
+
+<H3>The Test Object</H3>
+
+In order to create an object that can be drawn with several processors using the OLR system, all you have to do is
+ensure that the code can clip your object to a given horizontal strip of the screen.  The OLR uses the values defined
+in <B>n_mpes</B>, <B>base_mpe</B> and <B>slice_height</B> to allocate a strip of screen to the rendering code.  All the
+code has to do is pick up a pair of Y-clip parameters, and draw whichever bit of the object lies within the screen strip
+thus defined.  The test object illustrates this nicely.<P>
+
+All the test object actually does is the following:<P>
+
+<UL>
+<LI>Determine which MPE-number it is running on.
+<LI>Choose a colour, based on that number.
+<LI>Determine the Y-clip window.
+<LI>Fill that window with the selected colour.
+</UL>
+
+The reason for the striped appearance of the screen should now be evident.  Each participating MPE is drawing stripes of
+a specific colour.  You might like to try changing around the values of <B>n_mpes</B>, <B><B>base_mpe</B></B> and <B>slice_height</B> to see
+how the display is affected.<P>
+
+The first step in making a new object is to define the 4-vector-long OLR data structure for the object, which will appear
+in the object list.  For the test object, this is extremely simple:<P>
+<PRE>
+	.dc.s	$51f05a00	;red
+	.dc.s	$91223600	;green
+	.dc.s	$306ef000	;blue
+	.dc.s	$71deca00	;pink
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	test		;object type
+</PRE>
+Most of it is unused.  The first vector contains a table of four colours - these are the colours that will be selected
+according to which MPE finds itself running the code.  The only other word containing any information is the last longword,
+which contains the object type in bits 0-7.  This longword also contains information where appropriate about the object
+subtype (bits 8-15) and math table usage (bits 16-19), but since the test object contains only one function, and does not use
+any math tables, these bits are all set to zero.<P>
+
+Now let's check out the code for the test object - "test_ol.s".
+<PRE>
+; test_ob.s
+;
+; this is a test module to check the Object List renderer
+; is running correctly.  All it does is fill horizontal
+; strips of the screen full of a colour depending on what
+; our MPE number is...
+
+	.include	"ol_render.s"	;common base code an' stuff
+
+</PRE>
+Every OLR-compliant graphics routine must include "ol_render.s".  This defines the
+memory layout for the OLR overlay system, and contains the actual overlay code; your
+graphics routine will be called from the overlay control code in this module.
+<PRE>
+
+	.segment	local_ram
+
+; it'll use the default environment, naturally...
+
+;_base   = init_env
+
+;ctr = _base
+;mpenum = ctr+4
+;logical_mpenum = mpenum+4
+;memstat = logical_mpenum+4
+;dest_screen = _base+16
+;dest = dest_screen+4
+;rzinf = dest_screen+16
+;object = rzinf+16
+;dma__cmd = object+64
+;ol_buffer = dma__cmd+32
+
+;RecipLUT = dma__cmd+128
+;SineLUT = RecipLUT+512
+;RSqrtLUT = SineLUT+1024
+;olp = RSqrtLUT+768
+
+</PRE>
+The commented stuff is the basic layout that is "inherited" by us from the OLR
+environment.  Don't be alarmed by the fact that it looks like a load of precious
+DTRAM is taken up by the math tables - those are only loaded if the relevant bits are
+set in the Type field of the object's data structure.  You can ignore them and use the
+space for your own buffers, or choose to load the tables at a different place, if you so
+desire.  However, if you do overwrite the tables' space during your routine, you should
+modify the longword at <B>memstat</B> to declare what you smashed, so that objects which
+come after yours "know" to reload the tables, if needed.  You should clear bit 0 if you smash
+the RecipLUT; clear bit 1 if you smash the SineLUT; and clear bit 2 if you smash the RSqrtLUT.
+<PRE>
+
+dma_direct = $8000000
+
+</PRE>This is the value to OR onto a dma mode to make it Direct mode.  Filling solid blocks of
+colour is ideal for Direct mode, so that's what I am going to use.
+<PRE>
+
+	.origin	olp		;dummy
+	.dc.s	0
+
+</PRE>
+At the moment, the utility routine that traverses the entries in the Binaries table and builds
+the _routines list requires that there be *some* DTRAM definitions.  I don't really need one in this
+simple example, but for the setup routine to work, I must declare one dummy longword.
+<PRE> 
+
+	.segment	instruction_ram
+
+
+test_ob:
+
+	start_line = r8
+	end_line = r9
+	fill_colour = r10
+	dma_size = r11
+	h_pos = r12
+	h_size = r13
+
+</PRE>
+Just a few reg-equates to hold a few odds and sods.
+<PRE>
+
+	push	v0,rz		;save return address
+
+; Right.  Get our logical MPE number and load a colour.
+
+	ld_s	mpenum,r0
+	nop
+	lsl	#2,r0
+	mv_s	#object,r1
+	add	r0,r1
+	ld_s	(r1),fill_colour			;get colour from object....
+
+</PRE>
+The OLR has ensured that our physical MPE number is at <B><B>mpenum</B></B>.  The object's
+4-vector-long data structure has been loaded from external RAM by the OLR, and it lives at
+<B>object</B>; so we can pick up the parameters from there.  In this case, we use the MPE number
+as an offset into the first vector, and pull out a colour that depends on which MPE we are.
+<PRE>
+
+; Okay, now get ready to fill our bit of the screen.  Get the Y
+; clip params to find out where.
+
+	ld_s	dest_screen+12,start_line
+	nop
+	lsr	#16,start_line,end_line
+	bits	#15,>>#0,start_line		;unpacked start and end line.
+
+</PRE>
+Information about the screen we have to draw on is found in the vector at <B>dest_screen</B>.  The
+first two longs contain the DMA flags and the base address, respectively.  The next two longs contain
+the X-clip params and the Y-clip params.  I'm not interested in x-clipping this simple object, so I just
+get the Y-clip params.  Bits 0-15 contain the low edge and bits 16-31 the high edge, so I unpack them
+into <B>start_line</B> and <B>end_line</B>.
+<PRE>
+
+; get the height and init a counter
+
+	sub	start_line,end_line
+    add #1,end_line         ;clip zones are inclusive start and end line
+	st_s	end_line,rc0
+
+</PRE>
+Here I'm using the clip boundaries to set the count for the height of the strip.
+What follows from here on in is pretty much straightforward DMA.  I'm not
+being fancy with it or trying to be hugely efficient - this <B>is</B> only a small
+example object, anyway.<P>
+The following code just fills the screen strip, scanline by scanline, 64 pixels
+at a time.  In a more adventurous object, you would probably calculate some
+interesting pixels into a buffer and then dma the buffer out, of course, and arrange
+for more efficient DMA usage.<P>
+<PRE>
+
+; Right, get down to it: write out that colour using direct-mode DMA.
+
+yloop:
+
+	sub	h_pos,h_pos			;start from x=0
+	mv_s	#360,h_size		;do 360 pixels worth (screen is 360 pixels wide)
+		
+xloop:
+
+	mv_s	#64,r2			;maximum DMA size
+	sub	r2,h_size			;dec the size...
+	bra	ge,noadj,nop		;still stuff to go...
+	add	h_size,r2			;adjust size if necessary
+
+noadj:
+
+; set up and launch the DMA
+
+	mv_s	#dma__cmd,r4
+	mv_s	#(dmaFlags|dma_direct),r0	;dma mode flags for this screen
+	ld_s	dest,r1			;destination screenbase
+	lsl	#16,r2				;shift X size to high word
+	or h_pos,r2				;merge position
+	copy	start_line,r3	;copy Y position
+	bset	#16,r3			;make the Y size = 1
+	st_v	v0,(r4)			;setup first part of the DMA command
+	add	#16,r4				;point at next bit
+	st_s	fill_colour,(r4)
+	sub	#16,r4
+	st_s	r4,mdmacptr		;fire away.
+
+; wait until DMA is complete
+
+	jsr	dma_finished,nop
+
+; increment X stuff and loop around
+
+	cmp	#0,h_size			;did X size go negative?
+	bra	gt,xloop			;if not, carry on
+	add	#64,h_pos			;move to next slot
+	nop
+
+; increment Y position until done
+
+	dec	rc0					;count off Y lines
+	bra	c0ne,yloop
+	add	#1,start_line		;move to next line
+	nop
+
+; done.
+
+end:
+
+	pop	v0,rz	;get back return address
+	nop
+	rts	t,nop	;all done.
+
+</PRE>
+And that's all there is to it, really.  The OLR will spread out the rendering of the object
+according to how you have set it up.  All your object has to do is clip to its Y-limits.<P>
+Apart from that, your routine can do more or less whatever the hell it likes, so long as the
+values stored at <B>_base</B> up to <B>object</B> are not destroyed.  The OLR's context is on the
+stack before your routine gets called, so all the registers can be used.<P>
+
+</BODY>
+</HTML>

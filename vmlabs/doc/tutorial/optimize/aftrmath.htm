@@ -1,0 +1,47 @@
+<HTML>
+
+<HEAD>
+<TITLE>Aftermath</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<CENTER><H1>Aftermath</H1>
+</CENTER><P>
+
+<HR>
+
+Hopefully, reading through this tutorial and looking at the examples will have shown you that, exotic though this beast may be, it's actually not too difficult to write code for, and that you <I><B>can </I></B>have fun, even using hardly any memory and only one processor!  And, if nothing else, you've got an <I>excellent </I>trip-toy to play with :-)<P>
+
+So what <I><B>mistakes </I></B>did I make during the process of making my warper?  Well, there was that <B>silly mistake of not using the UV pair</B> from the outset to traverse the source tile, knowing full well that I intended to do a bilinear interpolation. <I> I shall abase myself and say three Hail Turings</I>, for I was guilty of the sin of <B><I>not thinking in the Merlin Way</I></B> when I chose my index registers. O woe!  But it wasn't too difficult to fix though, so no harm done.<P>
+
+I also probably <B>should have figured in the extra increments for the nonlinear warp</B> while I was still planning my inner loop on the whiteboard - that way I would probably have spotted the problem with the inelegant walk around the pixel quad earlier.  However, stuff like that is going to happen to <I>you, </I>and you will one day find yourself looking at an already packed loop and trying to fit something more in.  Where there's a will and enough tea, there is often a way.<P>
+
+<I>Where do you go from here</I>?  Well, here are a few suggestions...<P>
+
+You could try and bum a few more ticks off the warper.  I concentrated almost entirely on the innermost loop and didn't really touch the outer ones much.  Practise a little simple optimisation on them and see how much speed you gain.  You'll appreciate how important that innermost loop is to the overall timing.<P>
+
+The basic framework of the warper is handy for just about any effect that traverses a destination rectangle.  You could try messing about with it and seeing what you come up with.  In fact, it's an excellent framework for testing out procedural textures with - something you might like to explore using my next document, <B><I>How to Create Groovy Procedural Textures</B></I> (which I will get around to next time I am in the mood to write documentation).<P>
+
+Remember, we only used one MPE - think about the <I>naughtiness </I>you can get up to when you start using multiple MPEs in parallel or in a pipeline...<P>
+
+Above all, <I>have fun</I>.  Merlin is a blast to code, and the things you can do with graphics will make your brain bleed.<P>
+
+Happy hacking... and <B><I>enjoy your LLAMA...</I></B><P>
+
+
+<CENTER><IMG BORDER=3 SRC = "llama.jpg"><P>
+
+<B><I><FONT SIZE=+2>...I certainly enjoyed mine!</CENTER></I></B><P>
+
+<HR>
+<PRE>
+<A HREF="warp6.htm">jmp prev</A>
+<A HREF="llama.htm">rts</A>
+nop
+nop
+</PRE>
+</BODY>
+</HTML>
+
+

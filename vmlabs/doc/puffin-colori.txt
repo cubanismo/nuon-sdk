@@ -1,0 +1,27 @@
+VERSION INFO: $Id: puffin-colori.txt,v 1.1 2000/10/11 22:33:07 cheiny Exp $
+
+(MAKE-COLOR-IMAGE width height) --> image
+
+(DESTROY-COLOR-IMAGE image) --> #f
+
+(COLOR-IMAGE-VALID? image) --> boolean
+
+(COLOR-IMAGE-WIDTH image) --> width
+
+(COLOR-IMAGE-HEIGHT image) --> height
+
+(COLOR-IMAGE-SIZE image) --> size
+
+(SET-PIXEL! image x y r g b) --> status
+
+(SET-PIXEL-BLOCK! image x y luminance-values chrominance-values) --> status
+
+(GET-PIXEL image x y) --> r g b
+
+(GET-PIXEL-BLOCK image x y) --> luminance-values chrominance-values
+
+(LOAD-COLOR-IMAGE filename) -> image
+
+(DUMP-COLOR-IMAGE image filename) --> status
+
+(GET-COLOR-BY-NAME name) --> r g b

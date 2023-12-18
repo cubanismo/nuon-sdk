@@ -1,0 +1,213 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Updating Your Flash ROM</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Updating Your Development System's Firmware</h1>
+
+<h2 align="center"><font color="#FF0000">WARNING: These instructions are for revision 5.x
+systems only!</font></h2>
+
+<div align="center">
+  <center>
+  <table border="0" cellpadding="10" cellspacing="5">
+    <tr>
+      <td align="center"><big><a href="#Checking Your Current Stub Version">Checking
+        Your Current BIOS Version</a></big></td>
+      <td align="center"><big><a href="#Boot/BIOS ROM -VS- &quot;The Stub&quot;">Boot/BIOS ROM -VS- &quot;The Stub&quot;</a></big></td>
+    </tr>
+    <tr>
+      <td align="center"><a href="#Updating ROM-based BIOS &amp; Boot Code"><big>Updating
+        ROM-Based BIOS &amp; Boot Code</big></a></td>
+      <td align="center"><a href="#Important Notes For 2000-02-13 Firmware Release:"><big>Important
+        Notes For The<br>
+        2001-02-13 Firmware Release</big></a></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<hr>
+
+<h1 align="center"><a name="Checking Your Current BIOS Version">Checking Your Current
+BIOS Version</a></h1>
+
+<p><big>There is a sample program in the SDK that can print out information
+regarding the BIOS version that is currently installed.&nbsp; Go to the
+directory:</big></p>
+<p><big>&nbsp;&nbsp;&nbsp; \VMLABS\SAMPLE\DIAGNOSTIC\SYSINFO</big></p>
+<p><big>And enter the command &quot;</big><big><b>gmake load</b>&quot;.&nbsp; If
+your system is configured correctly, the program will be built if needed, and
+then it will execute.&nbsp; If everything works right, you'll get a display on
+your TV screen with text showing the current BIOS version.</big></p>
+<p><big>If you have difficulty building or running the </big><big><b>sysinfo</b>
+program, please make sure that your system is properly configured.&nbsp; Refer
+to the <b><a href="../Hitchhikers.PDF"><i>Hitchhiker's Guide To NUON</i></a></b>
+document for information.</big></p>
+
+<hr>
+
+<h1 align="center"><a name="Boot/BIOS ROM -VS- &quot;The Stub&quot;">Boot/BIOS ROM -VS- &quot;The Stub&quot;</a></h1>
+
+<p><big>Before you update anything, please make sure you understand the
+difference between the two parts of your NUON development system which use FLASH
+ROM.&nbsp; They are:</big>
+<ul>
+  <li><big>Boot ROM / BIOS ROM -- The NUON development system has a 4mb Flash
+    ROM built into the motherboard.&nbsp; The motherboard also has a socket for
+    a ROM or EPROM.&nbsp; A jumper (labeled &quot;Flash&quot; and
+    &quot;ROM&quot;) selects which one of these is active.&nbsp; (Normally it's
+    set to FLASH).<br>
+    <br>
+    This is what we usually mean when we refer to the &quot;Flash&quot;, the
+    &quot;Flash ROM&quot;, the &quot;Boot ROM&quot; or &quot;firmware&quot;.<br>
+    <br>
+    This Flash ROM contains the BIOS (if a ROM BIOS is installed) as well as
+    whatever startup code is installed.&nbsp; Older versions of the NUON startup
+    code displayed color bars or a NUON logo graphic.&nbsp; Some more recent
+    versions would draw an animated fractal image.&nbsp; The current version
+    shows a NUON logo and text prompts that allow you to go to a system
+    configuration menu or the DVD player.<br>
+    <br>
+    The boot code does not really interact with the stub.&nbsp; The BIOS only
+    interacts to the degree that the stub may occasionally download a small
+    piece of code to do some debugging function or to speed up a data transfer.<br>
+    <br>
+    <br>
+    </big></li>
+  <li><big>Debug / Ethernet Interface Card -- The debug card in your development
+    system uses a flash ROM so that the debugging stub may be updated when
+    needed.&nbsp; However, as a general rule, the NUON documentation does not
+    refer to this as &quot;flash ROM&quot;.&nbsp; Instead, we normally refer to
+    this simply as the &quot;stub&quot;.&nbsp; We would say &quot;update your
+    stub&quot; instead of &quot;update your debug card flash ROM&quot;.<br>
+    <br>
+    The debug card contains a PowerPC 860 processor, and most of the code on the
+    stub's ROM is intended for that processor, not the NUON chip on the
+    motherboard.&nbsp; This code does not have anything to do with the BIOS or
+    the startup code, except that it must safely co-exist on those occasions
+    when it must ask one of the NUON processor's MPEs to do something.&nbsp; In
+    those cases, it may download a small piece of code to an MPE to facilitate
+    some debugging function, or to speed up transfers over the Ethernet
+    interface.&nbsp;&nbsp;<br>
+    <br>
+    Please see &quot;<a href="update_stub.html">Updating Your Stub</a>&quot;
+    for information on how to update your stub.<br>
+    </big></li>
+</ul>
+
+<hr>
+
+<h1 align="center"><a name="Updating ROM-based BIOS &amp; Boot Code">Updating ROM-based BIOS &amp; Boot Code</a></h1>
+
+<p align="center"><b><font color="#FF0000">NOTE: </font></b><font color="#FF0000">These
+instructions only apply to updates dated February 13, 2001 or later.</font>
+
+<p><big>The ROM-based BIOS and startup boot code for your Revision 5.x system may be
+updated by following the instructions below.&nbsp; Please note that if you have
+just received a NUON development system, it is probably not necessary for you to
+update it right away.</big> 
+
+<ol>
+  <li><big>Make sure your SDK is properly installed and that your <b> MD_PORT</b> environment variable
+    is set correctly.<br>
+    </big></li>
+  <li><big>Change to the <b><i>VMLABS\BIOS Update </i></b>directory.<br>
+    </big></li>
+  <li><big>Reset your development system and wait for the reset process to complete.<br>
+    </big></li>
+  <li><big>For NTSC-based systems, execute the </big><big><b>UPDATE-NTSC.BAT</b>
+    batch file.<br>
+    </big></li>
+  <li><big>For PAL-based systems, execute the </big><big><b>UPDATE-PAL.BAT </b>batch
+    file.</big></li>
+</ol>
+
+<p><big>These steps will result in a program being downloaded to your development system,
+followed by the data to be programmed into the FLASH ROM.&nbsp; Your development system's
+display will indicate the current status of the update through a progress
+bar.&nbsp; Once the update is completed, a message will be shown and you can
+then reset your system.</big>
+<hr>
+
+<h1 align="center"><font color="#FF0000"><a name="Important Notes For 2000-02-13 Firmware Release:">Important Notes For 2000-02-13
+Firmware Release:</a></font></h1>
+
+<ul>
+  <li><big>This version of the NUON BIOS no longer supports the
+    original-style prototype game controllers.&nbsp; These are the Nintendo 64
+    shells with a DB-25 cable that connect to a small black interface box, which
+    in turn connects to the NUON development system using a DB-9 cable.<br>
+    <br>
+    It is now required that you use a production controller.&nbsp; Using a small
+    adapter cable, this type of controller connects to the USB-style ports on
+    the back of the NUON development system.&nbsp; (Note that these are not
+    actually USB ports... it's just the same kind of connector.)<br>
+    <br>
+    If you do not have an actual production-style game controller, we recommend
+    that&nbsp; you do not update your BIOS until you obtain one.<br>
+    </big></li>
+  <li><big>If you're using PAL mode, there are some known problems:<br>
+    </big>
+    <ul>
+      <li><big>DVD movies will not play, although the menu still says to &quot;<i>Press
+        'A' For DVD Player</i>&quot;<br>
+        </big></li>
+      <li><big>If you run the update procedure again, the display may not be
+        configured properly while the update is in progress.&nbsp; However, this
+        will not affect the update.&nbsp; This will be fixed in a future
+        release.</big></li>
+    </ul>
+  </li>
+</ul>
+
+<hr>
+
+<h1 align="center">Synth Wavetable Data</h1>
+
+<p><big>Revision 5.x machines are equipped with a Flash ROM.&nbsp; In the past,
+it was common practice to download the
+wavetable data used by the NUON SYNTH library to this Flash ROM, where it would be
+available at all times.&nbsp; </big><p><big>This was done largely because the
+original plan was to include the wavetable data in the ROM of production
+machines.&nbsp; However, this plan changed because we determined that the
+majority of games will not use MIDI.&nbsp; Rather they will use streaming audio
+from disc for music.&nbsp; This fact made it hard to justify devoting so much
+ROM space to the SYNTH wavetable data when that space could be used by other
+things.&nbsp; Plus, since that original plan was made, the minimum RAM size of a
+NUON player has increased from 4mb to 16mb, so it just seemed like a better idea
+to RAM-load the data when necessary.</big><p>&nbsp;
+</body>
+</html>

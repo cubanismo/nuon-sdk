@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+<TITLE>Intro to the Object List Renderer</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Intro to the Object List Renderer</H1><P>
+
+The <B><I>Object List Renderer</I></B> is a means of interface to various graphics routines running on the Merlin system.
+It is being created with the following objectives in mind:<P>
+
+<B>It should be easy to use.</B>  Most game console programmers are familiar with the idea of creating a data structure
+that describes a bunch of graphical objects, and then bunging that list at a co-processor for rendering.  The OLR works
+in pretty much the same way, except that instead of a coprocessor, the rendering gets done by code running on one or more MPEs.<P>
+
+<B>It should be scalable across multiple processors.</B>  Changing the number of processors used to render a frame, and the manner
+in which the work is subdivided between those processors, is as simple as changing a couple of constants and re-assembling.<P>
+
+<B>It should be extendable.</B>  If you write your code within a few simple constraints - basically, have it pick up its parameters
+from a 4-vector-long data block, and make it able to clip to a window bounded by two horizontal lines - then you can drop it
+straight into the OLR and use it like any of the other available objects.  You can get your routines running across multiple
+processors really easily.<P>
+
+<H3>How the OLR Works</H3>
+
+The OLR expects as input an <I>Object List</I>.  This is simply a chain of successive, 4-vector-long data structures in external RAM, each
+of which defines a particular kind of object.  A Sprite object, for example, will contain information specifying the sprite
+size and position, the X and Y scale, the location of the source bitmap, the angle of rotation, and the degree of transparency
+and smoothing.  Similar structures describe Line, Polyline and Circle objects; also supplied are some more whimsical, special-effects
+objects that define Warps and suchlike.  You can extend the OLR and define any object you like.<P>
+
+Once the object list is specified in external RAM, rendering it is as easy as a couple of subroutine calls.  A call to <B><I>InitOLREnv</I></B>
+sets up a small environment-space on the target MPEs.  This contains information on the address and size of the current draw buffer,
+the clip window, and the number of processors in the rendering array.  Then, calling <B><I>LoadRunOLR</I></B> will load the OLR into the
+relevant MPEs and start them up.<P>
+
+Each MPE in the rendering array traverses the object list, reading in one object at a time.  It checks the object type to
+see if a code overlay is needed.  If the code is not already in memory (i.e. the previous object did not use the same code block), the MPE
+will overlay the relevant code.  Next, the object's usage of math tables is checked, and again, if the tables are not already
+loaded by a previous object, they are loaded in.  Finally, the rendering code is executed, after which the MPE loops around to get
+the next object from the list.  This continues until the end of the list is reached, at which time the MPE flags completion and
+shuts down.<P>
+
+In the following two examples, we will just run a couple of example Object Lists to get an idea for what the OLR is doing.
+Then, we'll take a look at setting up the OLR, and finally, look at how to add objects to the OLR system.<P>
+
+<A HREF="llob1.htm">Check out the OLR...</A>
+
+
+</BODY>
+</HTML>

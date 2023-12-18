@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: LibraryUpdates-0.85.html,v 1.9 2001/06/15 01:24:59 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Library 
+  Updates</B></FONT></FONT></FONT> </P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.85<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">March 12</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2001</sdfield></b></font></font></font></p>
+<hr>
+<P>The following library updates with this release.<b></b></P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+  <COL WIDTH=114> <COL WIDTH=367> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=240> 
+      <P>File</P>
+    </TH>
+    <TH WIDTH=532> 
+      <P>Comments</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libmml2d.a</td>
+    <td width=532 class="Text"> 
+      <p>Version 2.24</p>
+      <ul>
+        <li>Extends m2dReadPixels and m2dWritePixels to 8 bit pixels</li>
+        <li>Updated <a href="./mml2d.pdf">documentation</a>.</li>
+      </ul>
+      <p>NOTE: This library is now dependent on libmutil.a; you must include <span class="UserInput">-lmutil<span class="Text"> 
+        and </span>-lm</span> after <span class="UserInput">-lmml2d </span>when 
+        linking.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename"> 
+      <p class="Filename">librombios.a</p>
+    </td>
+    <td width=532 class="Text"> 
+      <p>Version 1.03.16.00</p>
+      <ul>
+        <li class="Text">New BIOS API _LoadDefaultSystemSettings which restore 
+          the system settings to default.</li>
+        <li><a href="./bios.pdf">Updated documentation</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename"> 
+      <p><span class="Filename">libg.a, libg_p.a, libc.a, libc_p.a</span></p>
+    </td>
+    <td width=532 class="Text"> 
+      <p>newlib version 1.7.0 nuon version 11</p>
+      <ul>
+        <li>Bug fix to memmove</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libNISE.a</td>
+    <td width=532 class="Text"> 
+      <p>Version 1.52</p>
+      <ul>
+        <li>New AUDIOScale API </li>
+        <li><a href="./GameAudio.pdf">Updated documentation</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libpe.a</td>
+    <td width=532 class="Text">Added API_HostPutString(char *str) to handle the 
+      debug output from the player more efficiently.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libmovie.a</td>
+    <td width=532 class="Text">Updated with latest version.</td>
+  </tr>
+  <tr valign=TOP>
+    <td width=240 class="Filename">crt0.o</td>
+    <td width=532 class="Text">Includes cvs tag information.</td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <td colspan="2" class="TableHeading"> 
+      <div align="center">Unchanged For This Release</div>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=240 class="Filename">libmml3d.a</td>
+    <td WIDTH=532 class="Text"> 
+      <p>Version 1.09</p>
+      <p>&nbsp;</p>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=240 class="Filename">libmltxt.a</td>
+    <td WIDTH=532 class="Text">Version 2.4</td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=240 class="Filename">libmgl.a</td>
+    <td WIDTH=532 class="Text"> 
+      <p>Version .84</p>
+    </td>
+  </TR>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libsynth.a</td>
+    <td width=532 class="Text">Version 1.4</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libjpeg.a</td>
+    <td width=532 class="Text">Version 6a</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libmutil.a</td>
+    <td width=532 class="Text">Version 1.29</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libm3dl.a</td>
+    <td width=532 class="Text">Version 3.05, (dated Sept 12 2000)</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename"> 
+      <p><span class="Filename">crt01.o, gcrt0.o, gcrt01.o, crtend.o </span></p>
+      <p><span class="Filename">libm.a, libm_p.a, libstdc++.a, libgcc.a, libio.a, 
+        libiostream.a</span></p>
+    </td>
+    <td width=532 class="Text">&nbsp;</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=240 class="Filename">libImpulse.a, libNuonImpulse.a, libImpulseEffects.a, 
+      libImpulseDebug.a, libNuonImpulseDebug.a, libImpulseEffectsDebug.a</td>
+    <td width=532 class="Text">&nbsp;</td>
+  </tr>
+  </THEAD> <TBODY> </TBODY> 
+</TABLE>
+<P>After installing the new SDK on your system, you must re-link your NUON applications.</P>
+<hr>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --><span class="Copyright"><BR CLEAR=LEFT>
+</span> 
+</BODY>
+</HTML>

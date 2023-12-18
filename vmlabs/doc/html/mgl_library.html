@@ -1,0 +1,101 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>mGL 3D Graphics Library</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">mGL 3D Graphics Library</h1>
+
+<hr>
+<BIG>
+<p>The mGL library has been updated to work with the MPE 3 processor and ROM
+BIOS.&nbsp; However, your source code will probably need changes with respect to
+MPE allocation and related issues.</p>
+
+</BIG>
+
+<p><big>Other changes include:</big></p>
+
+<BIG>
+
+<ul>
+  <li>
+    SDRAM-based
+    textures created using <span style="font-family:Courier">mglNewTexture()</span>
+    now work.<br>
+    <br>
+  </li>
+  <li>
+    SDRAM textures can now be created using <span style="font-family:Courier">mglInitJPEGTexture()</span>
+    and <span style="font-family:Courier">mglInitBMPTexture()</span>. An
+    argument was added to these functions to facilitate this. The old prototypes
+    were:<br>
+    <br>
+</BIG>
+
+<span style="font-family:Courier">GLTexture
+*mglInitJPEGTexture(JOCTET *jpeg_start, GLuint jpeg_size, mmlPixFormat pix,
+GLint scale);<br>
+<br>
+GLTexture *mglInitBMPTexture(void *bp, mmlPixFormat pix, GLint scale);</span><br>
+<br>
+<big>The new prototypes are:</big><br>
+<br>
+<span style="font-family:Courier">GLTexture *mglInitJPEGTexture(JOCTET *jpeg_start, GLuint jpeg_size,
+mmlPixFormat pix, GLint scale, GLuint sdramFlag);<br>
+<br>
+GLTexture *mglInitBMPTexture(void *bp, mmlPixFormat pix, GLint scale, GLuint
+sdramFlag);</span>
+  &nbsp;
+  <br>
+  <br>
+<big>Applications passing <span style="font-family:Courier">GL_FALSE</span> for <span style="font-family:Courier">sdramFlag </span>will function as before. This
+modification was applied to the
+  </big>
+  <big> mGL </big><big>sample programs.<br>
+  <br>
+  </big>
+  </li>
+<li><big>The header <span style="font-family:Courier">nuon/gltypes.h</span> has
+been withdrawn. Its contents are now a part of <span style="font-family:Courier">nuon/gl.h</span>.
+This makes mGL a bit more like OpenGL. Files which include <span style="font-family:Courier">nuon/gltypes.h</span>
+should now include <span style="font-family:Courier">nuon/gl.h</span> instead.</big></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p><big>Please <a href="../mGL%203D%20Library.pdf">see the mGL documentation</a> for more
+information about mGL.</big></p>
+</body>
+</html>

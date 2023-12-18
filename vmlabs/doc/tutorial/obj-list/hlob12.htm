@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 12</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 12</H1><P>
+
+<B><I>The Double-Displacement Warp</I></B><P>
+
+Go to the top of ol_demo2.s, and set it up so that initlist = dwarp_initlist.  Run the code, and
+observe the rather nice, ripply warp that ensues (with the obligatory llama flying around over the
+top, of course).  This is the double-displacement warp, and it is the waro for which I originally
+intended the 20-long data structure used in the last example.<P>
+
+In order to explain how it works, check out the initlist for this example:<PRE>
+dwarp_initlist:
+
+; this initlist demonstrates the Double-Warp.
+
+    .dc.l   MooProtos               ;pointer to a list of prototypes
+    .dc.l   list_array              ;pointer to a list of linked lists
+    .dc.l   (source_tile1<<16)|1    ;one instance of sourcetile #1
+    .dc.l   (source_tile2<<16)|1    ;one instance of sourcetile #2
+    .dc.l   (double_warp<<16)|1     ;one instance of the Doublewarp 
+;    .dc.l   (fullscreen_feedback<<16)|1 ;enable this for a groOvy display...
+    .dc.l   (bouncy_llama<<16)|1         ;one instance of a llama
+    .dc.l   -1
+</PRE>
+Notice that there are now two <B>source_tile</B> objects.  Each one of these runs the sourcetile generator code
+as an external process during the HL object system - <B>source_tile2</B> is the same object that was used in the last
+example, and generates a sourcetile at <B>tile_img</B>; <B>source_tile1</B> generates a blue-and-white, blurry kinda sourcetile at
+<B>tile_img2</B>.<P>
+
+The actual double-displacement warp is created in the following manner: using the same set of parameters as in the last image, a warp of
+the tile at <B>tile_img</B> is performed.  Instead of writing the resultant pixel to the screen, the Cr and Cb components of the pixel colour
+are used as a <I>displacement</I>, which is added to the current co-ordinates of a second warp, onto the tile at tile_img2, which is the blue-and-white
+sourcetile, in this example.  By varying the parameters of both the warp surfaces, and the magnitude of the displacement that the first warp exerts on the
+second one, the rippling effect that you see is created.  By changing the nature of the source tiles, the way in which they are manipulated, and the
+parameters governing the two warps and how they are combined, many cool and trippy textures can be generated.  (You may wish to load up and fool around with dblwarp.moo to check out the effects of changing
+the warp parameters).<P>
+
+You will also notice that I have left that fullscreen_feedback object lying around commented in the initlist - you may feel free to uncomment it
+and have a look at what it does to the double warp.  One of the reasons I love coding Merlin is the ease with which one can generate such soft, wispy,
+organic-looking graphics.<P>
+
+In the next example, we'll take a look at reading the joystick using the command string, and take a look at how that information can be used to
+create a variety of different "<A HREF="hlob13.htm">spaceships</A>".<P>
+
+</BODY>
+</HTML>

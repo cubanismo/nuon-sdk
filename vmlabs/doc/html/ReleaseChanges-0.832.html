@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges-0.832.html,v 1.6 2001/02/10 08:22:54 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK Release 0.832<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">December 14</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2000</sdfield></b></font></font></font></p>
+<hr>
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<div align="center"> 
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td>The following changes are mandatory for the 0.832 SDK release. 
+        <ul>
+          <li>You <b>must</b> upgrade your debug stub to version 4.9.3. See the 
+            <a href="DebugStubInfo.html"><i>Debug Stub Info</i></a> document for 
+            details on how to do this.</li>
+        </ul>
+        <p>The following changes are recommended for the 0.832 SDK release.</p>
+        <ul>
+          <li>You <b>should</b> upgrade your flash ROM to the latest firmware 
+            versions (included in this release). See the <a href="FlashROMInfo.html"><i>Flash 
+            ROM Info</i></a> document for details on how to do this. <font color="#990000"><b>Be 
+            aware that this upgrade will disable the oldstyle joysticks!</b></font> 
+            If you require a joystick for your development and/or testing, you 
+            have 3 options: 
+            <ol>
+              <li>continue to use the old BIOS (from the 0.80 SDK);</li>
+              <li>you can obtain a new style joystick from <a href="mailto:georgec@vmlabs.com">George 
+                Campbell</a> before proceeding; or,</li>
+              <li>you can use the joystick that is packed in with a Samsung Extiva-1.</li>
+            </ol>
+            <p>See the <a href="JoystickInfo.html">Joystick Info</a> document 
+              for more information.</p>
+          </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for the SDK Release.</P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=125> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=301> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=342> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="Title"><font size="5" color="#FF0000">NOTE: This release 
+      of the SDK is for INTERNAL Use Only.</font></td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Changes for the SDK .832 release</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">
+      <p>Updated the Impulse libraries and include files:</p>
+      <p><span class="Filename">libImpulseDebug.a, libImpulseEffects.a, libImpulseEffectsDebug.a, 
+        libNuonImpulse.a, libNuonImpulseDebug.a, libImpulse.a</span></p>
+      <p class="Filename">include/impulse/NuonRaster.h</p>
+      <p>&nbsp;</p>
+      </td>
+    <td class="Text"> 
+      <ul>
+        <li>Demo applications now work properly in 8-bit mode.</li>
+        <li>Added the SynchClut and rasterize functions.</li>
+        <li>Allows anti-aliased text, even in SetColorIndex mode rather than SetColor 
+          mode.</li>
+        <li>Added the Debug libraries</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Changes for the SDK .831 release</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated the <span class="Filename">vml_make.mk</span> and 
+      <span class="Filename">vml_make_targets.mk</span></td>
+    <td class="Text"> 
+      <ul>
+        <li>Fixes build errors with <span class="UserInput">gmake</span> and <span class="UserInput">gmake 
+          clean</span>.</li>
+        <li>Added the SED variable.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Changes for the SDK .83 release</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Scripts, Executables 
+        and Documentation</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename"><span class="Text">Updated the Flash Rom </span>bin/NUON 
+      <span class="Text">executables. <span class="Filename">flash-dev-cc.bat, 
+      flash-dvd-cc.bat, flash-dev-cc</span> and <span class="Filename">flash-dvd-cc</span> 
+      scripts have been added for clear case systems.</span></TD>
+    <TD class="Text">See the <a href="./FlashROMInfo.html">Flash Rom Info</a> 
+      documentation for more information.</TD>
+  </TR>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Llama 2.6.4</TD>
+    <TD class="Text"> 
+      <p>llama can now understand a very limited set of C preprocessor commands 
+        and enum declarations. A description of the C header file support may 
+        be found in the <a href="./llama.pdf">llama documentation, chapter 6, 
+        "Interfacing C and Assembly"</a>.</p>
+    </TD>
+  </TR>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Filename"><span class="Text">Updated the Linux versions of </span>vml_make.mk 
+      <span class="Text">and </span>vml_make_targets.mk<span class="Text"> with 
+      the right line endings.</span></td>
+    <td class="Text">The <span class="Filename">install_linux</span> script now 
+      sets the end of lines correctly for <span class="Filename">*.mk</span> files.</td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text"> 
+      <p>Added <span class="Filename">gprof.</span></p>
+    </TD>
+    <TD class="Text">See the <a href="./gprof.pdf">GNU Profiler documentation</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">vmcrlf <span class="Text">and 
+      added documentation.</span> </span></TD>
+    <TD class="Text">Now recognizes the --silent option. See the <a href="./vmcrlf.html"><span class="Filename">vmcrlf</span> 
+      documentation</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Replaced <span class="Filename">bin/windows/synth.mpo</span> 
+      with <span class="Filename">bin/NUON/synthSO.cof</span>.</TD>
+    <TD class="Text"> 
+      <p><span class="Filename">synthSO.cof</span> includes a built-in wavetable. 
+        To use, type: </p>
+      <p><span class="UserInput">mload -p1 synthSO.cof -r </span></p>
+      <p><span class="UserInput">sendmidi.exe</span></p>
+      <p>NOTE: This is an old sendmidi.exe. We will update sendmidi.exe in the 
+        next release.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated the <span class="Filename">vml_make.mk</span> SEP 
+      environment variable for Windows-NT and Windows 98.</TD>
+    <TD class="Text">Changed the SEP environment variable to be compatible with 
+      the included sh.exe. They are now set to SEP = /#.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Removed <span class="Filename">bin/dos2linux</span> and <span class="Filename">bin/linux2dos</span>.</TD>
+    <TD class="Text">These files are obsolete and have been removed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Libraries and Include 
+        files</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">lib</span> directory.</TD>
+    <TD class="Text">See the <a href="./LibraryUpdates0.83.html">Library Updates documentation</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">include <span class="Text">directory</span></span>.</TD>
+    <TD class="Text">See the <a href="./IncludeFileUpdates0.83.html">Include File 
+      Updates documentation</a>.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Samples</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">mgl</span> samples. </TD>
+    <TD class="Text">Added the <span class="Filename">blend</span> sample.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Known Problems</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/windows/cc1.exe</TD>
+    <TD class="Text">May crash on Windows NT when interacting with MS Visual C++. 
+      We plan to have this fixed for the next release.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/linux/mgcc</TD>
+    <TD class="Text">Uses hardcoded paths to libraries before using your specified 
+      library paths.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/windows/sendmidi.exe</TD>
+    <TD class="Text">Needs to be updated to use TCL81.dll. Currently it uses TCL80.dll.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">libmml2d.a</TD>
+    <TD class="Text">The <span class="Filename">sample/mml2d/Ycrcb</span> sample 
+      doesn't display the correct colors; blue and pink are not displayed.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Too Late for this Release...</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Puffin</TD>
+    <TD class="Text"> 
+      <p>The next version will have various bug fixes.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">m3dl</TD>
+    <TD class="Text">We'll get the latest m3dl source and sample updates.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename"> 
+      <p><span class="Text">Change the directory structure</span>. </p>
+    </TD>
+    <TD class="Text">Requested changes to the directory structure will be implemented.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<p>For changes to the SDK .82 release, please see <a href="./ReleaseChanges-0.82.html">ReleaseChanges-0.82.html</a>. 
+</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">November 
+8, 2000</SDFIELD> by <A HREF="mailto:lreeber@vmlabs.com">Lisa Reeber</A>.</span></span> 
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">Version Info: $Id: ReleaseChanges-0.83.html,v 1.2 2000/10/11 
+  23:28:04 cheiny Exp $<span class="Copyright"><span class="Copyright"> </span></span></P>
+</BODY>
+</HTML>

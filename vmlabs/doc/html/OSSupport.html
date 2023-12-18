@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: OSSupport.html,v 1.25 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>OS 
+  Support </B></FONT></FONT></FONT></P>
+<p><!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --><p></p>
+<p>The SDK runs on a number of flavors of Windows and Linux, but is officially 
+  supported on a more limited subset. The following table indicates the level 
+  of support for each.</p>
+<table width="75%" border="2" align="center">
+  <tr class="TableHeading"> 
+    <td> 
+      <div align="center">OS</div>
+    </td>
+    <td> 
+      <div align="center">Support level</div>
+    </td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Windows 95</div>
+    </td>
+    <td class="TableContents" bgcolor="#FF9999">Not Supported</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Windows 98 SE</div>
+    </td>
+    <td class="TableContents" bgcolor="#FFFFCC">Runs</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Windows NT 4.1</div>
+    </td>
+    <td class="TableContents" bgcolor="#CCFFCC">Official</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Windows 2000</div>
+    </td>
+    <td class="TableContents" bgcolor="#CCFFCC">Official</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Linux SUSE 7.0</div>
+    </td>
+    <td class="TableContents" bgcolor="#FFFFCC">Runs</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Linux RedHat 6.2</div>
+    </td>
+    <td class="TableContents" bgcolor="#CCFFCC">Official</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Linux RedHat 6.0</div>
+    </td>
+    <td class="TableContents" bgcolor="#FFFFCC">Runs</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Linux RedHat 7.0</div>
+    </td>
+    <td class="TableContents" bgcolor="#FFFFCC">Runs</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">Linux RedHat 5.1</div>
+    </td>
+    <td class="TableContents" bgcolor="#FFFFCC">Runs</td>
+  </tr>
+  <tr>
+    <td class="TableContents">
+      <div align="right">Windows ME</div>
+    </td>
+    <td class="TableContents" bgcolor="#FF9999">Not Supported</td>
+  </tr>
+</table>
+<p>These levels of support have the following meanings:</p>
+<table width="75%" border="2" align="center">
+  <tr class="TableHeading"> 
+    <td width="23%">Support Level</td>
+    <td width="77%">What it means</td>
+  </tr>
+  <tr> 
+    <td width="23%" valign="top" align="right" bgcolor="#CCFFCC"><b>Official</b></td>
+    <td width="77%">The SDK is tested on this OS and is expected to function correctly 
+      in all respects.</td>
+  </tr>
+  <tr> 
+    <td width="23%" valign="top" align="right" bgcolor="#FFFFCC"><b>Runs</b></td>
+    <td width="77%">The SDK has been partially tested on this OS, and may reasonably 
+      be expected to function normally in most respects. <b>However,</b> some 
+      functionality may not be available, or there may be bugs that are not present 
+      on the officially supported platform. At VM Labs' discretion, VM Labs may 
+      fix such problems, or you may be requred to upgrade your OS if the desired 
+      functionality is available on an officially supported release.</td>
+  </tr>
+  <tr> 
+    <td width="23%" valign="top" align="right" bgcolor="#FF9999"><b>Not Supported</b></td>
+    <td width="77%">The SDK has not been tested at all on this OS. It may or may 
+      not function correctly. If you are experiencing problems, you must upgrade 
+      to an officially supported version.</td>
+  </tr>
+</table>
+<h3>Windows 95</h3>
+<p>Starting with SDK 0.82, any official support for the VM Labs SDK is withdrawn 
+  for Windows 95. If you are running Windows 95 and experience problems, you must 
+  upgrade your OS.</p>
+<h3>Windows ME</h3>
+<p>This OS release is too new to be considered. Future releases of the SDK will 
+  be supported at the &quot;Runs&quot; level on Windows ME. The officially supported 
+  MicroSoft Windows platform will be Windows 2000.</p>
+<h3>Future Support</h3>
+<p>Future release of the VM Labs SDK will be migrating to newer OS versions. In 
+  particular, the following OS versions are targeted:</p>
+<ul>
+  <ul>
+    <li>Windows 2000</li>
+    <li>Linux RedHat 7.0</li>
+    <li>Linux SUSE 7.2</li>
+  </ul>
+</ul>
+<p>Migration of support to these platforms is expected to begin with the next 
+  release of the SDK.</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+</BODY>
+</HTML>

@@ -1,0 +1,285 @@
+;
+; warp1.a - just get something - anything - up on the screen!
+; This just tiles the screen with an 8x8 source tile.
+
+; here's some definitions
+
+    .include    "merlin.i"          ;general Merlin things
+    .include    "scrndefs.i"        ;defines screen buffers and screen DMA type
+    .start  go
+    .segment    local_ram
+    .align.v
+
+; buffer for internal pixel map (1 DMA's worth)
+
+buffer:
+
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+; output line buffer (1 DMA's worth)
+
+line:
+
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+
+; DMA command buffer
+
+dma__cmd:
+
+    .dc.s   0,0,0,0,0,0,0,0
+
+
+; destination screen address
+
+dest:   .dc.s   dmaScreen2
+
+; reg equates for this routine
+
+    coltog = r7
+    x = r8
+    y = r9
+    pixel = v1
+    destx = r12
+    desty = r13
+    dma_len = r14
+    destw = r10
+    desth = r11
+    yi = r16
+    xi = r17
+    xs = r18
+    ys = r19
+    dma_mode = r20
+
+    .segment    instruction_ram
+
+go:
+
+
+    st_s    #$aa,intctl           ;turn off any existing video
+    st_s    #(local_ram_base+4096),sp       ;here's the SP
+
+; clear the source buffer to black pixels
+
+    mv_s    #$10808000,r0           ;A black pixel
+    mv_s    #buffer,r1              ;Address of the source buffer
+    st_s    #64,rc0                 ;This is how many pixels to clear to black
+
+cl_srceb:
+
+    dec rc0                         ;dec the loop counter
+    bra c0ne,cl_srceb               ;loop for all the pixels
+    st_s    r0,(r1)                 ;store the black pixel  
+    add #4,r1                       ;point to next pixel address
+
+; set up a simple cross-shaped test pattern in the buffer RAM
+
+    mv_s    #$51f05a00,r0           ;Pixel colour (a red colour)
+    mv_s    #buffer+(32*4),r1       ;Line halfway down buffer
+    mv_s    #buffer+16,r2           ;Column halfway across top line of buffer
+    st_s    #8,rc0                  ;Number of pixels to write
+
+
+testpat:
+    st_s    r0,(r1)                 ;Store pixel value at row address.
+    st_s    r0,(r2)                 ;Store pixel value at column address.
+    dec rc0                         ;Decrement loop counter.
+    bra c0ne,testpat                ;Loop if counter not equal to 0.
+    add #4,r1                      ;Increment row address by one pixel.
+    add #32,r2                      ;Increment column address by one line.
+
+; now, initialise video
+
+    jsr SetUpVideo,nop
+
+frame_loop:
+
+; generate a drawscreen address 
+
+    mv_s    #dmaScreenSize,r0       ;this lot selects one of
+    mv_s    #dmaScreen3,r3          ;three drawscreen buffers
+    ld_s    dest,r1                 ;this should be inited to a
+                                    ;valid screen buffer address
+    nop
+    cmp     r3,r1
+    bra     ne,updatedraw
+    add     r0,r1             
+    nop
+    mv_s    #dmaScreen1,r1          ;reset buffer base
+updatedraw:
+    st_s    r1,dest                 ;set current drawframe address
+
+; actually draw a frame
+
+    jsr drawframe,nop
+    
+; set the address of the frame just drawn on the video system
+
+    jsr SetVidBase
+    ld_s    dest,r0
+    nop
+    
+; loop back for the next frame
+
+    bra frame_loop,nop
+    
+
+
+drawframe:
+
+; save the return address for nested subroutine calls
+
+    push    v7,rz
+    
+; ensure that any pending DMA is complete.  Whilst it
+; is not really necessary at the moment, it is good form,
+; for later on we may arrive at the start of a routine
+; while DMA is still happening from something we did before.
+
+    jsr dma_finished,nop                
+
+; initialise the bilinear addressing registers
+
+
+    st_s    #buffer,xybase          ;I want XY to point at the buffer here.
+    st_s    #$104dd008,xyctl        ;XY type, derived as follows:
+                                    ;Bit 28 set, I wanna use CH-NORM.
+                                    ;Pixel type set to 4 (32-bit pixels).
+                                    ;XTILE and YTILE both set to 13 (treat the buffer as an 8x8 tilable bitmap).
+                                    ;The width is set to 8 pixels.
+    st_s    #line,uvbase            ;set the line buffer address
+    st_s    #$10400000,uvctl        ;UV type, derived as follows:
+                                    ;Bit 28 set, I wanna use CH-NORM.
+                                    ;Pixel type set to 4 (32-bit pixels).
+                                    ;XTILE and YTILE both set to 0 (no tiling).
+                                    ;The width is set to 0 (effectively, V is not used in address generation, since this is a line buffer).
+    
+ 
+; initialise parameters for the routine
+
+    mv_s    #0,desty                ;Start at dest y=0
+    mv_s    #0,destx                ;Start at dest x=0
+    ld_s    __fieldcount,x          ;Use __fieldcount, to make it move
+    ld_s    __fieldcount,y          ;Same for Y
+    lsl #16,x                       ;make it one whole pixel per fieldcount
+    lsl #16,y                       ;same
+    mv_s    #$10000,xi              ;Source X inc is 1.0 pixels
+    mv_s    #0,yi                   ;Source Y inc is 0 pixels
+    mv_s    #0,xs                   ;Source X step is 0 pixels
+    mv_s    #$10000,ys              ;Source Y step is 1.0 pixels
+    mv_s    #360,destw              ;Width of dest rectangle
+    mv_s    #240,desth              ;Height of dest rectangle
+
+; now the outer loop
+
+warp_outer:
+
+    push    v2                      ;save the source X and Y, and the width and height
+    push    v3                      ;save the dest X and Y  
+
+; and now the inner.
+
+warp_inner:
+
+    mv_s    #64,r0                  ;This is the maximum number of pixels for one DMA.
+    sub r0,destw                    ;Count them off the total dest width.
+    bra gt,w_1                      ;do nothing if this is positive
+    nop
+    st_s    #0,ru                   ;Point ru at the first pixel of the output buffer
+    add destw,r0                    ;If negative, modify the number of pixels to generate.
+w_1:
+    jsr pixel_gen                   ;Go and call the pixel generation loop
+    mv_s    r0,dma_len              ;Set the dma length in my dma vector
+    st_s    r0,rc0                  ;Set the counter for the pixgen loop
+
+; Pixel gen function will return here after having generated and DMA'd out the pixels
+
+    cmp #0,destw                    ;Did the width go negative?
+    bra gt,warp_inner               ;No, it did not, carry on the horizontal traverse of the dest rectangle
+    add dma_len,destx               ;add dma_len to the dest x position
+    nop                             ;empty delay slot
+
+; Horizontal span is finished if we fall through to here
+
+    pop v3                          ;restore dest X and Y
+    pop v2                          ;restore source X and Y
+    add #1,desty                    ;point to next line of dest
+    sub #1,desth                    ;decrement the Y size
+    jmp gt,warp_outer               ;loop for entire height
+    add xs,x                        ;add the X step to the source
+    add ys,y                        ;add the Y step to the source
+
+; all done!
+
+    pop v7,rz                       ;get back return address
+    nop
+    rts t,nop                       ;and return 
+
+
+pixel_gen:
+
+; This is the pixel generation function.  It collects pixels from the 8x8 pattern buffer and
+; deposits them in the linear destination buffer for output to external RAM.
+
+    st_s    x,rx                    ;Initialise bilinear X pointer
+    st_s    y,ry                    ;Initialise bilinear X pointer
+    ld_p    (xy),pixel              ;Grab a pixel from the source
+    dec rc0                         ;Decrement the counter
+    st_p    pixel,(uv)              ;Deposit the pixel in the dest buffer
+    addr    #1,ru                   ;increment the dest buffer pointer
+    bra c0ne,pixel_gen              ;Loop for the length of the dest buffer
+    add xi,x                        ;Add the x-increment
+    add yi,y                        ;Add the y_increment
+
+; Now, the pixel buffer is full, so it is time to DMA it out to external RAM.
+
+    push    v0,rz                   ;save return address
+    mv_s    #dmaFlags,r0            ;Get DMA flags for this screentype.
+    ld_s    dest,r1                 ;Address of external RAM screen base
+    copy    destx,r2                ;destination xpos
+    copy    desty,r3                ;destination ypos
+    lsl #16,dma_len,r4              ;shift DMA size up
+    or  r4,r2                       ;and combine with x-position
+    bset    #16,r3                  ;make Y size = 1
+    mv_s    #dma__cmd,r4            ;address of DMA command buffer in local RAM
+    st_v    v0,(r4)                 ;set up first vector of DMA command
+    add #16,r4                      ;point to next vector
+    mv_s    #line,r0                ;address of line buffer in local RAM
+    st_s    r0,(r4)                 ;place final word of DMA command
+    sub #16,r4                      ;point back to start of DMA command buffer
+    st_s    r4,mdmacptr             ;launch the DMA
+
+; Now we should wait until the DMA has completed, so we can re-use the buffer.
+
+    jsr dma_finished,nop    
+
+; and finally, bugger off.
+
+    pop v0,rz                       ;Restore the call stack pointer.
+    nop                             ;Delay while the pop completes.
+    rts t,nop                       ;Return to the main loops.
+
+; useful subroutines
+
+
+dma_finished:
+
+; Wait 'till all DMA has actually finished
+
+    ld_s    mdmactl,r0              ;get DMA status
+    nop
+    bits #4,>>#0,r0                 ;wait until Pending and Active Level are zero
+    bra ne,dma_finished,nop
+    rts t,nop
+    
+; here is the video stuff
+
+    .include    "video.def"
+    .include    "video.s"
+    

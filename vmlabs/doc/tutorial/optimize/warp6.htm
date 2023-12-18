@@ -1,0 +1,630 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; I) [Netscape]">
+   <TITLE>Adding Extra Functionality</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<CENTER>
+<H1>
+Adding Extra Functionality</H1></CENTER>
+
+<CENTER><IMG SRC="warp6.jpg" BORDER=3 ></CENTER>
+
+<CENTER></CENTER>
+
+<CENTER>&nbsp;<B><I>Hey, I think that acid must be coming on!</I></B></CENTER>
+<P>To assemble and run this example, use the batch file "m6" in the Warpcode directory.
+&nbsp;
+<BR>&nbsp;
+
+<P>&nbsp;Now here's an interesting tale of how <I>really wanting</I> to
+do something can make the scales fall from your eyes and allow you to see
+scope for<I> even more</I> optimisation where you thought there was none
+to be had.
+
+<P>&nbsp;As stated at the outset, I wanted to traverse the source image
+in a <I>cool </I>and <I>interesting </I>manner. The bilinear interpolation
+looked good, but it was still very linear. I had had in mind all along
+turning this into a <I>nonlinear warp</I> effect by the simple method of
+adding a couple of extra variables, <B>xii </B>and <B>yii, </B>and adding
+them to the x-increment and y-increment at each pixel.
+
+<P>&nbsp;That meant that I had to squeeze into my already well-packed inner
+loop two extra adds, <B><I>add xii,xi</I></B> and <B><I>add yii,yi.</I></B>
+One of them slipped in nicely on the multiplier at the end of the loop.
+I had one more to add... and I looked and looked at the loop... multiplier
+saturated... ALU saturated... reg unit saturated... mem unit saturated....
+it was increasingly looking like I was going to have to add an extra instruction
+for just <B><I>one poxy add</I></B>, and that was going to push the framerate
+up.
+
+<P>&nbsp;The thought of doing that just <B><I><FONT SIZE=+2>burned my ass.</FONT></I></B>
+
+<P>&nbsp;<B><I><FONT SIZE=+3>I wanted my nice warp effect in 8 ticks of
+inner loop, and I would give up llamas for life before I would sully my
+nice, pert, firmly packed inner loop with a single, isolated poxy add instruction.</FONT></I></B>
+
+<P>&nbsp;I made myself a really hot cup of tea and sat down to study the
+code, looking for any way I could make a hole in the flow for any of the
+function units. Finally, I saw the light. If you consider the four pixels
+that you have to pick up for the bilerp to be in this formation:
+<PRE>
+{a b}
+{c d}</PRE>
+then, due to the way the pixel registers became freed up during the calculation,
+I was loading them in the order a,c,b,d. This is somewhat inelegant, as
+it needs two <B><I>addr </I></B>instructions to go from pixel C to pixel
+B. I grokked that if I were to enter the loop with XY already set up to
+look at the "c" pixel (i.e. add 1 to <FONT COLOR="#66FF99">ry</FONT>),
+then, with a slight modification to the calculation to free up registers
+in a different order, I could load the pixels in the order (c,a,b,d), thus
+freeing up two register unit slots, one in the middle and one at the end
+of the loop. If I were to update <FONT COLOR="#66FF99">rv </FONT>with an
+<B><I>addr </I></B>instruction instead of adding to Y and then using <B><I>st_s
+rv</I></B>, I could just use <B><I>ld_s rv,y</I></B> outside of the loop
+to maintain the correct value across the scanline. Not having to add to
+Y in the inner loop would then free up a <B>(precious!)</B> multiplier
+slot. So, if I were to free up a register to use as a constant <B>four
+</B>in the inner loop, I could add to the destination buffer pointer using
+the spare <B><I>addm </I></B>slot, and I'd be home free. This I could do
+if I used the counter <I><FONT COLOR="#66FF99">rc1 </FONT></I>for the outer
+loop, instead of just subtracting from <I>desth. </I>I would not need to
+keep <I>desth </I>at all, so I could free up its register for my constant
+<B>four.</B>
+
+<P>&nbsp;I duly implemented, and it worked. The moral of this little digression
+being that, even if your inner loop is stuffed to bursting, you can often
+find a way to squeeze in a little bit more,<I> if you really want to and
+you drink enough tea</I>.
+
+<P>&nbsp;Anyway, with the inner loop nicely sorted, we should finish off
+the functionality of the warper. We wanted lots of nice parameters for
+tweaking, remember? Since the main parameters controlling the shape of
+the warpage are the increment registers <B>xi, yi, xii</B> and <B>yii,
+</B>it seemed sensible to add a buncha extra params to allow for much tweakage
+of same. To this end I added the following goodies:
+
+<P>&nbsp;
+<UL>
+<LI>
+<B>xss </B>and <B>yss, </B>which are added to the x-step and y-step at
+the end of every scanline. They allow you to give a degree of nonlinearity
+to the 'left edge' of the effect.</LI>
+
+<LI>
+<B>xis </B>and <B>yis, </B>which are added to the x increment and y increment
+at the end of every scanline. They allow you to tweak the horizontal warpiness
+on a scanline-by-scanline basis.</LI>
+
+<LI>
+Finally, since I had a couple of registers left over, I added <B>xsss </B>and
+<B>ysss, </B>which are added to <B>xss </B>and <B>yss </B>every scanline.
+It's probably overkill, but hey, I had two reggies left over, and hey,
+you can never have too many parameters to twiddle.</LI>
+</UL>
+I'll now list the resulting source code, once again commenting in bold
+where there's anything of note to say about it.
+
+<P>&nbsp;
+<HR>
+<PRE>
+
+;
+; warp6.a - makes the warp nonlinear
+
+; here's some definitions
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "merlin.i"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;general Merlin things
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp; "scrndefs.i"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;defines screen buffers and screen DMA type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .start&nbsp; go
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .segment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local_ram
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .align.v
+
+; buffer for internal pixel map (1 DMA's worth)
+
+buffer:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+; output line buffer (1 DMA's worth x2, for double buffering)
+
+line:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+
+; DMA command buffer
+
+dma__cmd:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0
+
+
+; destination screen address
+
+dest:&nbsp;&nbsp; .dc.s&nbsp;&nbsp; dmaScreen2
+
+; frame counter
+
+ctr:&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0
+
+; reg equates for this routine
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = r8
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; y = r9
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel = v1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel2 = v0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel3 = v6
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel4 = v7&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel5 = v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; destx = r12
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; desty = r13
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dma_len = r14
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; destw = r10
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; desth = r11
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; four = r11
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yi = r16
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xi = r17
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xii = r18
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yii = r19
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xs = r24
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ys = r25
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xss = r26
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yss = r27
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xis = r28
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yis = r29
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsss = r30
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ysss = r31
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dma_mode = r20
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dma_dbase = r21
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out_buffer = r22
+
+</PRE>
+<B>Note the new registers for all the parameters. I also shifted around
+a couple of the others for ease of access of stuff inside the inner loop,
+and to be easily able to stack certain params that need to be restored
+at the end of every scanline.</B>
+<PRE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .segment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; instruction_ram
+
+go:
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$aa,intctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;turn off any existing video
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #(local_ram_base+4096),sp&nbsp;&nbsp;&nbsp;&nbsp; ;here's the SP
+
+; clear the source buffer to *random* pixels, using the pseudo random sequence generator
+; out of Graphics Gems 1
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$a3000000,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;This is the mask
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$b3725309,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;A random seed
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Address of the source buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #64,rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;This is how many pixels to clear
+cl_srceb:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; btst&nbsp;&nbsp;&nbsp; #0,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Check bit zero of the current seed
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; eq,nxor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Do not xor with the mask if it ain't set
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lsr&nbsp;&nbsp;&nbsp;&nbsp; #1,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Always shift the mask, whatever happens
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;dec the loop counter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eor&nbsp;&nbsp;&nbsp;&nbsp; r2,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;If that bit was 1, xor in the mask
+nxor:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,cl_srceb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;loop for all the pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;store the pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #4,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next pixel address
+
+; set up a simple cross-shaped test pattern in the buffer RAM
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$51f05a00,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel colour (a red colour)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer+(32*4),r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Line halfway down buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer+16,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Column halfway across top line of buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #8,rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Number of pixels to write
+
+testpat:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Store pixel value at row address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Store pixel value at column address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Decrement loop counter.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,testpat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Loop if counter not equal to 0.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #4,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Increment row address by one pixel.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #32,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Increment column address by one line.
+
+; now, initialise video
+
+&nbsp;&nbsp;&nbsp; jsr SetUpVideo,nop
+
+frame_loop:
+
+; generate a drawscreen address&nbsp;
+
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreenSize,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;this lot selects one of
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreen3,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;three drawscreen buffers
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;this should be inited to a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;valid screen buffer address
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; cmp&nbsp;&nbsp;&nbsp;&nbsp; r3,r1
+&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; ne,updatedraw
+&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; r0,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreen1,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;reset buffer base
+updatedraw:
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r1,dest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set current drawframe address
+
+; actually draw a frame
+
+&nbsp;&nbsp;&nbsp; jsr drawframe,nop
+&nbsp;&nbsp;&nbsp;&nbsp;
+; increment the frame counter
+
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; ctr,r0
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; add #1,r0
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,ctr&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
+; set the address of the frame just drawn on the video system
+
+&nbsp;&nbsp;&nbsp; jsr SetVidBase
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r0
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp;&nbsp;
+; loop back for the next frame
+
+&nbsp;&nbsp;&nbsp; bra frame_loop,nop
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+drawframe:
+
+; save the return address for nested subroutine calls
+
+&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v7,rz
+&nbsp;&nbsp;&nbsp;&nbsp;
+; ensure that any pending DMA is complete.&nbsp; Whilst it
+; is not really necessary at the moment, it is good form,
+; for later on we may arrive at the start of a routine
+; while DMA is still happening from something we did before.
+
+&nbsp;&nbsp;&nbsp; jsr dma_finished,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+; initialise the bilinear addressing registers
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #buffer,uvbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I want *UV* to point at the buffer here.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #buffer,xybase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I want XY to point at the buffer here too.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$104dd008,uvctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;UV type, derived as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Bit 28 set, I wanna use CH-NORM.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel type set to 4 (32-bit pixels).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;YTILE and VTILE both set to 13 (treat the buffer as an 8x8 tilable bitmap).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;The width is set to 8 pixels.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$104dd008,xyctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;XY type, same as UV type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #line,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Store the same address as double buffer base.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$10400000,linpixctl&nbsp;&nbsp;&nbsp; ;Linear pixel mode, derived as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Bit 28 set, I wanna use CH-NORM.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel type set to 4 (32-bit pixels).
+</PRE>
+<B>Notice that, since I have modified the algorithm to have both <I>xy
+</I>and <I>uv </I>working on the same bitmap, I set up both <I>xy </I>and
+<I>uv </I>the same way now.&nbsp; In the new version I am addressing the
+output buffer directly through an address held in a scalar. Since I am
+still going to be storing pixels using <I>st_p, </I>I have to set up <I><FONT COLOR="#66FF99">linpixctl</FONT>
+</I>to tell the system what kind of pixels I am using. <I><FONT COLOR="#66FF99">linpixctl
+</FONT></I>is very similar to <I><FONT COLOR="#66FF99">xy/uvctl</FONT></I>,
+except that obviously there is no tile or width information.</B>
+<PRE>
+; initialise parameters for the routine
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,desty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Start at dest y=0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,destx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Start at dest x=0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; ctr,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Use counter, to make it move
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; ctr,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Same for Y
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lsl #13,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make it half a source pixel a frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lsl #14,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;same
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$300000,xi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source X inc *in 8:24*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$180000,yi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source Y inc *in 8:24*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$40,xii&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;x-inc-inc
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$10,yii&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;y-inc-inc
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$c0000,xs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source X step *in 8:24*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$140000,ys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source Y step *in 8:24*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$1000,xss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;x-step-step (8:24)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$1c00,yss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;y-step-step (8:24)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$300,xis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;x-increment-step&nbsp; (8:24)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #-$40,yis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;y-increment-step&nbsp; (8:24)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$40,xsss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;guess
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$22,ysss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;it's obvious really&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #360,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Width of dest rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #240,desth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Height of dest rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub out_buffer,out_buffer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;select buffer offset of 0
+</PRE>
+<B>Obviously, there are now a few more parameters to load. Note that I
+have given some of the parameters more bits of fraction. This is to allow
+for specifying the second and third order warp parameters with more precision
+than is actually used inside the loop.</B>
+<PRE>
+; now the outer loop
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; desth,rc1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I am going to use rc1 to count off the height...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #4,four&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;gonna use it as a constant :-)
+</PRE>
+<B>I am using <I>rc1 </I>to count the outer loop iterations, so I can reuse
+its register for a constant that is used to update the output buffer pointer
+in the inner loop.</B>
+<PRE>
+warp_outer:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save the source X and Y, and the width and height
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save the dest X and Y&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;lead v4 not into corruption...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and deliver the contents of v6 from molestation
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;guess what</PRE>
+<B>These pushes preserve variables that need to be restored at the end
+of a scanline, and the stuff that is going to get mashed by being used
+as pixel vectors.</B>
+<PRE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asr&nbsp;&nbsp;&nbsp;&nbsp; #8,xi&nbsp;&nbsp; ;convert these to 16:16 for inner loop use
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asr&nbsp;&nbsp;&nbsp;&nbsp; #8,yi&nbsp;&nbsp; ;convert these to 16:16 for inner loop use</PRE>
+<B>I convert the stuff that is held external to the inner loop with more
+fraction, back to the format that it is actually used in inside the loop.</B>
+<PRE>
+; and now the inner.
+
+warp_inner:
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #64,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;This is the maximum number of pixels for one DMA.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub&nbsp;&nbsp;&nbsp;&nbsp; r0,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Count them off the total dest width.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; gt,w_1,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;do nothing if this is positive
+</PRE>
+<B>There was a <I>st_s rx</I> in that delay slot, but due to the new way
+we are using <I><FONT COLOR="#66FF99">rx </FONT></I>and <I><FONT COLOR="#66FF99">ry</FONT>,
+</I>it is no longer needed.&nbsp; Since that would leave just two empty
+NOPs in the delay slots, I have binned them and used the <I>bra </I>instruction
+form that generates the NOPs for you.</B>
+<PRE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; destw,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;If negative, modify the number of pixels to generate.
+w_1:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jsr&nbsp;&nbsp;&nbsp;&nbsp; pixel_gen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Go and call the pixel generation loop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; r0,dma_len&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Set the dma length in my dma vector
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Set the counter for the pixgen loop
+
+; Pixel gen function will return here after having generated and DMA'd out the pixels
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmp&nbsp;&nbsp;&nbsp;&nbsp; #0,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Did the width go negative?
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; gt,warp_inner&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;No, it did not, carry on the horizontal traverse of the dest rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; dma_len,destx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add dma_len to the dest x position
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;empty delay slot
+
+; Horizontal span is finished if we fall through to here
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;no surprise
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore the purity of v5
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;undo the nastiness we did to v4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore dest X and Y
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore source X and Y
+</PRE>
+<B>Sundry unstackings to restore what got mashed.</B>
+<PRE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asr&nbsp;&nbsp;&nbsp;&nbsp; #8,xs,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;change these from 8:24
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asr&nbsp;&nbsp;&nbsp;&nbsp; #8,ys,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;change from 8:24
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #1,desty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next line of dest
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; r0,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add the X step to the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; r1,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add the Y step to the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xss,xs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add x step inc
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; yss,ys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add y step inc
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xis,xi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add x inc step
+{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; yis,yi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add y inc step
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;decrement the Y size
+}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jmp&nbsp;&nbsp;&nbsp;&nbsp; c1ne,warp_outer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;loop for entire height
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xsss,xss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;another tweaker for the step
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; ysss,yss</PRE>
+<B>Finally the loop count is decremented and the conditional branch evaluated,
+and the parameters that change every scanline are updated.</B>
+<PRE>
+; all done!
+
+&nbsp;&nbsp;&nbsp; pop v7,rz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get back return address
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; rts t,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and return&nbsp;
+
+
+pixel_gen:
+
+; This is the pixel generation function.&nbsp; It collects *bilerped* pixels from the 8x8 pattern buffer and
+; deposits them in the linear destination buffer for output to external RAM.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; dma_dbase,r15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save this in a spare reggy in v3
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; out_buffer,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Generate the real address of the buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I am going to use v3 as an extra pixel holder.
+}
+
+; Now, outside of the actual loop, I am gonna load up my stuff.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; x,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear U pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; y,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear V pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; x,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear X pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; y,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear Y pointer
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Grab a pixel from the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to next horiz pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xi,x
+}</PRE>
+<B>That <I>add xi,x</I> performs a necessary preincrement of x prior to
+entering the inner loop.</B>
+<PRE>
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get a second pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to next vert pixel
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get a third pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to prev horizontal pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub&nbsp;&nbsp;&nbsp;&nbsp; #4,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point at start of buffer -4
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get a fourth pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go back to original pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel,pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;b=b-a
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ry
+</PRE>
+<B>The <I>addr #1,ry</I> is the offset that I need on the xy pair to be
+able to pick up my pixels in a more efficient manner.</B>
+<PRE>&nbsp;
+
+bilerp:
+
+; Here is the bilerp part.
+
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_v&nbsp;&nbsp;&nbsp; pixel,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save a copy of first pixel, freeing up pixel 1.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; ru,pixel2,>>#14,pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;scale according to fractional part of ru
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel3,pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make vector between second 2 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; yi,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Point ry to next y
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; x,(ru)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Can now update ru, finished multiplying with it.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; ru,pixel4,>>#14,pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;scale according to fractional part of ru
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel3,pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; xi,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;(XY) now points at next pixel 1
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Loading next pixel 1.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;POinting to next pixel 3.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel2,pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get first intermediate result
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Decrementing the loop counter.
+}
+}</PRE>
+<B>I am loading the pixels in a slightly different order. <I>pixel3 </I>is
+now loaded before<I> pixel</I>.</B>
+<PRE>
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;getting next pixel 3.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel,pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get vector to final value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addm&nbsp;&nbsp;&nbsp; four,dma_dbase,dma_dbase
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Working over to point to pixel 2.
+}
+</PRE>
+<B>And here is where I squeeze in my dest buffer pointer increment on the
+multiplier.</B>
+<PRE>{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; rv,pixel4,>>#14,pixel4&nbsp; ;scale with fractional part of rv
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel2,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add pix2 to the copy of pix1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; yi,rv
+}</PRE>
+<B>Now <I>rv </I>is updated by using <I>yi </I>and the <I>addr </I>instruction.</B>
+<PRE>{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;load up next pixel2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next pixel 4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,bilerp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;start the branch
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xii,xi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Incrementing the x increment
+}</PRE>
+<B>Here's one of the warp parameters getting updated</B>
+<PRE>{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get next pixel4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel4,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make final pixel value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;start putting these right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addm&nbsp;&nbsp;&nbsp; yii,yi,yi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;do Y-inc-inc
+}</PRE>
+<B>And here's the other one.</B>
+<PRE>{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_p&nbsp;&nbsp;&nbsp; pixel5,(dma_dbase)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Deposit the pixel in the dest buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel,pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;b=b-a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addm&nbsp;&nbsp;&nbsp; xi,x,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;do x inc
+}
+
+; Now, the pixel buffer is full, so it is time to DMA it out to external RAM.
+;
+; To implement simple double-buffering of the DMA out, we have to do
+; the following:&nbsp; wait for (a) the PENDING bit to go clear, which will
+; mean that DMA is ready to accept a command; and (b), make sure that
+; the ACTIVE level is never greater than (#buffers-1).&nbsp; Here we are using
+; 2 buffers, so we wait until it is 1.
+
+dma_avail:
+
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; mdmactl,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get the DMA status.
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; btst&nbsp;&nbsp;&nbsp; #4,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pending?
+&nbsp;&nbsp;&nbsp; bra ne,dma_avail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Yeah, gotta wait.
+&nbsp;&nbsp;&nbsp; bits&nbsp;&nbsp;&nbsp; #3,>>#0,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Extract the ACTIVE level
+&nbsp;&nbsp;&nbsp; cmp #1,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;check against (#buffers-1)
+&nbsp;&nbsp;&nbsp; bra gt,dma_avail,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Wait until it is OK.
+
+; Now we know DMA is ready, so we can proceed to set up and launch the DMA write.&nbsp;&nbsp;&nbsp;&nbsp;
+
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaFlags,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get DMA flags for this screentype.
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Address of external RAM screen base
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; destx,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination xpos
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; desty,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination ypos
+&nbsp;&nbsp;&nbsp; lsl #16,dma_len,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;shift DMA size up
+&nbsp;&nbsp;&nbsp; or&nbsp; r4,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and combine with x-position
+&nbsp;&nbsp;&nbsp; bset&nbsp;&nbsp;&nbsp; #16,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make Y size = 1
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dma__cmd,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;address of DMA command buffer in local RAM
+&nbsp;&nbsp;&nbsp; st_v&nbsp;&nbsp;&nbsp; v0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set up first vector of DMA command
+&nbsp;&nbsp;&nbsp; add #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next vector
+&nbsp;&nbsp;&nbsp; add out_buffer,dma_dbase,r0&nbsp;&nbsp;&nbsp;&nbsp; ;point to the buffer we just drew
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;place final word of DMA command
+&nbsp;&nbsp;&nbsp; sub #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point back to start of DMA command buffer
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r4,mdmacptr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;launch the DMA
+
+; Because we are double buffering, there is no need to wait for
+; DMA to complete.&nbsp; We can switch buffers, return and get straight on with the
+; next line.
+
+&nbsp;&nbsp;&nbsp; rts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Return to the main loops.
+{
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; rv,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;fix this coz of preincrement
+&nbsp;&nbsp;&nbsp; sub xi,x
+}
+&nbsp;&nbsp;&nbsp; eor #1,&lt;>#-8,out_buffer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Toggle the buffer offset twixt 0 and 256.</PRE>
+<B>The previously empty delay slot is used to do a couple of fixups to
+stuff that was used in the inner loop. Because we removed direct adds to
+<I>y, </I>and that variable needs to be preserved across the whole scanline,
+we get the value of <I>y </I>from whatever it happened to be at the end
+of the loop by loading it from <I><FONT COLOR="#66FF99">rv</FONT>. </I>We
+also subtract <I>xi </I>from <I>x, </I>because it has been incremented
+one extra time - it was preincremented before we started the inner loop.</B>
+
+<P><B>Well, that's about it for this example.&nbsp; You may like to run
+warp7, by using the batch file "m7" - this example shows a warping screen
+image based on a version of the Warp code that has been tweaked to use
+a 16x16 source tile, and which uses the <I>ctr </I>counter to munge some
+of the parameters over time, bending the warp.&nbsp; Form here, it'd be
+a simple matter to tweak this core code into something you could use as
+a trippy background screen somewhere - you might consider, for example,
+implementing some realtime pattern generation that runs on the source tile
+rather than using a static, pre-defined image.&nbsp; You can also use this
+code as a framework for exploring more complex forms of algorithmic pattern
+generation - how about using more than one source tile, and combining them
+in some cool way using a more complex inner loop?.</B><B></B>
+
+<P><B>You may introduce a few extra ticks into the inner loop by adding
+more stuff, but don't worry too much about that - so far, we've only been
+using the <I>one </I>processor!&nbsp; While that warp is running, <I>most
+of the system is idle</I>!&nbsp; And now that you've got a toehold into
+writing native MPE code, and you've seen what you can do just using one
+processor, I'm sure you'll be just itching to code some more interesting
+stuff and start using more of the capacities of the whole Merlin chip.</B>
+
+<P><B>&nbsp;</B>
+<HR>
+<PRE><B><A HREF="aftrmath.htm">jmp next
+</A><A HREF="recap.htm">jmp prev
+</A><A HREF="llama.htm">rts
+</A>nop
+nop</B></PRE>
+
+</BODY>
+</HTML>

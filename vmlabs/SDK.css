@@ -1,0 +1,13 @@
+.Filename {  font-family: "Courier New", Courier, mono; font-size: 10pt}
+.Teletype {  font-family: "Courier New", Courier, mono; font-size: 10pt; font-style: normal; font-weight: normal}
+.UserInput {  font-family: "Courier New", Courier, mono; font-size: 10pt; font-style: normal; font-weight: bold; background-color: #FFFFFF}
+.Copyright {  font-family: "Times New Roman", Times, serif; font-size: 10pt; font-style: italic}
+.TableContents {  font-family: "Times New Roman", Times, serif; font-size: 12pt; font-style: normal; text-align: left; vertical-align: top}
+.TableHeading {  font-family: "Times New Roman", Times, serif; font-size: 12pt; font-weight: bold; background-color: #FFFF00}
+.Page {  background-color: #FFFFFF}
+.NoDocument {  background-color: #CCCCCC}
+.DocumentHere {  background-position: center center}
+.TableProps {  border: 2px solid; border-color: #0000FF #0000FF #0000FF groove}
+code {  font-family: Arial, Helvetica, sans-serif; font-size: 10pt}
+.Title {  font-family: "Times New Roman", Times, serif; font-size: 24pt; font-style: normal; font-weight: bold; color: #990000; text-align: center}
+.Text {  font-family: "Times New Roman", Times, serif; font-size: 12pt; font-style: normal; font-weight: normal; background-position: left top; background-color: #FFFFFF}

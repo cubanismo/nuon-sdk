@@ -1,0 +1,329 @@
+This is Info file gcc.info, produced by Makeinfo version 1.68 from the
+input file ../../egcs/gcc/gcc.texi.
+
+INFO-DIR-SECTION Programming
+START-INFO-DIR-ENTRY
+* gcc: (gcc).                  The GNU Compiler Collection.
+END-INFO-DIR-ENTRY
+   This file documents the use and the internals of the GNU compiler.
+
+   Published by the Free Software Foundation 59 Temple Place - Suite 330
+Boston, MA 02111-1307 USA
+
+   Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+1999 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided also
+that the sections entitled "GNU General Public License" and "Funding
+for Free Software" are included exactly as in the original, and
+provided that the entire resulting derived work is distributed under
+the terms of a permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that the sections entitled "GNU General Public
+License" and "Funding for Free Software", and this permission notice,
+may be included in translations approved by the Free Software Foundation
+instead of in the original English.
+
+
+Indirect:
+gcc.info-1: 1462
+gcc.info-2: 41997
+gcc.info-3: 75228
+gcc.info-4: 122504
+gcc.info-5: 166683
+gcc.info-6: 213187
+gcc.info-7: 260563
+gcc.info-8: 302180
+gcc.info-9: 349045
+gcc.info-10: 399025
+gcc.info-11: 440260
+gcc.info-12: 488380
+gcc.info-13: 529890
+gcc.info-14: 578782
+gcc.info-15: 626044
+gcc.info-16: 671150
+gcc.info-17: 721044
+gcc.info-18: 769825
+gcc.info-19: 816699
+gcc.info-20: 865525
+gcc.info-21: 915277
+gcc.info-22: 952338
+gcc.info-23: 994133
+gcc.info-24: 1039015
+gcc.info-25: 1084915
+gcc.info-26: 1129008
+gcc.info-27: 1178599
+gcc.info-28: 1218277
+gcc.info-29: 1263084
+gcc.info-30: 1287548
+
+Tag Table:
+(Indirect)
+Node: Top1462
+Node: G++ and GCC3223
+Node: Invoking GCC5621
+Node: Option Summary8982
+Node: Overall Options23734
+Node: Invoking G++28754
+Node: C Dialect Options30211
+Node: C++ Dialect Options41997
+Node: Warning Options57976
+Node: Debugging Options75228
+Node: Optimize Options92296
+Node: Preprocessor Options109768
+Node: Assembler Options116231
+Node: Link Options116598
+Node: Directory Options122504
+Node: Target Options126369
+Node: Submodel Options130000
+Node: M680x0 Options131550
+Node: VAX Options137066
+Node: SPARC Options137601
+Node: Convex Options147465
+Node: AMD29K Options149646
+Node: ARM Options153042
+Node: Thumb Options161063
+Node: MN10200 Options163033
+Node: MN10300 Options163557
+Node: M32R/D Options164333
+Node: M88K Options166683
+Node: RS/6000 and PowerPC Options174621
+Node: RT Options193735
+Node: MIPS Options195439
+Node: i386 Options205184
+Node: HPPA Options213187
+Node: Intel 960 Options217458
+Node: DEC Alpha Options220400
+Node: Clipper Options229794
+Node: H8/300 Options230193
+Node: SH Options231007
+Node: System V Options231826
+Node: TMS320C3x/C4x Options232644
+Node: V850 Options238149
+Node: ARC Options240158
+Node: NS32K Options241360
+Node: Code Gen Options245580
+Node: Environment Variables260563
+Node: Running Protoize266749
+Node: Installation273115
+Node: Configuration Files300575
+Node: Configurations302180
+Node: Other Dir341304
+Node: Cross-Compiler343020
+Node: Steps of Cross344851
+Node: Configure Cross345969
+Node: Tools and Libraries346606
+Node: Cross Runtime349045
+Node: Cross Headers353126
+Node: Build Cross355125
+Node: Sun Install357001
+Node: VMS Install358673
+Node: Collect2368603
+Node: Header Dirs371168
+Node: C Extensions372592
+Node: Statement Exprs376117
+Node: Local Labels378011
+Node: Labels as Values380073
+Node: Nested Functions381937
+Node: Constructing Calls385780
+Node: Naming Types387837
+Node: Typeof388931
+Node: Lvalues390796
+Node: Conditionals393236
+Node: Long Long394127
+Node: Complex395567
+Node: Hex Floats397428
+Node: Zero Length398348
+Node: Variable Length399025
+Node: Macro Varargs401550
+Node: Subscripting403653
+Node: Pointer Arith404136
+Node: Initializers404701
+Node: Constructors405166
+Node: Labeled Elements406860
+Node: Case Ranges409489
+Node: Cast to Union410170
+Node: Function Attributes411248
+Node: Function Prototypes427172
+Node: C++ Comments428974
+Node: Dollar Signs429510
+Node: Character Escapes429968
+Node: Alignment430255
+Node: Variable Attributes431727
+Node: Type Attributes440260
+Node: Inline449471
+Node: Extended Asm453713
+Node: Asm Labels468646
+Node: Explicit Reg Vars469965
+Node: Global Reg Vars471420
+Node: Local Reg Vars475985
+Node: Alternate Keywords477789
+Node: Incomplete Enums479191
+Node: Function Names479947
+Node: Return Address481221
+Node: Other Builtins483264
+Node: Deprecated Features485730
+Node: C++ Extensions487007
+Node: Naming Results488380
+Node: Min and Max491694
+Node: Destructors and Goto493134
+Node: C++ Interface493610
+Node: Template Instantiation498844
+Node: Bound member functions507459
+Node: C++ Signatures508792
+Node: Gcov513136
+Node: Gcov Intro513659
+Node: Invoking Gcov516340
+Node: Gcov and Optimization521951
+Node: Gcov Data Files523375
+Node: Trouble526945
+Node: Actual Bugs528623
+Node: Installation Problems529890
+Node: Cross-Compiler Problems543568
+Node: Interoperation545039
+Node: External Bugs558317
+Node: Incompatibilities560440
+Node: Fixed Headers568912
+Node: Standard Libraries571222
+Node: Disappointments572463
+Node: C++ Misunderstandings577002
+Node: Static Definitions577728
+Node: Temporaries578782
+Node: Copy Assignment580760
+Node: Protoize Caveats582571
+Node: Non-bugs586527
+Node: Warnings and Errors596158
+Node: Bugs597919
+Node: Bug Criteria599267
+Node: Bug Lists601705
+Node: Bug Reporting602821
+Node: Sending Patches615044
+Node: Service620419
+Node: Contributing620986
+Node: VMS621792
+Node: Include Files and VMS622178
+Node: Global Declarations626044
+Node: VMS Misc630349
+Node: Portability634656
+Node: Interface636405
+Node: Passes640987
+Node: RTL659338
+Node: RTL Objects661306
+Node: RTL Classes664352
+Node: Accessors668770
+Node: Flags671150
+Node: Machine Modes681485
+Node: Constants689119
+Node: Regs and Memory694307
+Node: Arithmetic706783
+Node: Comparisons712681
+Node: Bit Fields716744
+Node: Conversions718156
+Node: RTL Declarations721044
+Node: Side Effects721853
+Node: Incdec734857
+Node: Assembler738358
+Node: Insns739880
+Node: Calls763215
+Node: Sharing765810
+Node: Reading RTL768886
+Node: Machine Desc769825
+Node: Patterns771678
+Node: Example774622
+Node: RTL Template775750
+Node: Output Template788829
+Node: Output Statement792811
+Node: Constraints796524
+Node: Simple Constraints797527
+Node: Multi-Alternative809439
+Node: Class Preferences812275
+Node: Modifiers813155
+Node: Machine Constraints816699
+Node: No Constraints825761
+Node: Standard Names826882
+Node: Pattern Ordering864298
+Node: Dependent Patterns865525
+Node: Jump Patterns868340
+Node: Insn Canonicalizations874156
+Node: Peephole Definitions877651
+Node: Expander Definitions884569
+Node: Insn Splitting891954
+Node: Insn Attributes898885
+Node: Defining Attributes899932
+Node: Expressions901944
+Node: Tagging Insns908538
+Node: Attr Example912901
+Node: Insn Lengths915277
+Node: Constant Attributes918570
+Node: Delay Slots919730
+Node: Function Units922941
+Node: Target Macros928611
+Node: Driver930494
+Node: Run-time Target946041
+Node: Storage Layout952338
+Node: Type Layout969665
+Node: Registers976438
+Node: Register Basics977418
+Node: Allocation Order982214
+Node: Values in Registers983630
+Node: Leaf Functions988750
+Node: Stack Registers991528
+Node: Obsolete Register Macros992361
+Node: Register Classes994133
+Node: Stack and Calling1014140
+Node: Frame Layout1014595
+Node: Stack Checking1020092
+Node: Frame Registers1023672
+Node: Elimination1028087
+Node: Stack Arguments1032343
+Node: Register Arguments1039015
+Node: Scalar Return1049525
+Node: Aggregate Return1053763
+Node: Caller Saves1057478
+Node: Function Entry1059017
+Node: Profiling1069919
+Node: Varargs1077000
+Node: Trampolines1084915
+Node: Library Calls1091633
+Node: Addressing Modes1099691
+Node: Condition Code1110099
+Node: Costs1116298
+Node: Sections1129008
+Node: PIC1135239
+Node: Assembler Format1137948
+Node: File Framework1139014
+Node: Data Output1143712
+Node: Uninitialized Data1150906
+Node: Label Output1156312
+Node: Initialization1167518
+Node: Macros for Initialization1173661
+Node: Instruction Output1178599
+Node: Dispatch Tables1186786
+Node: Exception Region Output1189339
+Node: Alignment Output1192333
+Node: Debugging Info1194556
+Node: All Debuggers1195165
+Node: DBX Options1197993
+Node: DBX Hooks1203276
+Node: File Names and DBX1206916
+Node: SDB and DWARF1208889
+Node: Cross-compilation1211711
+Node: Misc1218277
+Node: Config1242654
+Node: Fragments1249917
+Node: Target Fragment1250513
+Node: Host Fragment1254668
+Node: Funding1255270
+Node: GNU/Linux1257769
+Node: Copying1263084
+Node: Contributors1282272
+Node: Index1287548
+
+End Tag Table

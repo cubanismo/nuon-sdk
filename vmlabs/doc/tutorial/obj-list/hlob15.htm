@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 15</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 15</H1><P>
+
+<B><I>Thrust!</I></B><P>
+Consider the dark-blue pointy ship.  Play with it for awhile using the joystick, and notice how it behaves.
+Forward motion on the stick causes it to accelerate forwards; backward motion on the stick accelerates it
+in the opposite direction, and if you leave off the stick, the ship eventually comes to a halt.<P>
+
+This behaviour is quite a simple addition to the ships we have looked at already.  Inspecting <B>ship4.moo</B>, we'll
+have a shufty at what's gnu:<PRE>; Variables
+
+	.dc.s	plship3     ;Address of polyline definition
+    .dc.s   $306ef000   ;Colour     
+    .dc.s   $00100010   ;Scale   
+    .dc.s   $8000       ;Phase offset to make thrust vector correct
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000002   ;sine   (stopped)
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000003   ;cos    (stopped)
+
+    .dc.s   $b00000     ;Xpos
+    .dc.s   0           ;vel
+    .dc.s   $10000      ;fr
+    .dc.s   $80000101   ;lim, type (Wrap)
+
+    .dc.s   $780000     ;Ypos
+    .dc.s   0           ;vel
+    .dc.s   $10000      ;fr
+    .dc.s   $80000102   ;lim, type  (Wrap)
+
+    .dc.s   0           ;used for Thrust
+    .dc.s   0
+    .dc.s   $ffc0
+    .dc.s   $80000000
+
+</PRE>Mush the same as before - except that we are introducing one extra variable, a Positional variable with
+the "Friction" set to other than 1.0.  We aren't actually interested in the position part of this variable at all -
+we are gonna use the velocity part to store the current Thrust level, and allow the "Friction" to make the Thrust tend
+towards zero when the increment is small.<PRE>
+
+; Ranges
+
+	.dc.s	0
+	.dc.s	$1680000    ;max X	
+	.dc.s	$f00000     ;max Y
+	.dc.s	-$400     ;min angle inc
+	.dc.s	$400      ;max angle inc
+	.dc.s	-$700000     ;min velocity inc
+	.dc.s	$700000      ;max velocity inc
+	.dc.s	-$f0000
+	.dc.s	$f0000
+	.dc.s	0,0,0,0,0,0,0
+
+; Command
+
+    .ascii  "A0=h"              ;set address of polyline in object
+    .ascii  "A1=c"
+    .ascii  "c=d"               ;set colour
+    .ascii  "A2=e"              ;set scale
+
+    .ascii  "@x[34]+C1=C1"          ;set rotate angle from stick
+    .ascii  "C1=g"             ;set phase of wave C from angle
+    .ascii  "g+A3=B1"           ;set phase of wave B from angle
+
+</PRE>Thus far, the command string is similar to that of the last example.<PRE>	
+	
+    .ascii  "@x[56]+F1=F1"          ;inc velocity
+</PRE>Here, we're adding to the velocity part of the new positional variable. Note that the increment is quite large -
+I want maximum Thrust to cover the full range of 32-bits, because I am going to multiply the value with a waveform
+to make the velocities.  Because the "Friction" in the new positional variable is less than 1.0, if little or no increment is
+added, then the Thrust value will decrease towards zero.<PRE> 	
+    .ascii  "F1*B[78]=D1"          ;set X-velocity from sine
+    .ascii  "F1*C[78]=E1"          ;set Y-velocity from cosine
+    .ascii  "D0!=a<"            ;set X position
+    .ascii  "E0!=a>:"           ;set Y-position and finish
+    
+</PRE>Finally, we use the thrust value in F1 to set the X and Y velocities, as before.<P>
+
+This is all fine and groovy, but the ship still doesn't belave in a very space-shippy manner, really.  Although you can Thrust, if you leave off
+the Thrust and turn the ship, your velocity vector changes straight away, and that certainly wouldn't happen in space!  We should
+modify the velocity vector only when the thrust is actually being applied.  This can be done by adding to, rather than just brutally setting absolutely, the X and Y velocities.
+In the next example, we will look at a ship which is almost, but not quite, the classic <A HREF="hlob16.htm">Asteroids ship.</A><P> 
+
+
+</BODY>
+</HTML>

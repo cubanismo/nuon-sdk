@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges-0.84.html,v 1.6 2001/03/06 03:37:33 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK Release 0.84<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">December 19</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2000</sdfield></b></font></font></font></p>
+<hr>
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for SDK Release.</P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=125> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=301> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=342> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="Title"><font size="5" color="#FF0000">NOTE: This release 
+      of the SDK is for INTERNAL Use Only.</font></td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Scripts, Executables 
+        and Documentation</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Llama 2.6.8</td>
+    <td class="Text"> 
+      <ul>
+        <li>Llama now automatically selects the #n,<>#m,rk forms of logical operations 
+          when given #nnnn,rk forms with suitable #nnnn (so we output a 32 bit 
+          form instead of a 64 bit one). 
+          <p>Did the same for the #n,>>#-m,rk forms of add and sub instructions.</p>
+        </li>
+        <li> 
+          <p>Increased the stack size available to the parser.</p>
+        </li>
+        <li> 
+          <p>Added -M switch which totally supresses all errors and warnings. 
+            It also has an optional number to restrict the number of characters 
+            output on each line. Under Windows the forward slash is output for 
+            a directory separator wherever llama has to add one (most of our tools 
+            prefer this)</p>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Puffin 4.9.3</p>
+      <p>Removed <span class="Filename">cfg</span> directory.</p>
+    </td>
+    <td class="Text"> 
+      <p>Fixes Bugs:</p>
+      <ul>
+        <li>When setting a watch: symbols that looked like hex numbers (for example, 
+          ACE or AD01) were treated as hex numbers rather than symbols.</li>
+        <li>Puffin thought that R10 and r10 were the same symbol.</li>
+        <li>Use .dfl as the extension for debug files rather than .d. </li>
+        <li>Instead of looking in the SDK for the workspace description, look 
+          in the user's home directory (as specified by the HOME environment variable). 
+          The workspace description file is renamed from workspace.d to .puffin2k.dfl.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated the following Windows executables:</p>
+      <ul>
+        <li><span class="Filename">cat.exe</span></li>
+        <li class="Filename">less.exe</li>
+        <li><span class="Filename">gawk.exe</span></li>
+        <li><span class="Filename">echo.exe</span></li>
+        <li><span class="Filename">m4.exe</span></li>
+        <li class="Filename">diff.exe</li>
+      </ul>
+    </td>
+    <td class="Text"> 
+      <p>These executables are from a royalty-free set of Win32 gnu utilities 
+        provided at <a href="http://www.edv.agrar.tu-muenchen.de/%7Esyring/win32/UnxUtils.html">http://www.edv.agrar.tumuenchen.de/~syring/win32/UnxUtils.html 
+        </a></p>
+      <p>We also include <span class="Filename">touch.exe, which.exe, sed.exe, 
+        rmdir.exe, rm.exe, mv.exe, ls.exe, grep.exe, find.exe, chmod.exe, <span class="Text">and</span> 
+        cp.exe</span> from the above link. </p>
+      <p>Known problems: </p>
+      <ul>
+        <li><span class="Filename">find.exe</span> gets confused by upper case 
+          letters; just use lower case to find a file.</li>
+        <li><span class="Filename">which.exe</span> needs the extension .exe specified 
+          executable that you are trying to find the path of.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated the following Windows executables:</p>
+      <ul>
+        <li class="Filename">vmocopy.exe</li>
+      </ul>
+    </td>
+    <td class="Text">Copied from the old SDK-Beta release.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated the following Windows executables:</p>
+      <ul>
+        <li><span class="Filename">bmp2mbm.exe</span></li>
+        <li><span class="Filename">mergembm.exe</span></li>
+        <li><span class="Filename">tfn2mbm.exe</span></li>
+      </ul>
+    </td>
+    <td class="Text">These are the latest files from m3dl.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text"> 
+      <p>Updated <span class="Filename">bin/linux</span></p>
+      <ul>
+        <li><span class="Filename">vmcrlf</span> </li>
+        <li><span class="Filename">authinfo</span></li>
+        <li class="Filename">h2i</li>
+      </ul>
+    </td>
+    <td class="Text">Programs no longer crash on Linux (they are now statically 
+      linked.) </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">vml_make.mk</span> and <span class="Filename">vml_make_targets.mk</span></td>
+    <td class="Text">Added ECHO macro. Fixed the WAITKEY define for Windows.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">install_linux</span> script.</td>
+    <td class="Text">
+      <p>Fixes some minor bugs. </p>
+      <p>NOTE: when you install_linux, you may see the following error: </p>
+      <p><span class="UserInput">gzip: stdin: decompression OK, trailing garbage 
+        ignored</span></p>
+      <p><span class="UserInput">tar: Child returned status 2</span></p>
+      <p><span class="UserInput">tar: Error exit delayed from previous errors</span></p>
+      <p>This error can be ignored.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">user-setup</span> script.</td>
+    <td class="Text">Fixes bug so that it sets the correct PATH environment. </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated Flash ROM binaries.</td>
+    <td class="Text">See <a href="./FlashROMInfo.html">Flash Rom Documentation</a>.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated gmake documentation to 3.79.</td>
+    <td class="Text">See <a href="./gmake.pdf">gmake documentation</a>.</td>
+  </tr>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Libraries and Include 
+        files</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">lib</span> directory.</TD>
+    <TD class="Text">See the <a href="./LibraryUpdates-0.84.html">Library Updates documentation</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Text">Updated <span class="Filename">include <span class="Text">directory</span></span>.</TD>
+    <TD class="Text">See the <a href="./IncludeFileUpdates-0.84.html">Include File 
+      Updates documentation</a>.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Samples</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=125 class="TableContents">&nbsp;</td>
+    <td class="Text">Updated <span class="Filename">sample/m3dl <span class="Text">directory</span></span>.</td>
+    <td class="Text"> 
+      <p>Now has working samples for Windows machines. </p>
+      <p>These samples currently don't work on Linux and 'gmake clean' doesn't 
+        work on machines using sh.exe. This will be fixed as soon as possible. 
+      </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Platforms Tested</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center">Windows 98, Windows NT/2000, Red Hat Linux 6.2</div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Known Problems</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/windows/cc1.exe</TD>
+    <TD class="Text">May crash on Windows NT when interacting with MS Visual C++. 
+      We plan to have this fixed for the next release.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/linux/mgcc</TD>
+    <TD class="Text">Uses hardcoded paths to libraries before using your specified 
+      library paths.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">bin/windows/sendmidi.exe</TD>
+    <TD class="Text">Needs to be updated to use TCL81.dll. Currently it uses TCL80.dll.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">libmml2d.a</TD>
+    <TD class="Text">The <span class="Filename">sample/mml2d/Ycrcb</span> sample 
+      doesn't display the correct colors; blue and pink are not displayed.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Too Late for this Release...</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename">lib/src</TD>
+    <TD class="Text"> 
+      <p>We will include the source code for the mml2d, mml3d, mutil, mgl, and 
+        jpeg libraries.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD class="Filename"> 
+      <p><span class="Text">Change the directory structure</span>. </p>
+    </TD>
+    <TD class="Text">Requested changes to the directory structure will be implemented.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<p>For changes to the SDK .832 release, please see <a href="./ReleaseChanges-0.832.html">ReleaseChanges-0.832.html</a>. 
+</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">&nbsp;</P>
+</BODY>
+</HTML>

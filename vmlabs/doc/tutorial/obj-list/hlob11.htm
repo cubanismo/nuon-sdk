@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 11</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 11</H1><P>
+
+<B><I>Getting Warped</I></B><P>
+
+For the next example, we are going to use <B>ol_warps.s</B> Subtype 00, which is a filtered, nonlinear, translucent warp effect.
+To set up for the example, go to the top of <B>ol_demo2.s</B> and set <B>initlist = swarp_initlist</B> and make sure <B>drawloop = drawframe_hl</B>.
+You may also wish to roll up a small quantity of Arcturan Narco-Weed, turn off the lights and put on a little Pink Floyd.  Then, run the
+code.<P>
+
+This warp isn't quite as quick as the warp that was developed in the <A HREF="llama.htm">Optimization example</A> (and which is available in
+<B>ol_warps.s</B>, as subtype 02), but it does do some cool
+extra stuff, the most significant of which is that it is a translucent warp.  Rather than directly replacing whatever is already on the screen, it
+blends over the top of whatever is there, to a degree specified in the parameters passed to the routine.  This yields some nice soft blurring
+effects - in this example, to show the degree of translucency, the bouncing llama is drawn <I>behind</I> the warp on each frame.<P>
+
+This warp, and another, related warp in the <B>ol_warps.s</B> module, is controlled by a data block laid out as follows:<PRE>
+    .dc.s   $10000              ;u
+    .dc.s   $10000              ;v
+    .dc.s   0                   ;u2
+    .dc.s   0                   ;v2
+    
+    .dc.s   $400                ;du/dx
+    .dc.s   $100                ;dv/dx
+    .dc.s   $2000               ;d2u/dx (<<8)    
+    .dc.s   $6000               ;d2u/dx (<<8)    
+
+    .dc.s   0                   ;du2/dx
+    .dc.s   0                   ;dv2/dx
+    .dc.s   $0                  ;d2u2/dx (<<8)    
+    .dc.s   $0                  ;d2u2/dx (<<8)    
+        
+    .dc.s   $200                ;du/dy
+    .dc.s   $500                ;dv/dy
+    .dc.s   $1000               ;d2u/dy (<<8)    
+    .dc.s   $0800               ;d2u/dy (<<8) 
+    
+    .dc.s   $700                ;du2/dy
+    .dc.s   -$100               ;dv2/dy
+    .dc.s   $6000               ;d2u2/dy (<<8)    
+    .dc.s   $2000               ;d2u2/dy (<<8) 
+</PRE>
+This data block actually contains positional info and first- and second-order deltas for two warps, and in fact was
+originally for use in another type of warp which uses two sourcetiles blended together.  We'll check out the
+doublewarp in the next example, but for now, let's have a look at the HL object that creates this structure for
+the current example.  It's in <B>snglwarp.moo</B>:<PRE>
+
+;
+; snglwarp.moo = a MacrOObject that
+; defines a translucent 1-layer warp
+
+snglwarp1:
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$140b0000		;Type (Zero with ten vectors of params)
+	.dc.s	0			;Address of parameter block, if not local
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is if not local
+	.dc.s	warpobj	;here is the object prototype...
+	.dc.s	0			;here is the base of the warp_params (will be concatinated)
+
+	.dc.s	snglwarp1_end-snglwarp1
+	.dc.s	0				;routine # for init object (0 = none)
+	.dc.s	0,0
+
+	.dc.s	0,0,0,0
+
+</PRE>The parameter block that this Warp subtype expects is 20 longs in size.  Here, I'm going to
+generate it in the secondary data area, and then pass the address of this to the routine in the
+OLR object.  The secondary data area is local to the object, so multiple instances of this Warp
+can have different parameter sets.<P>
+I've also defined 11 variables - actually, 10 that get used, and one that is a dummy and just holds a few
+constants.<PRE>
+
+; local paramspace
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $2743   ;Phase offset
+        .dc.s   $0140   ;Speed
+        .dc.s   2       ;Mode (Sin)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $10000  ;Phase offset
+        .dc.s   $0735   ;Speed
+        .dc.s   3       ;Mode (Cos)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $19287  ;Phase offset
+        .dc.s   $1676   ;Speed
+        .dc.s   2       ;Mode (Sin)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $7294   ;Phase offset
+        .dc.s   $1620   ;Speed
+        .dc.s   3       ;Mode (Cos)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $4000   ;Phase offset
+        .dc.s   $115f   ;Speed
+        .dc.s   2       ;Mode (Sin)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $8203   ;Phase offset
+        .dc.s   $1e3c   ;Speed
+        .dc.s   3       ;Mode (Cos)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $1122   ;Phase offset
+        .dc.s   $0125   ;Speed
+        .dc.s   2       ;Mode (Sin)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $4000   ;Phase offset
+        .dc.s   $076e   ;Speed
+        .dc.s   3       ;Mode (Cos)
+
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $2933   ;Phase offset
+        .dc.s   $0818   ;Speed
+        .dc.s   2       ;Mode (Sin)
+        
+ .dc.s   0              ;Phase relative to current
+        .dc.s   $f0f0   ;Phase offset
+        .dc.s   $0945   ;Speed
+        .dc.s   3       ;Mode (Cos)
+
+</PRE>Ten assorted waves.<PRE>
+
+    .dc.s   tile_img    ;tile 1 srce
+    .dc.s   $16800f0    ;Size
+    .dc.s   1           ;Innerloop style
+    .dc.s   0           ;Position
+
+</PRE>And one dummy, that is just used to hold these constants.<PRE>
+
+; ranges table
+    
+	.dc.s	-$2000
+	.dc.s	$2000	
+	.dc.s	-$100000
+	.dc.s	$200000
+	.dc.s	-$300000
+	.dc.s	$300000
+	.dc.s	$00,$4000
+	.dc.s	-$300000,$200000,-$f00,$f00,0,0,0,0
+
+</PRE>The ranges...<PRE>
+
+; here is local workspace (20 longs)
+
+    .dc.s   0,0,0,0,0,0,0,0,0,0
+    .dc.s   0,0,0,0,0,0,0,0,0,0
+
+</PRE>And this is where the parameter block will get built.<PRE>
+
+; command string
+
+    .ascii  "$_a=m"     ;pass address of local data block to the object
+</PRE>Here the "$" operator is used again to pass the address of the data block in the OLR structure.<PRE>	
+	
+    .ascii  "E*F[67]=h<"    ;generate translucency
+    .ascii  "K0=k"          ;set some constants
+    .ascii  "K3=a"
+    .ascii  "K1=b"
+    .ascii  "K2=n"
+    .ascii  "a=l"
+	.ascii	"I[45]=_a"      ;position X
+	.ascii	"J[45]=_b"      ;position Y
+    
+	.ascii	"A[23]=_e"      ;du/dx
+	.ascii	"B[23]=_f"      ;dv/dx
+	.ascii	"C[01]=_g"      ;d2u/dx
+	.ascii	"D[01]=_h"      ;d2v/dx
+    
+	.ascii	"H[23]=_m"      ;du/dy
+	.ascii	"G[23]=_n"      ;dv/dy
+	.ascii	"F[01]=_o"      ;d2u/dy
+	.ascii	"E[01]=_p:"     ;d2v/dy
+
+	.align.v
+
+snglwarp1_end:
+
+</PRE>The rest of the warp setup is quite straightforward: some constants are loaded into the OLR structure, specifying
+the position and size of the warp, and the location of the sourcetile to be used; then the waveforms are used to change
+the parameters of the warp.  When invoked by the OLR, the warp routine loads in the 20-longword parameter block to local
+RAM, and uses the params therein to generate the warp.<P>
+
+Oh yeah - if you wish to proceed directly to Trip-Out City, find the <B>swarp_initlist</B> in <B>ol_demo2.s</B>, and uncomment the line that
+defines a <B>fullscreen_feedback</B> object.  If you have seen any of the Plasmatron demos, then now you know how they are done!  The
+<B>fullscreen_feedback</B> object uses a giant sprite, the size of the screen, with translucency, scaling, rotation and bilinear filtering.
+The source of the sprite is set to be the screen that is currently displayed, and the parameters are gently caressed by the waveform variables
+defined in <B>fullscreen_feedback</B>.  This screen is copied over the screen that was just drawn by the
+warp, at an intensity level specified in the <B>fullscreen_feedback</B> parameters.  The results of this feedback setup are such that I am sure the
+late Dr. Timothy Leary would have heartily approved.<P> 
+
+Next we will have a look at another variant of <B>ol_warps.s</B> Subtype 00 - the <A HREF="hlob12.htm">Double Displacement Warp</A>.<P>
+
+</BODY>
+</HTML>

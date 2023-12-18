@@ -1,0 +1,515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: index.html,v 1.34 2001/06/14 01:10:37 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 18pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=5><B>VM 
+  Labs SDK</B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<P> Please see the <a href="./doc/index.html">documentation</a> for this release 
+  for detailed information. Details of changes included in this release can be 
+  found in the <i><a href="./doc/ReleaseChanges.html">Release Changes</a></i> 
+  document.</P>
+<P>For installation instructions, please see the <A HREF="./install/index.html">install 
+  page</A>.</P>
+<!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<div align="center"> </div>
+<h1>Directory Structure</h1>
+<P>This release of the SDK has the following directory structure. Note that:</P>
+<ol>
+  <ol>
+    <li>This structure is currently under development.</li>
+    <li>This structure is subject to change with future releases of the SDK. Please 
+      use caution when coding references to the SDK into programs or scripts. 
+      Directories subject to restructure are shaded in pale green.</li>
+    <li>Entries shaded gray have been deleted from this release.</li>
+    <li>Entries shaded blue are new with this release.</li>
+    <li>Entries in shaded yellow have been moved to a new location for this release</li>
+  </ol>
+</ol>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=3 name="Directory Structure" class="TableProps">
+  <COL WIDTH=24*> <COL WIDTH=25*> <COL WIDTH=20*> <COL WIDTH=188*> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH colspan="3"> 
+      <P><font size="+1">Directory</font></P>
+    </TH>
+    <TH WIDTH=73%> 
+      <P><font size="+1">Contains</font></P>
+    </TH>
+  </TR>
+  </THEAD> <TBODY> 
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>SDK</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Top level directory.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>bin</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Executable files (scripts or binaries) that can be executed on multiple 
+        platforms. Those that are specific to a given hardware or OS configuration 
+        are included one of the subdirectories of this folder.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>linux</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Executables that run on the Linux on an i86.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>windows</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Executables that run under Windows 9<I>x</I><SPAN STYLE="font-style: normal">, 
+        NT, and Win2K on an i586.</SPAN></P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%>&nbsp;</TD>
+    <TD WIDTH=10%>&nbsp;</TD>
+    <TD WIDTH=8%><font face="Courier New, monospace"><font size=2>NUON</font></font></TD>
+    <TD WIDTH=73%>Executables that run on the NUON processor, plus scripts associated 
+      with them.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace" class="Filename">860stub</FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Binaries and support files for the PPC860 based debug card. See the <a href="./doc/DebugStubInfo.html">documentation</a> 
+        for more info.</P>
+    </TD>
+  </TR>
+  <tr valign=TOP bgcolor="#FFFFCC"> 
+    <td width=9%>&nbsp;</td>
+    <td width=10% class="Filename">sample</td>
+    <td width=8%><font face="Courier New, monospace"></font></td>
+    <td width=73%>Sample code for NUON programming. See the <i><a href="./doc/html/samplecode.html">Sample 
+      Code Overview</a></i> for information about the code samples. This directory 
+      used to be in the doc directory.</td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>doc</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>All documentation lives here. Click here for the <A HREF="./doc/index.html" NAME="Documentation index.">index</A>.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>tutorial</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Teach yourself NUON programming.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#CCFFCC"> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>fonts</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Useful fonts. This is likely to migrate into the <span class="Filename">media</span> 
+        directory.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>media</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Video, audio and still images.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>video</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>video clips (currently empty)</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>midi</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>midi audio clips</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>images</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>still pictures and clip art</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>include</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P><span class="Filename">.h</span> and <span class="Filename">.i</span> 
+        files used to build NUON firmware.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>arpa</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Internet related include files.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>jpeg</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>JPEG format image processing include files.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>m3dl</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>includes for the m3dl library.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>machine</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>NUON hardware specific includes.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>netinet</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>TCP/IP, UDP, and other network related include files.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>NUON</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Includes specific to the NUON hardware or the VM Labs embedded firmware 
+        packages/libraries.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>sys</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>standard includes.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>lib</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Runtime libraries and object files.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#CCFFFF"> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>src</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Sources for selected libraries and object files. </P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>install</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Tools, binaries, and <A HREF="./install/index.html">detailed instructions</A> 
+        for installing the SDK.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>util</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>Utilities programs, scripts and files.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#CCFFCC"> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>puffin</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>debugger utility functions (this location subject to change in the future).</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#CCFFCC"> 
+    <TD WIDTH=9%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=10%> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=8%> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>xlisp</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=73%> 
+      <P>xlisp utility functions (this location subject to change in the future).</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#FFFFFF"> 
+    <TD WIDTH=9%>&nbsp;</TD>
+    <TD WIDTH=10% class="Filename">bundled</TD>
+    <TD WIDTH=8% class="Filename">&nbsp;</TD>
+    <TD WIDTH=73%>Third party applications, plugins, tools, libraries and so on. 
+      These are elements that are not formally part of the SDK, but may be required 
+      for certain SDK functionality. See the <a href="./doc/ThirdParty.html"><i>Third 
+      Party Apps</i></a> documentation.</TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#FFFFFF"> 
+    <TD WIDTH=9%>&nbsp;</TD>
+    <TD WIDTH=10% class="Filename">&nbsp;</TD>
+    <TD WIDTH=8% class="Filename">linux</TD>
+    <TD WIDTH=73%>... for Linux</TD>
+  </TR>
+  <TR VALIGN=TOP bgcolor="#FFFFFF"> 
+    <TD WIDTH=9%>&nbsp;</TD>
+    <TD WIDTH=10% class="Filename">&nbsp;</TD>
+    <TD WIDTH=8% class="Filename">windows</TD>
+    <TD WIDTH=73%>... for Windows 98/NT/2000.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<hr>
+<br>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright" STYLE="margin-bottom: 0.2in">&nbsp; </P>
+</BODY>
+</HTML>

@@ -1,0 +1,214 @@
+
+
+Microsoft(R) Windows 95
+   (C)Copyright Microsoft Corp 1981-1995.
+
+C:\>d:
+
+D:\faststub>cd \jeff\oldemo
+
+D:\jeff\oldemo>m
+
+D:\jeff\oldemo>llama -fm68k -o test_ob.hex test_ob.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+
+D:\jeff\oldemo>llama -fm68k -o ol_sprite.hex ol_sprite.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+recip.s: line 38: Warning: Local symbol `x' shadows global definition in file `ol_sprite.s', line 101
+sp_pixg4.s: line 44: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 49: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 53: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 58: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 76: Warning: obsolete shift; use >>#30 instead
+sp_pixg4.s: line 82: Warning: obsolete shift; use >>#30 instead
+sp_pixg4.s: line 88: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 96: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 100: Warning: obsolete shift; use >>#30 instead
+sp_pixg4.s: line 102: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 106: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 112: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg4.s: line 117: Warning: obsolete shift; use >>#30 instead
+sp_pixg4.s: line 123: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 50: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 54: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 63: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 73: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 93: Warning: obsolete shift; use >>#30 instead
+sp_pixg6.s: line 94: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 104: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 124: Warning: obsolete shift; use >>#30 instead
+sp_pixg6.s: line 137: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 140: Warning: obsolete shift; use >>#30 instead
+sp_pixg6.s: line 158: Warning: obsolete shift; use >>#30 instead
+sp_pixg6.s: line 159: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sp_pixg6.s: line 175: Warning: obsolete shift; use >>#30 instead
+sp_pixg6.s: line 185: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+0 errors, 29 warnings
+
+D:\jeff\oldemo>llama -fm68k -o ol_circle.hex ol_circle.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+sqrt.s: line 38: Warning: Local symbol `x' shadows global definition in file `ol_circle.s', line 60
+sqrt.s: line 61: Warning: Local symbol `y' shadows global definition in file `ol_circle.s', line 59
+sqrt.s: line 62: Warning: Local symbol `temp' shadows global definition in file `ol_circle.s', line 69
+recip.s: line 38: Warning: Local symbol `x' shadows global definition in file `ol_circle.s', line 60
+recip.s: line 69: Warning: Local symbol `y' shadows global definition in file `ol_circle.s', line 59
+recip.s: line 70: Warning: Local symbol `temp' shadows global definition in file `ol_circle.s', line 69
+ol_circle.s: line 550: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_circle.s: line 595: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_circle.s: line 766: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_circle.s: line 788: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+0 errors, 10 warnings
+
+D:\jeff\oldemo>llama -fm68k -o ol_warps.hex ol_warps.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+foo5.ptx: line 5: Warning: Redefining symbol bufaddr (previous definition in file `ol_warps.s', line 152)
+foo5.ptx: line 6: Warning: Redefining symbol temp (previous definition in file `ol_warps.s', line 153)
+warp1trans.ptx: line 5: Warning: Redefining symbol bufaddr (previous definition in file `ol_warps.s', line 152)
+warp1trans.ptx: line 6: Warning: Redefining symbol temp (previous definition in file `ol_warps.s', line 153)
+warp2.ptx: line 5: Warning: Redefining symbol bufaddr (previous definition in file `ol_warps.s', line 152)
+warp2.ptx: line 6: Warning: Redefining symbol temp (previous definition in file `ol_warps.s', line 153)
+recip.s: line 70: Warning: Local symbol `temp' shadows global definition in file `ol_warps.s', line 153
+ol_warps.s: line 255: Warning: obsolete shift; use >>#30 instead
+ol_warps.s: line 1116: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1121: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1125: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1130: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1133: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1141: Warning: obsolete shift; use >>#30 instead
+ol_warps.s: line 1147: Warning: obsolete shift; use >>#30 instead
+ol_warps.s: line 1153: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1161: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1164: Warning: obsolete shift; use >>#30 instead
+ol_warps.s: line 1170: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+ol_warps.s: line 1178: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 31: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 36: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 43: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 49: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 53: Warning: obsolete shift; use >>#30 instead
+foo5.ptx: line 60: Warning: obsolete shift; use >>#30 instead
+foo5.ptx: line 72: Warning: obsolete shift; use >>#30 instead
+foo5.ptx: line 90: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+foo5.ptx: line 95: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 31: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 36: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 43: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 49: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 53: Warning: obsolete shift; use >>#30 instead
+warp1trans.ptx: line 60: Warning: obsolete shift; use >>#30 instead
+warp1trans.ptx: line 73: Warning: obsolete shift; use >>#30 instead
+warp1trans.ptx: line 92: Warning: obsolete shift; use >>#30 instead
+warp1trans.ptx: line 100: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1trans.ptx: line 105: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 31: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 36: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 43: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 49: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 53: Warning: obsolete shift; use >>#30 instead
+warp1circ.ptx: line 60: Warning: obsolete shift; use >>#30 instead
+warp1circ.ptx: line 73: Warning: obsolete shift; use >>#30 instead
+warp1circ.ptx: line 111: Warning: obsolete shift; use >>#30 instead
+warp1circ.ptx: line 124: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp1circ.ptx: line 129: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 30: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 35: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 42: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 49: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 57: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 71: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 105: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 110: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 115: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 123: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 131: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 149: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 164: Warning: obsolete shift; use >>#30 instead
+warp2.ptx: line 170: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+warp2.ptx: line 176: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+0 errors, 64 warnings
+
+D:\jeff\oldemo>llama -fm68k -o ol_line.hex ol_line.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+rsqrt.s: line 79: Warning: Local symbol `temp' shadows global definition in file `ol_line.s', line 69
+sqrt.s: line 62: Warning: Local symbol `temp' shadows global definition in file `ol_line.s', line 69
+recip.s: line 70: Warning: Local symbol `temp' shadows global definition in file `ol_line.s', line 69
+sincos.s: line 36: Warning: Local symbol `temp' shadows global definition in file `ol_line.s', line 69
+sincos.s: line 37: Warning: Local symbol `y1' shadows global definition in file `ol_line.s', line 50
+sincos.s: line 38: Warning: Local symbol `y2' shadows global definition in file `ol_line.s', line 52
+sincos.s: line 39: Warning: Local symbol `x1' shadows global definition in file `ol_line.s', line 49
+sincos.s: line 40: Warning: Local symbol `x2' shadows global definition in file `ol_line.s', line 51
+aaline5.s: line 129: Warning: obsolete shift; use >>#30 instead
+aaline5.s: line 167: Warning: obsolete shift; use >>#30 instead
+aaline5.s: line 184: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+aaline5.s: line 238: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+0 errors, 12 warnings
+
+D:\jeff\oldemo>llama -fm68k -o moo_cow.hex moo_cow.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+moo_cow.s: line 1007: Warning: r31 conflict with previous packet
+0 errors, 1 warnings
+
+D:\jeff\oldemo>llama -fm68k -o sourcetile.hex sourcetile.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+sourcetile.s: line 244: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sourcetile.s: line 247: Warning: obsolete instruction form; use addr #(n<<16),ri instead
+sourcetile.s: line 266: Warning: obsolete shift; use >>#30 instead
+0 errors, 3 warnings
+
+D:\jeff\oldemo>llama -fm68k -o olrlister.hex olrlister.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+
+D:\jeff\oldemo>llama -fm68k -o kryten.hex kryten.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+kryten.s: line 342: Warning: address not aligned for instruction
+0 errors, 1 warnings
+
+D:\jeff\oldemo>llama -fmpo -o ol_demo2.mpo ol_demo2.s
+LLAMA optimizing assembler version 1.97, last built May 22 1998
+
+Copyright (c) 1995-1998 VM Labs, Inc. All rights reserved.
+Confidential and Proprietary Information of VM Labs, Inc.
+ol_demo2.s: line 115: ERROR: Unable to open include file `solidcol.s'
+ol_demo2.s: line 122: ERROR: Unable to open include file `solidcol.s'
+ol_demo2.s: line 149: ERROR: Unable to open include file `f1.msk'
+ol_demo2.s: line 153: ERROR: Unable to open include file `f2.msk'
+ol_demo2.s: line 156: ERROR: Unable to open include file `f3.msk'
+ol_demo2.s: line 159: ERROR: Unable to open include file `f4.msk'
+ol_demo2.s: line 516: ERROR: Unable to open include file `warp_tile.moo'
+7 errors, 0 warnings
+
+D:\jeff\oldemo>mload -p 0 -h ol_demo2.mpo -r -m
+Loading 'ol_demo2.mpo' into mpe 0
+error: loading file 'ol_demo2.mpo' ('no version (V) record')
+
+D:\jeff\oldemo>
+
+D:\jeff\oldemo>exit
+Exited

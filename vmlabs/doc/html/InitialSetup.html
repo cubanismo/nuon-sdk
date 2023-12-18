@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: InitialSetup.html,v 1.23 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Initial 
+  Setup </B></FONT></FONT></FONT></P>
+<p>
+<p>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> These instructions will guide you through the initial 
+set up of your PC and development system.
+<h2>Third Party Software</h2>
+<p>You must also install any required third party applications, as described in 
+  the <a href="./ThirdParty.html"><i>Third Party Apps</i></a> documentation.</p>
+<h2>Environment variables</h2>
+<p class="Text">There are two important environment variables that must be defined; 
+  VMLABS and MD_PORT.</p>
+<h3>The VMLABS environment variable </h3>
+<p class="Text">The <span class="Filename">VMLABS</span> variable should be set 
+  to the directory where you unpacked the SDK (or if you are mounting the SDK 
+  from the network, the network drive or NFS mount point for the SDK). For example, 
+  for a Windows you would add the following line to<span class="Filename"> autoexec.bat</span></p>
+<blockquote>
+  <p class="UserInput"> set VMLABS=C:\vmlabs</p>
+</blockquote>
+<p class="Text">if you had installed the SDK in the <span class="Filename">C:\vmlabs</span> 
+  directory. Under Linux, using <span class="Filename">bash</span> you would add 
+  the following line to your <span class="Filename">.bashrc</span> file</p>
+<blockquote>
+  <p class="UserInput">export VMLABS=/usr/local/vmlabs</p>
+</blockquote>
+<p class="Text">if you had installed the SDK in <span class="Filename">/usr/local/vmlabs</span> 
+  (other shells may vary somewhat in syntax).</p>
+<p class="Text">Additionally, you will want to add <span class="Filename">VMLABS</span> 
+  to your environment's <span class="Filename">PATH</span> variable. For Windows, 
+  add</p>
+<blockquote>
+  <p class="UserInput">set PATH=&quot;%PATH%&quot;;&quot;%VMLABS%\bin&quot;;&quot;%VMLABS%\bin\windows&quot;</p>
+</blockquote>
+<p class="Text">to <span class="Filename">autoexec.bat</span>.</p>
+<p class="Text">For Linux, using <span class="Filename">bash</span> you would 
+  add</p>
+<blockquote>
+  <p class="UserInput">export PATH=$PATH:$VMLABS/bin:$VMLABS/bin/linux</p>
+</blockquote>
+<p class="Text">to your <span class="Filename">.bashrc</span> file (other shells 
+  may vary somewhat in syntax).</p>
+<h3>The MD_PORT environment variable </h3>
+<p class="Text">The <span class="Filename">MD_PORT</span> variable should be set 
+  to the IP address of your NUON development system. If you do not already have 
+  an address that you can assign to the system (or one has not already been assigned 
+  for you), you should obtain one from your system administrator or ISP. This 
+  address should be on the same subnet as your PC.</p>
+<p class="Text">For Windows systems, add the line</p>
+<blockquote>
+  <p class="UserInput">set MD_PORT=<i>ip1.ip2.ip3.ip4</i></p>
+</blockquote>
+<p class="Text">to your <span class="Filename">autoexec.bat</span> file. <i><span class="Filename">ip1.ip2.ip3.ip4</span></i> 
+  is the IP address of your development system.</p>
+<p class="Text">Under Linux, using <span class="Filename">bash</span>, add the 
+  line</p>
+<blockquote>
+  <p class="UserInput">export MD_PORT=<i>ip1.ip2.ip3.ip4</i></p>
+</blockquote>
+<p class="Text">to your <span class="Filename">.bashrc</span> file (other shells 
+  may vary somewhat in syntax). <i><span class="Filename">ip1.ip2.ip3.ip4</span></i> 
+  is the IP address of your development system.</p>
+<p class="Text">Note that if you have forgotten your development system's IP address, 
+  you can determine it either from the boot app or by resetting the development 
+  system and checking the first lines of the hyperterminal output.</p>
+<h2>Update the Debug Stub of your NUON development system</h2>
+<h3 class="Text">See the <a href="./DebugStubInfo.html">Debug Stub Documentation</a>.</h3>
+<h2>Update your Flash ROM of your NUON development system</h2>
+<h3 class="Text">See the <a href="./FlashROMInfo.html">Flash ROM Documentation</a>.</h3>
+<hr>
+<span class="Copyright"><span class="Copyright"> <br>
+<span class="Copyright"></span> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+</BODY>
+</HTML>

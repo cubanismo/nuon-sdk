@@ -1,0 +1,89 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\File-Server\printf</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>March 2, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This program demonstrates how to use the <b>print()</b> function
+together with the file server aspect of the MLOAD tool.&nbsp;</p>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">printf.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<h4>A Little Information About The File Server</h4>
+<p>On the NUON development system, known as the "client", your programs calls
+functions in standard C library for performing file access. In the library,
+these calls are then translated into messages sent over the TCP/IP connection to your host PC.</p>
+<p>On the PC side, the file server is one of two separate items:</p>
+<ol>
+  <li>The FSSERV.EXE program.&nbsp; (Obsolete)<br>
+  </li>
+  <li>The "-fs" option of the MLOAD tool.<br>
+    <br>
+    <b><font color="#000080">mload -p3 -n </font><font color="#FF0000">-fs</font><font color="#000080">
+    fstest.cof -r -m</font></b></li>
+</ol>
+<p>A future version of the PUFFIN debugger will also have the file server built into it.</p>
+<p>When you run the file server on the PC side, it tells the client that the file server is available so that it knows what TCP/IP address to use when making requests.</p>
+<p>When the file server receives a message from the client, it performs whatever file operation was requested and then sends the appropriate information back to the client.</p>
+<h4>STDIN &amp; STDOUT</h4>
+<p>The STDOUT and STDIN file streams are both directed to the PC console, so you can use it for character-based input and output.</p>
+<h4>File Server Caveats</h4>
+<p>Please note that while you might otherwise successfully use more than one PC to transfer data to your
+NUON system, this will only confuse things when using the file server.  Stick to one server per client.<br>
+<br>
+Also remember that using standard C library functions to read data from your host PC is something that will only work on a development system.  Final production code must use the Media Access Library
+functions that are part of the BIOS.  Therefore it is highly recommended that you encapsulate your data access routines into a few functions within a single module so that you may change things more easily when the time comes.</p>
+<hr>
+<p align="left">Before attempting to load or run any of the SDK samples, make
+sure you have first read the <a href="../../../doc/Hitchhikers.PDF">Hitchhiker's
+Guide To NUON</a> document.&nbsp;&nbsp;</p>
+<p align="left">After that, if you're still having trouble getting this sample
+program to work, &nbsp;<a href="mailto:devsupport@vmlab.com?subject=Problem with Sample Code">click
+here to request assistance from developer support</a>.</p>
+<p align="left"><a href="../../../doc/html/onlinedocumentation.html">Click here
+for other online SDK documentation</a>.</p>
+</body>
+</html>

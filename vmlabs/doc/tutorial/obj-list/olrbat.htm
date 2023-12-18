@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<TITLE>Batch file for <B>simplolr.a</B></TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>The batch file for <B>simplolr.a</B></H1><P>
+
+<PRE>
+llama -fm68k -o ol_sprite.hex ol_sprite.a
+llama -fm68k -o ol_line.hex ol_line.a
+llama -fm68k -o ol_warps.hex ol_warps.a
+llama -fm68k -o test_ob.hex test_ob.a
+</PRE>
+These assemble the components that are going to be used into the .hex files needed for
+the binaries section.  Of course, there is no need to re-assemble the components if they
+remain unchanged, but I am frequently tinkering with them, and besides, they take a very
+small amount of time to assemble, so I habitually assemble the whole lot.<PRE>
+llama -fmpo -o simpleolr.mpo simpleolr.a
+mload -p 0 -h simpleolr.mpo -r -m
+</PRE>Finally, the main part of the example code is assembled into a normal .mpo file and
+loaded onto MPE0.<P>
+
+</BODY>
+</HTML>

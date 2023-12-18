@@ -1,0 +1,220 @@
+<!-- This document was created with HomeSite 2.5 -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 1</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 1</H1><P>
+
+Okay, first set up <B>ol_demo2.s</B> properly to start looking at the HL object examples.
+At the top of the code, see that <B>drawloop</B> is set to <B>drawframe_hl</B>, and <B>initlist</B> is set to
+<B>basic_initlist</B>.  This sets up the code to call <B>drawframe_hl</B> every frame - this is the version of
+the frame rendering code that includes the HL Object routines.  The <I>initlist</I> is what gets passed to the
+HL Object List Setup routine which is called before the mainloop is entered.  It is basically just a list of the
+Objects you require.  Here is what <B>basic_initlist</B> looks like:
+
+<PRE>
+
+basic_initlist:
+
+; real simple init-list.
+
+    .dc.l   MooProtos               ;pointer to a list of prototypes
+    .dc.l   list_array              ;pointer to a list of linked lists
+    .dc.l   (clear_block<<16)|1     ;one instance of clear block
+	.dc.l	(olr_show<<16)|1		;onr instance of olr_show
+    .dc.l   (llama_1<<16)|1         ;one instance of a llama
+    .dc.l   -1
+
+</PRE>
+
+This list contains three objects, <B>clear_block</B> which is used to clear the screen to a background colour, olr_show which
+is a special object which displays the first five objects in the OLR list as hex values, using a character-mapped acreen overlay,
+and <B>llama_1</B>, which is an Object that defines a vector llama.  <B>clear_block</B> and <B>llama_1</B> are not the actual
+Object definitions, of course - they are numeric values that identify the Objects.  In the initlist, the object number goes in the
+top 16-bits of a longword; the bottom 16-bits contains a value that defines how many instances of that object to create.  So in
+<B>basic_initlist</B>, we are asking for one instance of <B>clear_block</B>, and one instance of <B>llama_1</B>.<P> 
+
+What about the first two entries in the list?  Well, <B>list_array</B> is the address of a structure that has room for
+a bunch of pointers, each one representing a linked list of Objects.  This structure is filled by the HL List Setup
+code.  At the moment we are only concerned with the first pointer that gets passed back, which is the address of
+the linked-list used to actually draw a frame.  As more high-level game functions get incorporated into the system,
+other lists in the list_array will be defined and used.  <B>MooProtos</B> contains a list of pointers to the HL Object
+prototypes which are used by the HL Object List Setup code to generate the actual HL Object List.  If you examine
+the following section of the code, you'll get the idea:<P>
+
+<PRE>
+
+; now here are some definitions of the HL object types.
+
+    source_tile1 = 0
+    quick_warp = 1
+    cursor_1 = 2
+    cursor_2 = 3
+    ship_1 = 4
+    ship_2 = 5
+    ship_3 = 6
+    ship_4 = 7
+    ship_5 = 8
+    ship_6 = 9
+    aster_1 = 10
+    blur_field = 11
+    clear_block = 12
+    llama_1 = 13
+	olr_show = 14
+	
+</PRE>
+
+In this section, I am defining a unique numeric ID for each high-level object type I've created.<P>
+
+<PRE>
+
+MooProtos:
+
+; here are the addresses of the HL object prototypes.
+
+    .dc.s   stile       ;source tile
+    .dc.s   qwarp       ;quick-warp
+    .dc.s   curs_1    	;cursor
+    .dc.s   curs_2    	;cursor
+    .dc.s   sh_1        ;ship
+    .dc.s   sh_2        ;ship
+    .dc.s   sh_3        ;ship
+    .dc.s   sh_4        ;ship
+    .dc.s   sh_5        ;ship
+    .dc.s   sh_6        ;ship
+    .dc.s   aster       ;asteroid
+    .dc.s   blurf       ;blur field
+    .dc.s   clear       ;clear block
+    .dc.s   llam        ;llama
+	.dc.s	olrll		;OLR lister
+
+</PRE>
+
+And here is the actual <B>MooProtos</B> table.  It contains the actual addresses of the HL Object definitions,
+in the order they were defined above.
+
+<PRE>
+     
+; Now, here are the actual HL object prototypes.
+
+stile:
+    .include    "sourcetile.moo"
+qwarp:
+    .include    "qwarp.moo"
+curs_1:
+    .include    "cursor1.moo"    
+curs_2:
+    .include    "cursor2.moo"
+sh_1:
+    .include    "ship1.moo"
+sh_2:
+    .include    "ship2.moo"
+sh_3:
+    .include    "ship3.moo" 
+sh_4:
+    .include    "ship4.moo"  
+sh_5:
+    .include    "ship5.moo"  
+sh_6:
+    .include    "ship6.moo"    
+aster:
+    .include    "asteroid.moo"
+blurf:
+    .include    "blurfield.moo"   
+clear:
+    .include    "cls.moo" 
+llam:
+    .include    "llama.moo" 
+olrll:
+    .include    "olrlister.moo" 
+</PRE>
+
+Here, the included .<B>moo</B> files define the actual HL objects.  In the first few examples,
+we shall be mostly concerned with <B>cls.moo</B> and <B>llama.moo</B>.<P>
+
+Okay, now assemble and run the code.  You should see a yellow llama on a black background.  Not terribly
+exciting, even if you really like llamas, because nothing is moving.  We'll soon fix that, but for now, let's
+just have a look at the object definitions, and see how they work.  Take a look at "cls.moo":<P>
+
+<PRE>
+
+;
+; cls.moo = a MacrOObject that
+; clears a block of screen.
+
+cl_s:
+
+	.dc.s	0		    ;Prev
+	.dc.s	0			;Next
+	.dc.s	0			;length of param block 
+	.dc.s	0           ;param address, if not local
+
+	.dc.s	null_ranges	    ;Address of ranges table, if not local
+	.dc.s	null_command	;this'll be where the command string is, if not local
+	.dc.s	clsobj          ;here's the proto
+	.dc.s	0
+
+    .dc.s   cl_s_end-cl_s   ;total object size
+    .dc.s   0,0,0
+    
+    .dc.s   0,0,0,0
+
+	.align.v
+
+cl_s_end:
+
+</PRE>
+
+This is about the simplest high-level object definition it's possible to have.  Let's look at the significant
+values:  <B>Prev</B> and <B>Next</B> are pointers to the previous and next Objects in the linked list, and are filled in when
+the list is generated by HL Object List Setup.  There are no variable parameters in this simplest of Objects, so the
+entry for the length of the parameter block is set to 0.  Likewise, the param address is set to 0; there aren't any.<P>
+
+The next two entries do indeed point to an actual range-table and command-string, but they are just defaults which don't
+do anything - look them up in the source if you feel like it.  The next entry points to <B>clsobj</B> - which is a low-level
+OLR object.  Remember that the high-level object list is traversed in order to generate an OLR list, which is then traversed
+by the Object List Renderer to actually draw a frame.  The high-level object usually generates a low-level OLR object as its output.
+Typically, the high-level object will use an already-defined OLR object as a protoype, then modify certain fields before
+writing the object to the OLR list.  The third long of the second vector points to the prototype OLR to be used.  In this case,
+it looks like this:
+
+ <PRE>
+
+ clsobj:
+
+; here is a simple object that clears the screen
+
+	.dc.s	$00000000			;packed 16bit x:y destination position
+	.dc.s	$016800f0			;size X:Y 
+	.dc.s	$10808000			;colour to clear screen to
+	.dc.s	$0000000	
+
+    .dc.s   0,0,0,0
+    
+    .dc.s   0,0,0,0
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   (warps|$300)        ;subtype 3 of Warp is plain fill.
+  
+</PRE>
+
+as you can see, a really simple OLR object, with only position, size and colour parameters.  The last long shows that
+the clear-block code resides in the Warps overlay and is the third subtype, and that it uses no math tables.<P>
+
+If you look at the OLR display that is overlaid on the screen, you can see that the first object in the OLR list is
+the CLS object.<P>
+
+The only other significant entry in the cls.moo high-level object is its length, which always resides in the first long of the
+third vector.  As you can see, cls.moo is a pretty boring high-level object, which doesn't really do anything more than emit
+a pre-defined OLR object.  In the <A HREF="hlob2.htm">next example</A>, we will introduce a variable at last!
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,61 @@
+<HTML>
+
+<HEAD>
+<TITLE>The High-Level Object System</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>The High-Level Object System</H1><P>
+
+I have already documented how it is possible to string together a bunch of low-level object definitions and have the
+Object List Renderer traverse the list, rendering the objects using as many MPEs as you specify.  That's all well and
+groovy, but you still have to build that object list in the first place.  You can elect to do that yourself via
+whatever means you choose, but if you want to use it, I have created a set of utilities which I call the High-Level
+Object System which will assist in the creation and manipulation of lists for the Object List Renderer.<P>
+
+Low-level objects are always 16 longs in size, and contain just enough information to tell the Object List Renderer how
+to draw the necessary Object.  High-level objects are more complex entities that contain not only information about the
+object in question, such as position, angel and colour; these objects also contain information on how components of the
+object vary over time.  Using the HL object system, it is possible to define useful and interesting behaviour for any object
+easily.<P>
+
+<H3>How it Works</H3>
+
+A high-level Object List consists of a linked list of objects, rather than a simple chain of objects as used by the low-level
+Object List Renderer.  A linked-list is used because unlike low-level Objects, which are always 16 longs in size, the high-level
+Objects can be of a variable size.<P>
+
+The linked list may be created for you by running the list setup code in the module moo_cow prior to beginning the display
+loop.  You simply provide a list of the objects you require, and call list setup, to generate the linked list used during
+the display loop.  List setup allows you to specify multiple instances of any Object type.<P>
+
+During the display loop, the high-level object list code traverses the linked list.  Variables that change over time are
+updated for the object.  The resultant values may be used to build a low-level (OLR) object, and/or a secondary data block which
+may be used by objects that require more parameters than can be contained in the standard, 16-long OLR object.  In addition, a
+high-level object may request that a routine be run either locally or on any remote MPE that is free.  This is handy, since you
+can use the HL Object system to run other processes in parallel whilst the display list is being built.<P>   
+
+In the High-Level Object examples, a special OLR Display object is available.  This Object lists in hex the memory that contains
+the first five OLR objects in the current list.  Using this Object, you can see the OLR objects that the High-Level Object
+system generates, and watch the values change in realtime.<P>
+
+<H3>Anatomy of a High-Level Object</H3>
+
+A high-level object consists of four main areas: the Header block, which contains mainly pointers to various bits of data used by the
+Object; the Variables section, which defines how certain parameters vary over time; the Ranges section, which is used in conjunction with the
+Variables section, and basically defines certain boundaries and ranges used by the Variables handler; and finally the Command string,
+which is a simple script string which defines how the Variables and Ranges go together to make the resultant data structure (which
+is usually, but not always, an OLR object).<P>
+
+Of course, I can waffle on until I am blue in the face about what constitutes a high-level object, but you won't really learn
+properly until you get to play with one!  So let's dive into the <A HREF="hlob1.htm">examples</A>.
+
+ 
+
+ 
+
+</BODY>
+</HTML>
+
+

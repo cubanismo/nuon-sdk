@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<TITLE>OLR Include file</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>OLR Include file</B></H1>
+
+This file defines some constants and addresses in external RAM that all
+OLR-participating code needs to know.<P>
+
+<PRE>
+
+status = external_ram_base
+external_routines = status+32
+external_recip = external_routines+1024
+external_sine = external_recip+512
+external_sqrt = external_sine+1024
+external_math_end = external_sqrt+768
+
+</PRE>
+Actually I don't much like doing this, having to declare these structures relative
+to an absolute position in external RAM.  I will likely change this.
+<PRE> 
+ 
+        dmaScreenWidth = 360
+	    dmaScreenHeight = 240
+        dmaScreenSize = (dmaScreenWidth * dmaScreenHeight * 4)
+        dmaScreen1 = (external_ram_base+$18000)
+        dmaScreen2 = (dmaScreen1 + dmaScreenSize)
+        dmaScreen3 = (dmaScreen2 + dmaScreenSize)
+        dmaScreen = dmaScreen2
+ 		dmaPixelType = 4	; 32 bit pixel
+		dmaPixelSize = 1	; 32 bit pixel
+    	dmaPixelWrite = 6
+		CLUSTER=(1<<11)
+		dmaFlags = (dmaPixelWrite<<13)|((dmaScreenWidth/8)<<16)|(dmaPixelType<<4)|CLUSTER
+
+</PRE>
+This lot all go to define the size and nature of the screen I am using, and the number of
+screen buffers to use.
+<PRE>
+
+OLRam = (dmaScreen3 + dmaScreenSize)
+ROLRam = OLRam+$10000
+
+</PRE>
+These two locate some space in RAM beyond the screen-buffers for constructing object lists.
+They are not used directly by the low-level OLR.  The high-level object system uses them when
+it generates OLR lists.
+<PRE>
+init_env = local_ram_base
+</PRE>
+Finally, this is the position in the rendering MPE's local RAM that is the base of the structures used
+by MPEs running OLR.
+
+
+</BODY>
+</HTML>

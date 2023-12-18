@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: IncludeFileUpdates0.85beta.html,v 1.13 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Include 
+  File Updates</B></FONT></FONT></FONT> </P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<P>The following include file updates are effective with this release:<b></b></P>
+<TABLE WIDTH=499 BORDER=2 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=114> <COL WIDTH=104> <COL WIDTH=255> <THEAD class="TableProps"> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=114> 
+      <P>File</P>
+    </TH>
+    <TH WIDTH=104> 
+      <P>Path</P>
+    </TH>
+    <TH WIDTH=255> 
+      <P>Comments</P>
+    </TH>
+  </TR>
+  <TR VALIGN=TOP class="TableContents">
+    <td class="Filename">ioctl.h</td>
+    <td class="Filename">include/sys</td>
+    <td class="TableContents">Added codes for keyboard drivers.</td>
+  </TR>
+  <TR VALIGN=TOP class="TableContents"> 
+    <td class="Filename">video.h </td>
+    <td class="Filename">include/nuon</td>
+    <td class="TableContents">Added _VidSetOutputType</td>
+  </TR>
+  <TR VALIGN=TOP class="TableContents"> 
+    <td class="Filename">tcp_ip.h </td>
+    <td class="Filename">include/sys</td>
+    <td class="TableContents"> 
+      <p>Added this file. </p>
+      <p>Enables networking.</p>
+    </td>
+  </TR>
+  <tr valign=TOP class="TableContents"> 
+    <td class="Filename"> 
+      <p><span class="Filename">dma.h</span></p>
+      <p><span class="Filename">mutil.h </span></p>
+    </td>
+    <td class="Filename">include/nuon</td>
+    <td class="TableContents"><span class="Filename">dma.h</span> has been separated 
+      from the <span class="Filename">mutil</span> project. All <span class="Filename">mutil</span> 
+      specific functions have been removed from <span class="Filename">dma.h</span> 
+      and are now in <span class="Filename">mutil.h</span>.</td>
+  </tr>
+  <tr valign=TOP class="TableContents"> 
+    <td class="Filename">Protocol.h, objc-api.h, sarray.h, NXConstStr.h, encoding.h, 
+      objc-list.h, thr.h, Object.h, hash.h, objc.h, typedstream.h</td>
+    <td class="Filename">include/objc</td>
+    <td class="TableContents">Removed; Objective C is not supported.</td>
+  </tr>
+  </THEAD> <TBODY class="Filename"> </TBODY> 
+</TABLE>
+<P>Note that after you install the SDK in your development environment, you must 
+  recompile and relink any code that depends on these header files.</P>
+<table width="75%" border="2" class="TableProps">
+  <tr bgcolor="#FF0000"> 
+    <td colspan="3"> 
+      <div align="center"><b><font size="+1">The following include files are obsolete 
+        and will be removed from the SDK in the very near future. Please update 
+        your source code appropriately.</font></b></div>
+    </td>
+  </tr>
+  <tr class="TableHeading"> 
+    <td> 
+      <div align="center"><b>Obsolete File</b></div>
+    </td>
+    <td> 
+      <div align="center"><b>Path</b></div>
+    </td>
+    <td> 
+      <div align="center">Replace with</div>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">merlin.i</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &quot;nuon/nuon.i&quot;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">m2pub.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/mml2d.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">m2types.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/mml2d.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">audioapi.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename"> 
+      <p>either<br>
+        <span class="Filename"> #include &lt;nuon/nise.h&gt;</span><br>
+        or<br>
+        <span class="Filename">#include &lt;nuon/synth.h&gt;</span> </p>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">mlcolor.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/mml2d.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">mlpixmap.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/mml2d.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">mltypes.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/mml2d.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">pcmapi.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename">#include &lt;nuon/nise.h&gt;</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="Filename">synthapi.h</td>
+    <td class="Filename">include/nuon/</td>
+    <td class="Filename"> 
+      <p class="Filename">#include &lt;nuon/synth.h&gt;</p>
+    </td>
+  </tr>
+</table>
+<hr>
+<span class="Copyright"><br>
+</span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem -->
+</BODY>
+</HTML>

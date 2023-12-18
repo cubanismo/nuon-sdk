@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges.html,v 1.72 2001/06/15 01:10:19 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for SDK Release.</P>
+<TABLE WIDTH=929 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=75> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=294> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=532> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <p><font size="+1" color="#FF0000">Please Note: This is an internal version 
+        of the SDK. </font></p>
+      <p>For an external version of the SDK, please contact sdk-release@vmlabs.com.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updates for the SDK 0.86.2 Release.</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Llama 2.80</p>
+      <p><span class="Filename">bin/windows/llama.exe</span> and <span class="Filename">bin/linux/llama</span></p>
+    </td>
+    <td class="Text" width="532">No longer emits spurious warnings about instructions 
+      with no effect. 
+      <p>See the following for more information:</p>
+      <ul>
+        <li><a href="./html/llama_notes.html">Release Notes</a></li>
+        <li><a href="llama.pdf">Llama documentation</a>.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Puffin 5.0.02 Beta</p>
+      <p>Update for Windows platform: <span class="Filename">bin/windows/puffin5.exe</span></p>
+      <p>Update for Linux platform: <span class="Filename">bin/linux/puffin5</span>, 
+        <span class="Filename">lib/tcl8.3</span> and <span class="Filename">lib/tk8.3</span></p>
+    </td>
+    <td class="Text" width="532"> 
+      <p>A preliminary version of Puffin5, the new debugger. Currently, it is 
+        only an assembly language debugger. The C support will be added in a future 
+        release. </p>
+      <p>To run the new debugger:</p>
+      <ul>
+        <li>on windows you must <a href="../bundled/windows/tcl832.exe">install 
+          tcl 8.32</a></li>
+        <li>type <span class="Filename">puffin5</span></li>
+      </ul>
+      <p>The Puffin 5.0.02 Beta release includes the TCL/TK 8.32 files needed 
+        to run puffin5 on linux.</p>
+      <p>There have been some bug fixes and new features added since the Puffin 
+        5.0.01 Beta release. Please see the <a href="./puffin5.pdf">documentation</a> 
+        for more information.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Include file update.</p>
+      <p class="Filename">include/nuon/video.h</p>
+    </td>
+    <td class="Text" width="532"><span class="Filename">include/nuon/video.h</span> 
+      was updated to add the missing <span class="UserInput">int fps</span> field 
+      in the <span class="UserInput">bios_viddisplay</span> structure. This missing 
+      field had resulted in the incorrect number of bytes (36) returned for the 
+      structure; it now returns the correct number of bytes (40).</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">Updated patches <span class="Filename">lib/crt0.o</span>, 
+      <span class="Filename">lib/gcrt0.o</span> and <span class="Filename">lib/crtend.o</span></td>
+    <td class="Text" width="532"> <span class="Text">See the <a href="./html/patch_notes.html">patch 
+      release notes</a>.</span></td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Removed obsolete files: <span class="Filename">lib/crt0l.o</span> and 
+        <span class="Filename">lib/gcrt0l.o</span></p>
+    </td>
+    <td class="Text" width="532">These files were used with the obsolete library-based 
+      bios, libbios.a.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>PAL/NTSC firmware:</p>
+      <p class="Filename">bin/NUON/flashRcv-pal.cof, bin/NUON/flash-dev-pal.bat, 
+        bin/NUON/flash-dev-pal, bin/NUON/nuon-flash.tcl, bin/NUON/dev-pal.cof</p>
+    </td>
+    <td class="Text" width="532"> 
+      <p>The Flash Programming window will no longer be distorted when you flash 
+        the PAL boot images while the NUON system is set to PAL mode. However, 
+        it will be distorted when you flash the PAL boot images while the NUON 
+        system is set to NTSC mode and vise versa.</p>
+      <p>See the <a href="./FlashROMInfo.html">Flash Rom Documentation</a> for 
+        more information.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Authinfo documentation update.</p>
+      <p class="Filename">doc/authinfo.html</p>
+    </td>
+    <td class="Text" width="532">The <a href="./authinfo.html">Authinfo</a> documentation 
+      has been updated.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Linker 2.9.14</p>
+      <p>Update for Linux platform:</p>
+      <p class="Filename">bin/linux/vmld</p>
+    </td>
+    <td class="Text" width="532"> Fixed &quot;common&quot; variable alignment 
+      bug for <span class="Filename">vmld</span> on Linux.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Executables for the 
+        SDK 0.86.1 Release.</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Linker 2.9.14</p>
+      <p>Update for Windows platform:</p>
+      <p class="Filename">bin/windows/vmld.exe</p>
+    </td>
+    <td class="Text" width="532" bgcolor="#FFFFFF"> 
+      <p>This version of <span class="Filename">vmld</span> is necessary for the 
+        new compiler to work correctly. </p>
+      <p><span class="Filename">vmld</span> will now continue command line option 
+        processing if -v is followed by other commands.</p>
+      <p><span class="Filename">vmdump</span> no longer has random output in gaps 
+        and padding when the <span class="UserInput">--snap(-pad)<span class="Text">options 
+        are used.</span></span></p>
+      <p>Fixed &quot;common&quot; variable alignment bug on Windows only.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Scripts, Executables 
+        and Documentation for the SDK 0.86 Release.</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">MGCC 2.95.3</td>
+    <td class="Text" width="532"> 
+      <p>Recent Updates:</p>
+      <ul>
+        <li>Updated to GCC 2.95.3, which has some improvements in multiword load 
+          and store sequences.</li>
+        <li>Renamed <span class="Filename">cpp</span> to <span class="Filename">vmcpp</span></li>
+        <li>Fixed a bug related to the handling of short values.</li>
+        <li>Fixed a bug with volatile and sub-word writes that caused the wrong 
+          timecode to be displayed.</li>
+      </ul>
+      <p>Known Bugs:</p>
+      <ul>
+        <li>There may be a case where &quot;long long&quot; may not work correctly. 
+          If you run into such a case, please report it to <a href="mailto:%20sdk-release@vmlabs.com">sdk-release@vmlabs.com.</a></li>
+        <li>There is still a register allocation bug in the reload pass of the 
+          compiler. This can cause the compiler to crash when compiling some functions 
+          with a lot of local variables, particularly with <font color="#0000FF">-O2</font> 
+          and better optimization. Using a lower optimization level will usually 
+          fix this. (This bug seems to be a general gcc 2.95.3 bug.</li>
+        <li>On Windows OS machines, if you see cc1.exe crashing, check to see 
+          if you have the ROOTDIR environment variable set. If it is not set, 
+          update your autoexec.bat file or your System control panel environment 
+          variables to set this: 
+          <blockquote> 
+            <p><span class="TableContents"><font face="Courier New, monospace"><font size=2><span class="Filename">set 
+              ROOTDIR=C:</span></font></font></span></p>
+          </blockquote>
+          If the cc1.exe is still crashing, another workaround is to use the shell 
+          environment, by typing &quot;sh&quot; at the command line, then restart 
+          your build from this window. This bug is being looked into and will 
+          hopefully be resolved in the next release.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">Mload 4.9.6</td>
+    <td class="Text" width="532">No longer accepts ths foreslash, /, as a command 
+      line option, so that linux users can specify the path of a file to the mload 
+      command. </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Filename" width="294"> 
+      <p class="Text">Authinfo 0.02</p>
+    </td>
+    <td class="Text" width="532">Now correctly identifies application types.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p><span class="Filename"><span class="Text">Added</span> bin/windows/vmupdate.exe 
+        <span class="Text">and</span> bin/linux/vmupdate</span></p>
+    </td>
+    <td class="Text" width="532"> 
+      <p class="Text">If the source file is different than destination file, <span class="Filename">vmupdate</span> 
+        will copy the source file over the destination file. </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">Removed <span class="Filename">bin/windows/dump.exe</span> 
+      and <span class="Filename">bin/linux/dump</span></td>
+    <td class="Text" width="532"> 
+      <p>Replaced with <span class="Filename">vmdump.</span></p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>Removed obsolete, redundant and unnecessary executables from <span class="Filename">bin/linux.</span></p>
+    </td>
+    <td class="Text" width="532"> The following executables were removed: 
+      <ul>
+        <li><span class="Filename">merlin-local-gdb</span></li>
+        <li><span class="Filename">merlin-local-g77</span></li>
+        <li><span class="Filename">merlin-local-protoize</span></li>
+        <li><span class="Filename">merlin-local-unprotoize</span></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">Added <span class="Filename">bin/linux/gmake</span></td>
+    <td class="Text" width="532">Includes gmake 3.79.1 to correspond to the windows 
+      version. </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294">samples</td>
+    <td class="Text" width="532"> 
+      <p>We have new and improved samples! </p>
+      <p>We also now include a NUON game called &quot;SameGame&quot;; see <a href="../sample/Games/SameGame/index.html">sample/Games/SameGame/index.html</a> 
+        for more information.</p>
+    </td>
+  </tr>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Libraries and Include 
+        files</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="294">Updated <span class="Filename">lib</span> directory.</TD>
+    <TD class="Text" width="532"> 
+      <p>See the <a href="./LibraryUpdates.html">Library Updates documentation</a>.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="294">Updated <span class="Filename">include <span class="Text">directory</span></span>.</TD>
+    <TD class="Text" width="532">See the <a href="./IncludeFileUpdates.html">Include 
+      File Updates documentation</a>.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Platforms Tested</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center">Windows 98, Windows 2000, Red Hat Linux 6.2</div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Unix like tools for Windows</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>MKS Tools:</p>
+      <ul>
+        <li><span class="Filename">which.exe</span></li>
+        <li><span class="Filename">cp.exe</span></li>
+        <li><span class="Filename">sh.exe</span></li>
+      </ul>
+      <p>&nbsp;</p>
+    </td>
+    <td class="Text" width="532"> 
+      <p>Since the SDK is an internal release, we included the MKS version of 
+        these tools. If you do not have ROOTDIR set, please set it to your C: 
+        drive by doing either of the following:</p>
+      <ul>
+        <li> Add the following to your autoexec.bat file: 
+          <blockquote> 
+            <p class="UserInput">set ROOTDIR=C:</p>
+          </blockquote>
+        </li>
+        <li>You can also set these environment variables on Windows NT/2000 systems 
+          by executing Start-&gt;Settings-&gt;Control Panel, double click on System, 
+          select the Advanced tab, click on the <b>Environment Variables</b> button, 
+          and finally add the ROOTDIR variable and set it to C:</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=75 class="TableContents">&nbsp;</td>
+    <td class="Text" width="294"> 
+      <p>GNU Tools:</p>
+      <ul>
+        <li class="Filename">chmod.exe </li>
+        <li><span class="Filename">find.exe </span></li>
+        <li><span class="Filename">grep.exe </span></li>
+        <li><span class="Filename">ls.exe </span></li>
+        <li><span class="Filename">mkdir.exe </span></li>
+        <li><span class="Filename">mv.exe </span></li>
+        <li><span class="Filename">rm.exe </span></li>
+        <li><span class="Filename">rmdir.exe </span></li>
+        <li><span class="Filename">touch.exe </span></li>
+        <li><span class="Filename">cat.exe </span></li>
+        <li><span class="Filename">gawk.exe </span></li>
+        <li><span class="Filename">echo.exe </span></li>
+        <li><span class="Filename">m4.exe </span></li>
+        <li><span class="Filename">diff.exe </span></li>
+        <li><span class="Filename">less.exe</span></li>
+        <li class="Filename">expr.exe</li>
+      </ul>
+    </td>
+    <td class="Text" width="532"> 
+      <p>From the GNU royalty-free set of Win32 gnu utilities provided at <a href="http://www.edv.agrar.tu-muenchen.de/%7Esyring/win32/UnxUtils.html">http://www.edv.agrar.tumuenchen.de/~syring/win32/UnxUtils.html 
+        </a></p>
+      <p>We also include erase.exe which is just a copy of rm.exe; erase.exe is 
+        used by the sample's Makefiles. </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Known Problems</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="294">Firmware Problems</TD>
+    <TD class="Text" width="532"> See the <a href="./FlashROMInfo.html">Flash 
+      Rom Documentation</a> for more information.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="294">Puffin2k Problems</TD>
+    <TD class="Text" width="532">On Windows 98/2000, Puffin2k is not working correctly 
+      with Day5 (<span class="Filename">bright.d</span>) of the tutorial; it doesn't 
+      load the <span class="Filename">dmademo.cof</span> file into the dev system. 
+      This bug is being looked at and will be fixed as soon as possible. It works 
+      correctly on Windows NT. On Linux, it loads the cof file but then core dumps.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="294"> 
+      <p><span class="Text">Sample Problems:</span></p>
+      <p><span class="Filename">rgb2ycrcb</span></p>
+    </TD>
+    <TD class="Text" width="532"> 
+      <p>The following samples need the rgb2ycrcb executable, which we don't support 
+        on Linux. Therefore the following samples won't compile on the Linux platform:</p>
+      <p>Game-Controllers/Controller-Dump</p>
+      <p>NUON-Programming-Series/DMA-Sample</p>
+      <p>Video/Screensaver</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="294"> 
+      <p><span class="Text">Sample Problems:</span></p>
+      <p class="Filename">bmp2mbm</p>
+    </TD>
+    <TD class="Text" width="532"> 
+      <p>The following samples need the bmp2mbm executable, which we don't support 
+        on Linux. Therefore the following samples won't compile on the Linux platform:</p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p> </p>
+      <p></p>
+      <p> m3dl/Transparency</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="294">bin/linux/mgcc</TD>
+    <TD class="Text" width="532">Uses hardcoded paths to libraries before using 
+      your specified library paths.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=75 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="294">bin/windows/sendmidi.exe</TD>
+    <TD class="Text" width="532">Needs to be updated to use TCL81.dll. Currently 
+      it uses TCL80.dll.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<p>For changes to the SDK .85 release, please see <a href="./ReleaseChanges-0.85.html">ReleaseChanges-0.85.html</a>. 
+</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">&nbsp;</P>
+</BODY>
+</HTML>

@@ -1,0 +1,211 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 18</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 18</H1><P>
+
+To set up for this example, make sure you are already set up for the Ships demo, and then find the ".include ship6.moo",
+which is where the definition for the Lunar Lander object is.  Change that so that it includes "ship7.moo" instead.
+Run the demo, and you should find that the Lunar Lander now emits a flame out the bottom when Thrust is pressed, and that
+the size of the flame depends on how much Thrust is being applied using the Y-axis of the joystick.<P>
+
+To see how this is done, first let's take a look at the polyline definition of the Lunar Lander.  It's in <B>ol_demo2.s</B>, at the
+label "lland":<PRE>
+
+lland:
+
+    .dc.s   $00e0ff20
+    .dc.s   $00e0ff40
+    .dc.s   $0040ff40
+    .dc.s   $0000ffa0
+    .dc.s   $ffc0ff60
+    .dc.s   $ff80ff60
+    .dc.s   $ff40ffa0
+    .dc.s   $ff400060
+    .dc.s   $ff8000a0
+    .dc.s   $ffc000a0
+    .dc.s   $00000060
+    .dc.s   $0000ffa0
+    .dc.s   $0080ffa0
+    .dc.s   $0080ffe0
+    .dc.s   $00a0ffc0
+    .dc.s   $00a00040
+    .dc.s   $00800020
+    .dc.s   $00800060
+    .dc.s   $00000060
+    .dc.s   $004000c0
+    .dc.s   $00e000c0
+    .dc.s   $00e000e0
+    .dc.s   $80000002
+    .dc.s   $00e0ff40
+    .dc.s   $00e0ff60
+    .dc.s   $80000002
+    .dc.s   $0080ffe0
+    .dc.s   $00800020
+    .dc.s   $80000002
+    .dc.s   $00e000a0
+    .dc.s   $00e000c0
+lland_xtra:    .dc.s   $80000001    
+    .dc.s   $00a0ffe0
+lland_tail:    .dc.s   $00f00000
+    .dc.s   $00a00020
+    .dc.s   $80000001
+</PRE>
+Note that the value at "lland_xtra" is $80000001, which is the polyline Escape code for "end polyline".  So, as it stands, the values
+after that longword would never be seen by the polyline routine.<P>
+If, however, that word at "lland_extra" were to be set to $80000002 instead of $80000001, then it would be the Escape code for "break line
+and move to", and the following three points would then define a pointy spike, underneath the "engine" part of the Lunar Lander ship.<P>
+Given that we now know how to execute bits of the command string conditional on a FIRE button being pressed, I am sure you are starting to get
+my drift here.  So now let's take a look at "ship7.moo", and see what's going on:<PRE>
+
+
+;
+; ship7.moo = a MacrOObject that
+; defines a simple type of ship
+; controlled by the joystick.
+;
+; This one is a Lunar Lander with a thrust-flame!
+
+lndr2:
+
+; Header block
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$05080000		;3 secondary data, 7 vects of variables
+	.dc.s	0			;Address of parameter block if not local
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype object to use
+	.dc.s	0			;no secondary data
+
+	.dc.s	lndr2_end-lndr2		;length
+    .dc.s   0,0,0
+
+    .dc.s   0,0,0,0
+
+</PRE>I added some secondary data space, to hold some constants and odds and sods for the flame stuff.  I also added
+another waveform variable, which cycles quite fast, and will be used to make the point of the flame move around a little
+so it looks like the flame is "flickering".<PRE>
+
+; Variables
+
+    .dc.s   lland       ;Polyline definition
+    .dc.s   $f080f000   ;Colour     
+    .dc.s   $00140014   ;Scale   
+    .dc.s   $8000       ;Phase offset to make thrust vector correct
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000002   ;sine   (stopped)
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000003   ;cos    (stopped)
+
+    .dc.s   $b00000     ;xpos
+    .dc.s   0           ;vel
+    .dc.s   $ffe0       ;fr
+    .dc.s   $80000201   ;lim, type (bounce)
+
+    .dc.s   $780000     ;ypos
+    .dc.s   0           ;vel
+    .dc.s   $ffe0       ;fr
+    .dc.s   $80000302   ;lim, type (max)
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $cfc0
+    .dc.s   $80000078   ;Used to make thrust
+    
+    .dc.s   0,$200,0,0  ;Storage and 'G'
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   $1c2000      ;Speed
+    .dc.s   $1          ;triangle
+
+</PRE>That last one is the quick triangle-wave that will be used to move the end of the "flame".<PRE>
+
+; Range table
+
+	.dc.s	0
+	.dc.s	$1680000    ;max X	
+	.dc.s	$c00000     ;max Y
+	.dc.s	-$400     ;min angle inc
+	.dc.s	$400      ;max angle inc
+	.dc.s	$0000     ;min velocity inc
+	.dc.s	$f0000      ;max velocity inc
+	.dc.s	$00b0       ;minimum flame ypos 
+	.dc.s	$01f0       ;maximum flame ypos
+    
+	.dc.s	-$f0000,$f0000,0,$40,0,0,0
+
+; Secondary data.
+
+    .dc.s   lland_xtra          ;Address of a link in the llander definition.
+    .dc.s   $80000001           ;The default value there - end.
+    .dc.s   $80000002           ;If the button is pressed, put this in instead.
+    .dc.s   lland_tail          ;Address of the tail point of the flame.
+    .dc.s   $00f00000           ;Default value of same.
+
+</PRE>Here is the extra gubbins for the flame animation.  Firstly there is the address <B>lland_xtra</B>, which is the address of the
+Escape command in the polyline definition which needs to change from $80000001 to $80000002 to enable the extra couple of line
+segments that make up the "flame" to be visible.  Then there are the two values themselves - the default and the replacement.<P>
+The address lland_tail contains the address of the point that defines the tip of the "flame".  By displacing this point in the
+Y direction, we can change the size of the flame.<PRE> 
+
+; Command section
+
+    .ascii  "A0=h"              ;set address of polyline in object
+    .ascii  "A1=c"              ;set colour in d
+    .ascii  "c=d"               ;set colour in c
+    .ascii  "A2=e"              ;set scale
+
+    .ascii  "@x[34]+G0=G0"      ;set rotate angle from stick in G0
+    .ascii  "G0=g"              ;set angle in object
+    .ascii  "_a%_b"             ;Default _b to (_a).
+
+</PRE>The "%" is the store external command.  Placed between two values, it means to store the second
+value at the address defined by the first.  So here it means "store _b at (_a)", and _b is in fact the default
+value for the flame link.  So, by storing $80000001 at the flame link, it ensures that the by default, the flame is OFF.<PRE>	
+	
+    .ascii  "G0*@0?C1"          ;if button 0 pressed, set phase of C to G0
+</PRE>Here's the conditional store and skip, as before; the following commands are only executed if the THRUST button is pressed.<PRE>	
+    .ascii  "_a%_c"             ;Inside the conditional, store _c at (_a).
+</PRE>Another store command; this one stores $80000002 at the flame line, enabling the flame display.<PRE>	
+    .ascii  "@y[78]=_e<"        ;Set flame size according to ystick
+</PRE>The final longword of the secondary data space contains a copy of the point that defines the tip of the flame.  The Y-component is
+in the high 16-bits, so this statement displaces the point in Y according to the position of the joystick.<PRE>	
+    .ascii  "H[0<]+_e<=_e<"     ;add flicker displacement
+</PRE>This statement further perturbs the point, using the triangle wave at H, to make the "flickering".<P>
+You will notice the range statement contains another non-numeric character.  i am still further inclined to change the indices of range
+statements to alpha, because having to insert the nonalphanumeric index here cost me a bug.  I had originally had the limits of the flame tip
+perturbation at ranges(0) and ranges(11), which corresponds to the indices "[0;]".  However, this statement is inside a conditional, and the conditional
+code uses ";" as the end-of-skip delimiter.  So my conditional was restarting somewhere in the middle of this statement, with the result that the
+lunar lander did all manner of odd things, like being attracted up into the sky and suchlike.  So I may well change the indices of range statements, or
+the conditional delimiter, in a future version.<PRE>	
+    .ascii  "_d%_e"             ;store it in the polyline-def
+</PRE>This statement stores the value that we have been working on at _e, to the external address defined at _d, thereby overwriting the point
+definition that is there, and causing the flame to flicker at an appropriate size.  The rest of the command string is the same aa for the
+old-style Lander ship:<PRE>	
+    .ascii  "g+A3=B1"           ;if the button is pressed. set phase of B from angle + constant A3
+    .ascii  "@y[56]+F1=F1;"     ;if the button is pressed, inc velocity; end of conditional.
+    .ascii  "F1*B[9:]+D1=D1"    ;increase X-velocity from sine
+    .ascii  "F1*C[9:]+E1=E1"    ;increase Y-velocity from cosine
+    .ascii  "G1+E1=E1"          ;grav!
+    .ascii  "D0!=a<"            ;set X position
+    .ascii  "E0!=a>:"           ;set Y-position and finish
+</PRE>
+
+There is actually a bug in this code.  Run the code and press THRUST without touching the analog stick.  Can you work out why
+this happens?<P>
+
+</BODY>
+</HTML>

@@ -1,0 +1,19 @@
+
+To make SameGame run from a DVD one needs to:
+
+1. Compile SameGame with ON_DVD set to 1 (this turns
+   off the printf statements amongst other things)
+
+2. Place sg.cnf in the nuon directory on the DVD: /udf/nuon/.  This
+   will tell SameGame where to look for Artwork and Sounds.  (See 4)
+
+3. Place SameGame.cof in the nuon directory, renamed as nuon.run or as
+   appropiate.  Place the Contents directory wherever you've specified
+   in the PATH variable in sg.cnf.
+
+4. Make sure the PATH variable in sg.cnf is correctly set to something
+   appropiate such as "/udf/nuon/SameGame/Contents/Poke/"   The PATH
+   variable tells SameGame.cof where to look for sounds and artwork.
+
+Disclaimer: I've never tried running SameGame from a DVD.  (No DVD
+burner here.)  In theory the above should work.

@@ -10,3 +10,4 @@ set Path=%Path%;%NUONSDK%\vmlabs\bin\win32
 
 REM Set the VMLABS variable to point at the VMLABS SDK Root
 set VMLABS=%NUONSDK%\vmlabs
+set BUILDHOST=WINDOWS_NT

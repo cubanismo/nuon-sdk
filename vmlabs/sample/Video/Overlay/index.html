@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\Video\Overlay</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left">&nbsp;<b>Copyright © 2000
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>December 5, 2000</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This program demonstrates how the video overlay channel can be
+used.</p>
+
+<p align="left">The program creates three screen frame buffers.&nbsp; Two are
+used to double-buffer the main video channel.&nbsp; The third buffer is used for
+an overlay video channel.</p>
+
+<p align="left">The program draws a simple graphics display into the main video
+channel.&nbsp; This consists of a few colored lines that cross from one side of
+the screen to the other.</p>
+
+<p align="left">For the overlay channel, the program draws only text.&nbsp; The
+overlay channel's frame buffer is initialized to use an alpha channel value that represents complete
+transparency, so that it is invisible and you see through it to the main
+channel.&nbsp; Then the text is drawn using a different alpha channel value that
+makes it opaque.&nbsp; Finally, a portion of the text is animated so that the
+alpha channel value is changed frame by frame to make it slowly fade away.</p>
+
+<p align="left">The text in the overlay channel is only redrawn when something
+is changing, such as the animation.&nbsp; The rest of the time, it is not
+necessary to redraw the text every frame because the changes to the graphics in
+the main channel do not affect the overlay channel.</p>
+
+<p align="left">This example does not double-buffer the overlay channel.&nbsp;
+However, there is no reason why an application could not do so if desired.</p>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">graphics.c</td>
+      <td width="50%">Functions for creating screen display.</td>
+    </tr>
+    <tr>
+      <td width="50%">vidoverlay.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+    <tr>
+      <td width="50%">vidoverlay.h</td>
+      <td width="50%">Contains a variety of definitions used throughout the
+        program</td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>&nbsp;</p>
+<hr>
+<p align="left">Before attempting to load or run any of the SDK samples, make
+sure you have first read the <a href="../../../doc/Hitchhikers.PDF">Hitchhiker's
+Guide To NUON</a> document.&nbsp;&nbsp;</p>
+<p align="left">After that, if you're still having trouble getting this sample
+program to work, &nbsp;<a href="mailto:devsupport@vmlab.com?subject=Problem with Sample Code">click
+here to request assistance from developer support</a>.</p>
+<p align="left"><a href="../../../doc/html/onlinedocumentation.html">Click here
+for other online SDK documentation</a>.</p>
+</body>
+</html>

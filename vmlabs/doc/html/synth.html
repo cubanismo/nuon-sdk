@@ -1,0 +1,132 @@
+<html>
+
+<head>
+<title></title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">NUON Synth Notes</h1>
+
+<hr>
+
+<h2 align="center"><font color="#000000"> SYNTH Wavetable Data</font></h2>
+
+<p><font color="#000000"><big>Older versions of the SYNTH library required wavetable information
+in ROM
+(or Flash ROM) or loaded into RAM separately from the library itself.&nbsp; This
+has been changed.&nbsp; </big></font><big>The current version of the SYNTH
+library now includes the wavetable data within the library itself, so that it is
+automatically linked into your program when the library is used.&nbsp; No
+special initialization is required to access the linked-in data.</big></p>
+
+<hr>
+
+<h2 align="center"><a name="sendmidi">sendmidi</a></h2>
+
+<p align="center"><font color="#FF0000"><b>Please note that the SENDMIDI tool
+may not function correctly in this version of the SDK.&nbsp; We are working on
+an update.</b></font></p>
+
+<p align="center">&nbsp;</p>
+
+<p><big>Sendmidi is a small graphical tool used to download and playback MIDI files using
+the Merlin synth.</big></p>
+
+<p><big>Here's what you need to run and use this tool:</big> 
+
+<ul>
+  <li><big>Tcl/Tk 8.0 installed on your machine.</big><br>
+    <big>(<a href="http://MikeF-Desktop/dev/files/tools/tcl80p2.exe">download from VM Labs</a>)</big><br>
+  </li>
+  <li><big>A current SDK installed</big><br>
+  </li>
+  <li><big>A current version of the synth running on your Merlin</big><br>
+    <big>(use the appropriate GOSYNTH batch file)</big></li>
+</ul>
+
+<p><big>sendmidi accepts the following command line options:</big></p>
+
+<blockquote>
+  <ul>
+    <li><font face="Times New Roman" color="#000000"><big>-ip a.b.c.d&nbsp;&nbsp; // Ignore
+      MD_PORT and connect to IP address a.b.c.d </big><br>
+      </font></li>
+    <li><font face="Times New Roman" color="#000000"><big>-mpe
+      x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MPE on which the synth is running (default:
+      1) </big><br>
+      </font></li>
+    <li><big><font color="#000000"><font face="Times New Roman">-midi
+      x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Which MIDI port to use (default: 0 = the
+      first available)</font> </font></big></li>
+  </ul>
+</blockquote>
+<font face="Times New Roman">
+
+<p></font><big><font face="Times New Roman" color="#000000">Error messages:</font><font
+color="#000000"> </font></big>
+
+<ul>
+  <li><font color="#000000"><big><font face="Times New Roman">&quot;Can't open MIDI
+    port&quot;: <br>
+    Your computer has no sound card with MIDI interface, or you are using the wrong port (see
+    above)</font> </big><br>
+    </font></li>
+  <li><font color="#000000"><big><font face="Times New Roman">&quot;Can't connect to
+    merlin&quot;: <br>
+    Your MD_PORT variable isn't set properly, or your merlin is turned off ;-) <br>
+    You can also try the -ip option to override the MD_PORT</font><big> </big>setting.</big><br>
+    </font></li>
+  <li><font face="Times New Roman" color="#000000"><big>&quot;No response from the
+    synth&quot;: <br>
+    Make sure you are running a current version of the synth on MPE 1.&nbsp;&nbsp; If you're
+    using another MPE for the synth, you have to specify the MPE number with the -mpe &nbsp;
+    option.</big></font><blockquote>
+      <p><big><font face="Times New Roman" color="#000000">Example:</font></big></p>
+      <blockquote>
+        <p><big><font face="Times New Roman" color="#000000">sendmidi -ip 192.1.1.253 -mpe 0 -midi
+        1 </font></big></p>
+      </blockquote>
+    </blockquote>
+    <blockquote>
+      <blockquote>
+        <p><big><font face="Times New Roman" color="#000000">Connects to the synth on the box
+        192.1.1.253 in MPE 0.<br>
+        The second available MIDI input port on your PC will be used. </font></big></p>
+      </blockquote>
+    </blockquote>
+  </li>
+</ul>
+
+<p><big><font color="#000000"><font face="Times New Roman">NOTE: The synth can handle ONLY
+Midi files in format 0.</font> </font></big></p>
+</body>
+</html>

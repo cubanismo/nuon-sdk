@@ -1,0 +1,99 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+<h3 align="right"><b>\vmlabs\sample\audio\NISE-Streaming</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>March 2, 2001</b></td>
+  </tr>
+</table>
+<hr>
+
+<p align="left">This sample demonstrates how to use streaming audio.</p>
+
+<div align="center">
+  <center>
+  <table border="1" width="500" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr>
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+    <tr>
+      <td width="50%">NUON.DAT</td>
+      <td width="50%">Data file containing raw PCM audio data (<b>This file may
+        not be not
+        supplied... see below.)</b></td>
+    </tr>
+    <tr>
+      <td width="50%">stream.c</td>
+      <td width="50%">Main program code for sample.</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left">By default, this program is configured to look at the
+MEDIA_REMOTE device, which is the ETHERNET link to your host PC.&nbsp;&nbsp;However,
+please be aware that the MEDIA_REMOTE device has experienced reliability
+problems in the past that may not be entirely solved.&nbsp; If you experience
+difficulty, please try using a NUON DVD data disc and the MEDIA_DVD device type.</p>
+
+<p align="left"> If you
+have a NUON DVD disc with an appropriate data file located in the NUON directory, you
+can&nbsp;edit the source to refer to MEDIA_DVD instead of MEDIA_REMOTE.&nbsp; <b>Please note that you must have an appropriate data file to
+use this sample.&nbsp; Because this file can be quite large, one may not be provided.</b></p>
+
+<p align="left">The proper format for audio streaming is:</p>
+
+<ul>
+  <li>
+    <p align="left">32000 hz sample rate</li>
+  <li>
+    <p align="left">16-bit stereo</li>
+  <li>
+    <p align="left">Big-endian data format (aka &quot;Motorola&quot; format)</li>
+  <li>
+    <p align="left">Raw PCM data, with stereo channels interleaved together.</li>
+</ul>
+<p align="left">You can create the proper format with many applications that
+edit digital audio samples, such as <i><a href="http://www.sonicfoundry.com">Sound
+Forge</a></i> and <i><a href="http://www.syntrillium.com">Cool Edit Pro</a></i>.&nbsp;&nbsp;</p>
+
+<hr>
+<p align="left">Before attempting to load or run any of the SDK samples, make
+sure you have first read the <a href="../../../doc/Hitchhikers.PDF">Hitchhiker's
+Guide To NUON</a> document.&nbsp;&nbsp;</p>
+<p align="left">After that, if you're still having trouble getting this sample
+program to work, &nbsp;<a href="mailto:devsupport@vmlab.com?subject=Problem with Sample Code">click
+here to request assistance from developer support</a>.</p>
+<p align="left"><a href="../../../doc/html/onlinedocumentation.html">Click here
+for other online SDK documentation</a>.</p>
+<p align="left">&nbsp;</p>
+
+</body>
+</html>

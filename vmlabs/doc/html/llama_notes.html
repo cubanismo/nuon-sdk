@@ -1,0 +1,153 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Llama Assembler Notes</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+          <p align="center"><b>June 6, 2001</b> 
+        </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Llama Assembler Notes</h1>
+
+<hr>
+<big>
+<P>The following changes have been made to Llama in recent versions.</P>
+<h3>Llama 2.69 improvements:</h3>
+<ul>
+    <li>The code generation now emits "sub #N,r0" instead of "add #-N,r0" when 
+      N is a small integer constant and when the results of the carry bit are 
+      not used later. (And similarly "add #N,r0" can be used instead of "sub #-N,r0".) 
+      This means that a long (48 bit) instruction can be replaced with a 16 or 
+      32 bit instruction.<br>
+ </li>
+    <li>The optimizer now understands that "mvr" and some forms of "st_io" are 
+      equivalent, and will switch between them when this results in better code.<br>
+    </li>
+    <li>The mvr instruction no longer accepts xybase, xyrange, and xyctl as destination 
+      registers.</li>
+</ul>
+<h3>&nbsp;</h3>
+<h3>Llama 2.70 improvements:</h3>
+    <ul>
+      <li>Optimizer code would write the wrong instruction of a pair into the 
+        instruction stream. For example, it would try to turn "mvr" into "st_io", 
+        but accidentally write "mvr" instead and then next time through it would 
+        try to repeat the same thing, resulting in an infinite loop.</li>
+    </ul>
+<h3>&nbsp;</h3>
+<h3>Llama 2.71 improvements:</h3>
+    <ul>
+      <li>Added "-chip N" option to specify alpha, oz, or aries, and made default 
+        aries (it used to be oz).<br>
+ </li>
+      <li>When assembling for aries, generate "dec_only" instruction instead of 
+        synthetic "addr #0,rx" as a placeholder RCU instruction.</li>
+    </ul>
+<h3>&nbsp;</h3>
+<h3>Llama 2.72 improvements:</h3>
+    <ul>
+      <li>Added code to "pull back" instructions to fill nops that are left after 
+        optimization. </li>
+    </ul>
+<ul>
+    <li>Added a second pass to replace longer instructions with shorter, equivalent 
+      alternate forms.<br>
+ </li>
+    <li>Used the "pull back" code to replace dec_only instructions where possible 
+      (by pulling back a register unit instruction to hold the dec).</li>
+</ul>
+<h3>&nbsp;</h3>
+<h3>Llama 2.73</h3>
+    <ul>
+      <li>Extended .lcomm and .comm directives with an optional alignment parameter.<br>
+      </li>
+      <li>Extended the built in linking process so that .comm works with the built 
+        in linker. </li>
+    </ul>
+<h3>&nbsp;</h3>
+<h3>Llama 2.74</h3>
+    <ul>
+      <li>Fixed definition of st_s for rx,ry,ru,rv so it is properly noted as 
+        a local store.<br>
+ </li>
+      <li>Extended the optimizer's "instruction pullback to fill nops" stage to 
+        also look for alternate forms of instructions to pull back. </li>
+    </ul>
+</big> 
+<p>&nbsp;</p>
+<p><big><font size="+1"><b>Llama 2.75</b></font></p>
+<ul>
+  <li>Added new warnings 
+    <ul>
+      <li>"alignment > 32768 not officially supported"</li>
+      <li>"instruction has no effect" </li>
+    </ul>
+  </li>
+  <li>Fixed the "section symbols" in COFF files, which frequently had trailing 
+    garbage after them.</li>
+  <li>Fixed a bug in the optimizer where it would sometimes select alternate forms 
+    of instructions which are shorter but which have side effects which are dangerous 
+    in that location.</li>
+</ul>
+<p>&nbsp;</p>
+<p><b><font size="+1">Llama 2.76</font></b></p>
+<ul>
+  <li>Symbolic labels are now allowed in the expression which limits an overlay 
+    or section size.</li>
+  <li>If a jmp or jsr that was assumed to be in local memory doesn't fit in a 
+    32 bit instruction, the longer jmp/jsr forms are tried.</li>
+</ul>
+<p>&nbsp;</p>
+<p><b><font size="+1">Llama 2.77</font></b></p>
+<ul>
+  <li>Added directives for unaligned short and word-sized data.</li>
+</ul>
+<p>&nbsp;</p>
+<p><b><font size="+1">Llama 2.78</font></b></p>
+<ul>
+  <li>Fixed instruction analysis of bra ,nop instructions occuring in delay slots. 
+  </li>
+</ul>
+<p>&nbsp;</p>
+<p><b><font size="+1">Llama 2.79</font></b></p>
+<ul>
+  <li> Catch out of range addresses in st_s #nnnn,labelD instructions.</li>
+</ul>
+<p>&nbsp;</p>
+<p><b><font size="+1">Llama 2.80</font></b></p>
+<ul>
+  <li>No longer emits spurious warnings about instructions with no effect.</li>
+</ul>
+<p>&nbsp;</p>
+</big>
+</body>
+</html>

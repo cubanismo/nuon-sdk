@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: DebugStubInfo.html,v 1.28 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+		KBD { font-size: 10pt; font-weight: bold }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid" class="Page"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Debug 
+  Stub Info</B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=5><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY"></SDFIELD></B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<P><FONT SIZE=3>In order to take full advantage of improvements in transfer speed 
+  and debugger functionality in the new SDK, it is necessary to update the stub 
+  in your development system.&#160; The SDK includes all of the files necessary 
+  to do this. &#160; Please choose the appropriate set of instructions below.</FONT></P>
+<P><font size="4" color="#CC0033">The current stub version is 4.9.5. Version 4.9.3 
+  or later is <b>required</b> for use with the SDK.</font></P>
+<table width="75%" border="3" align="center" bordercolorlight="#3333FF" bordercolordark="#3300CC">
+  <tr> 
+    <td class="TableHeading"> 
+      <div align="center"><font size="+1">File Location Change for SDK 0.82</font></div>
+    </td>
+  </tr>
+  <tr> 
+    <td class="TableContents">Note that the location of the debug stub files and 
+      scripts have changed effective with SDK 0.82. The debug stub and its related 
+      files can now be found in <span class="Filename">$VMLABS/bin/860stub</span>.</td>
+  </tr>
+  <tr> 
+    <td class="TableHeading">
+      <div align="center"><font size="+1">ACE360 stub deleted for SDK 0.82</font></div>
+    </td>
+  </tr>
+  <tr>
+    <td class="TableContents">Effective with the .82 release, the ACE stub is 
+      no longer supported. ACE related files have been removed from the SDK distribution. 
+      If you have an ACE based board, please contact your VM Labs support representative 
+      immediately for an upgrade.</td>
+  </tr>
+</table>
+<P>Also, before you update anything, please make sure you understand the difference 
+  between the two parts of your NUON development system which use FLASH ROM.&#160; 
+  They are:</P>
+<UL>
+	<LI><P>Boot ROM / BIOS ROM -- The NUON development system has a 4mb
+	Flash ROM built into the motherboard.&#160; The motherboard also has
+	a socket for a ROM or EPROM.&#160; A jumper (labeled &quot;Flash&quot;
+	and &quot;ROM&quot;) selects which one of these is active.&#160;
+	(Normally it's set to FLASH).<BR><BR>This is what we usually mean
+	when we refer to the &quot;Flash&quot;, the &quot;Flash ROM&quot;,
+	or the &quot;Boot ROM&quot;.<BR><BR>This Flash ROM contains the BIOS
+	(if a ROM BIOS is installed) as well as whatever startup code is
+	installed.&#160; Older versions of the NUON startup code displayed
+	color bars or a NUON logo graphic.&#160; The newest version which
+	ships with this SDK draws an animated fractal image.<BR><BR>The boot
+	code does not really interact with the stub.&#160; The BIOS only
+	interacts to the degree that the stub may occasionally download a
+	small piece of code to do some debugging function or to speed up a
+	data transfer.<BR><BR>Other than the BIOS and startup code, the
+	items which may optionally be installed into your FLASH ROM would be
+	the DVD player firmware and a copy of the NUON Synth's wavetable
+	data.<BR><BR>
+      Please see &quot;<A HREF="./FlashROMInfo.html"><i>Flash ROM Info</i></A>&quot; 
+      for information on how to update your Boot/BIOS ROM.</P>
+</UL>
+<UL>
+	<LI><P>Debug / Ethernet Interface Card -- The debug card in your
+	development system uses a flash ROM so that the debugging stub may
+	be updated when needed.&#160; However, as a general rule, the NUON
+	documentation does not refer to this as &quot;flash ROM&quot;.&#160;
+	Instead, we normally refer to this simply as the &quot;stub&quot;.&#160;
+	We would say &quot;update your stub&quot; instead of &quot;update
+	your debug card flash ROM&quot;.<BR><BR>The debug card contains a
+	PowerPC 860 processor, and most of the code on the stub's ROM is
+	intended for that processor, not the NUON chip on the motherboard.&#160;
+	This code does not have anything to do with the BIOS or the startup
+	code, except that it must safely co-exist on those occasions when it
+	must ask one of the NUON processor's MPEs to do something.&#160; In
+	those cases, it may download a small piece of code to an MPE to
+	facilitate some debugging function, or to speed up transfers over
+	the Ethernet interface.&#160;&#160;</P>
+</UL>
+<P>Please see the remainder of this document for information how to
+update your stub. 
+</P>
+<H1>Updating Your Stub</H1>
+<P><FONT SIZE=3>After installing the updated SDK, execute the
+following commands from a shell prompt:</FONT></P>
+<TABLE WIDTH=473 BORDER=2 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+  <COL WIDTH=240> <COL WIDTH=215> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=240>
+				<P>Linux</P>
+			</TH>
+			<TH WIDTH=215>
+				<P>Windows</P>
+			</TH>
+		</TR>
+  </THEAD> <TBODY class="UserInput"> 
+  <TR VALIGN=TOP>
+			<TD WIDTH=240>
+				
+      <P><FONT SIZE=3><KBD>cd $VMLABS/bin/860stub/</KBD></FONT></P>
+			</TD>
+			<TD WIDTH=215>
+				
+      <P><KBD>cd %VMLABS%\bin\860stub\</KBD></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			
+    <TD WIDTH=240 height="25"> 
+      <P><KBD>mload -u 860loadr -u 860bootr</KBD></P>
+			</TD>
+			
+    <TD WIDTH=215 height="25"> 
+      <P><KBD>new860</KBD></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><FONT SIZE=3>After the shell prompt returns, push the reset button
+on the debug card.  If you are connected via hyperterminal, you
+should see the following feedback:</FONT></P>
+<P STYLE="margin-left: 1.58in"><FONT SIZE=3><FONT FACE="Courier New, monospace"><font size=3><tt><span class="Teletype">IP 
+  Address 10.1.47.171<br>
+  </span></tt></font></FONT></FONT><FONT SIZE=3><FONT FACE="Courier New, monospace"><font size=3><tt><span class="Teletype">Aries 
+  Debug Stub 4.9.5 - Feb 23 2001, 13:01:08</span></tt></font></FONT></FONT></P>
+<P><FONT SIZE=3>Alternatively, you can can check the debug stub version using 
+  the mload tool. At a shell prompt, type the command &quot;<KBD class="UserInput">mload 
+  -v</KBD>&quot;, and you should receive the following response (or something 
+  similar, depending on your OS and prompt settings):</FONT></P>
+<P STYLE="margin-left: 1.58in"><FONT SIZE=3><TT><span class="Teletype">N:\SDK\bin\860stub&gt;</span><KBD class="UserInput">mload 
+  -v</KBD><BR>
+  </TT></FONT><FONT SIZE=3><TT><span class="Teletype">MLOAD 4.9.6 - March 20, 
+  2001</span></TT></FONT><BR>
+  <FONT SIZE=3><TT><span class="Teletype">Aries Debug Stub 
+  4.9.5 - Feb 23 2001, 13:01:08<BR>
+  <A HREF="../stubs/860stub"><SPAN STYLE="text-decoration: none"><FONT COLOR="#000000">N:\SDK\bin\860stub</FONT></SPAN></A><FONT COLOR="#000000">&gt;</FONT></span></TT></FONT></P>
+<H1>ACE360 Debug Interface</H1>
+<P>Please note that the ACE360 interface is no longer supported by VM Labs, and 
+  is no longer distributed with the SDK. If you have a development system with 
+  a revision 4 board, using either OZ or ARIES revisions of the chip, please contact 
+  the appropriate parties at VM Labs for a system update. </P>
+<hr>
+<br>
+<span class="UserInput"></span> <!-- #BeginLibraryItem "/Library/Footer.lbi" class="Copyright" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --><span class="Copyright"><span class="copyright"><span class="copyright"><span class="Copyright"> 
+</span></span></span></span> 
+</BODY>
+</HTML>

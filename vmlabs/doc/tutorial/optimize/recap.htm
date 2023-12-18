@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; I) [Netscape]">
+   <TITLE>Recap: General Optimisation Strategies</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<CENTER>
+<H1>
+Recap: General Optimisation Strategies</H1></CENTER>
+
+<HR>Now that we've seen how to shave some heavy ticks off of a working
+inner loop, perhaps it would be a good time to go back over some of the
+strategies we used to achieve that optimisation, and consider how they
+can be applied to <I>any </I>piece of inner loop code.
+
+<P>&nbsp;In the first place, <B><I>code everything linear</I></B> so that
+you are sure that your algorithm is working correctly.
+
+<P>&nbsp;When you have that running, <B><I>examine your algorithm</I></B>
+for possible shortcuts and cheats, and implement them while the code is
+still in a readable format.
+
+<P>&nbsp;Once you are ready to pack up your inner loop, <B><I>go offline</I></B>
+and <B><I>make plenty of tea</I></B>. I like to work at a whiteboard, laying
+out pseudocode as columns, with one column and colour per function unit.
+Some people use spreadsheets. Pick a method that is comfortable for you.
+Work out the minimum possible amount of steps your algorithm requires,
+forgetting for a moment about the things that have to go on in the periphery
+like juggling index registers and loading and storing pixels. You may spot
+extra shortcuts while you are doing this - test them out before your code
+gets too convoluted.
+
+<P>&nbsp;Be prepared to <B><I>slip the phase of your loop</I></B> a bit.
+It's okay to have a bit of setup code that is executed before you dive
+into the critical loop, so that you can begin your calculation and already
+be <B>preparing for the <I>next</I> iteration</B> while you are proceeding
+through the current one.
+
+<P>&nbsp;If it would help your inner loop code to have extra registers
+free, or to do things in a slightly more complex way outside the inner
+loop if it meant freeing up resources for inside, then <B><I>do it</I></B>.
+A few pushes and pops before entering the loop to free registers don't
+matter at all if it means you save a tick in there.
+
+<P>&nbsp;When you're putting everything together, there are a few helpful
+little tricks that you should remember:
+
+<P>&nbsp;<I>Avoid ALU bottlenecks by using the multiplier</I>. ADDM and
+SUBM are extremely useful for incidental additions that don't need the
+condition codes setting, like incrementing pointers and suchlike. You can
+also use the multiplier to get up to three register-to-register moves in
+one packet - if you have a register with a zero in it, you can use <B>mv_s
+(or mv_v), copy</B> and <B>addm source,zeroreg,dest</B> all together.
+
+<P>&nbsp;<I>Use the counters and index registers to full effect</I>. Using
+<B>rc0 </B>and <B>rc1 </B>for counting your iterations is greatly to be
+preferred to using a standard register and using the ALU. You can stick
+a <B><I>dec rc0</I></B> onto just about any packet, and the branch conditional
+flag isn't smashed if you happen to be doing other, more important stuff
+with the ALU before you get to your branch. When you're stepping over a
+data structure, <B><I>addr</I></B> instructions can handle a lot of common
+pointer manipulations - again leaving the ALU proper free to do more useful
+stuff.
+
+<P>&nbsp;<I>Remember that the index registers are read/write.</I> You could
+dump perfectly good values into the index registers if you weren't using
+'em for anything else, and then be able to manipulate them with <B>addr</B>
+in parallel with anything else you might have going on in the ALU and the
+multiplier. You'll need to allow a spare register and a tick to <B>ld_io
+</B>them out when you need them, but staying off the ALU and the multiplier
+might be worth it to you.
+
+<P>
+<HR>
+<PRE><A HREF="warp6.htm">jmp next
+</A><A HREF="recap.htm">jmp prev
+</A><A HREF="llama.htm">rts
+</A>nop
+nop</PRE>
+
+</BODY>
+</HTML>

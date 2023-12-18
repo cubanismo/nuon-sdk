@@ -1,0 +1,101 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Controller Handling Changes</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Include Files</h1>
+
+<hr>
+
+<p><big>Some changes to the system include files have been made.&nbsp; These
+changes include:</big></p>
+
+<ul>
+  <li><big>The Audio library configuration has changed.&nbsp; Instead of
+    LIBMAUD1 and LIBMAUD2, we now have LIBSYNTH and LIBNISE.&nbsp; The LIBSYNTH
+    library contains the synthesizer and non-streaming PCM functions.&nbsp; The
+    LIBNISE library contains the non-streaming PCM functions as well as
+    streaming audio functions.<br>
+    <br>
+    The changes to the libraries are not very drastic.&nbsp; It should be simple
+    to change existing code.&nbsp; Instead of including PCMAPI.H, you should now
+    include NISE.H.&nbsp; See <a href="../Audio/GameAudio.pdf">GAMEAUDIO.PDF</a> for
+    documentation.<br>
+    <br>
+    </big></li>
+  <li><big>A number of separate include files for various portions of the MML2D
+    library have been combined into a single large MML2D.H include file.&nbsp;
+    These files are:<br>
+    <br>
+    </big><big>M2PUB.H<br>
+    M2TYPES.H<br>
+    MLCOLOR.H<br>
+    MLPIXMAP.H<br>
+    MLTEXT.H<br>
+    MLTYPES.H<br>
+    <br>
+    References to any of these files should be replaced with a single reference
+    to the MML2D.H file.&nbsp; Please note that failing to make this change is
+    not fatal.&nbsp; The older files have been modified to include MML2D.H and
+    display a warning that your source should be updated.</big>
+  </li>
+</ul>
+
+<p>&nbsp;</p>
+
+<ul>
+  <li><big>The BIOS.H include file has been modified to automatically include
+    all of the BIOS-related include files so that they no longer need be listed
+    individually. However, aside from BIOS.H, the individual files have not been
+    modified.&nbsp;&nbsp; The BIOS.H file now automatically includes:<br>
+    <br>
+    </big><big>MPE.H<br>
+    COMM.H<br>
+    CACHE.H<br>
+    AUDIO.H<br>
+    VIDEO.H<br>
+    JOYSTICK.H<br>
+    TIME.H<br>
+    MEDIAIO.H<br>
+    <br>
+    <br>
+    </big><big><br>
+    </big>
+  </li>
+</ul>
+
+<p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges-0.82.html,v 1.15 2000/11/09 20:21:35 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK Release 0.82<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">October 25</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2000</sdfield></b></font></font></font></p>
+<hr>
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<div align="center"> 
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td>The following changes are mandatory for the 0.82 SDK release. 
+        <ul>
+          <li>You <b>must</b> upgrade your debug stub to version 4.9.3. See the 
+            <a href="DebugStubInfo.html"><i>Debug Stub Info</i></a> document for 
+            details on how to do this.</li>
+        </ul>
+        <p>The following changes are recommended for the 0.82 SDK release.</p>
+        <ul>
+          <li>You <b>should</b> upgrade your flash ROM to the latest firmware 
+            versions (included in this release). See the <a href="FlashROMInfo.html"><i>Flash 
+            ROM Info</i></a> document for details on how to do this. <font color="#990000"><b>Be 
+            aware that this upgrade will disable the oldstyle joysticks!</b></font> 
+            If you require a joystick for your development and/or testing, you 
+            have 3 options: 
+            <ol>
+              <li>continue to use the old BIOS (from the 0.80 SDK);</li>
+              <li>you can obtain a new style joystick from <a href="mailto:georgec@vmlabs.com">George 
+                Campbell</a> before proceeding; or,</li>
+              <li>you can use the joystick that is packed in with a Samsung Extiva-1.</li>
+            </ol>
+            <p>See the <a href="JoystickInfo.html">Joystick Info</a> document 
+              for more information.</p>
+          </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for SDK Release 0.82.</P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=125> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=301> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=342> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P class="TableContents">&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P class="TableContents">Linux install creates all files with <span class="Filename">777</span> 
+        permissions.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P class="TableContents"><span class="Filename">install_linux</span> script 
+        no longer changes the file permissions.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P class="TableContents">Many of the <span class="Filename">mailto:</span> 
+        links are broken.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Changed link properties in web templates.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Link to <FONT FACE="Courier New, monospace"><FONT SIZE=2>install_linux</FONT></FONT> 
+        is broken.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Corrected file capitalization.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Incorrect release of mGL included.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Not a problem &#150; most recent submission was included.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>mGL does not build.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Corrected.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Directory structure changes not documented.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Changes will be documented with this and future releases.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Link to hitch-hikers guide broken in doc index.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Chris can't type. This is now fixed (the link, not the typing skills).</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Win98 local install instructions are numbered 1..4/1..3 rather than 1..7.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Corrected by changing web publishing tools.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P><FONT FACE="Courier New, monospace"><FONT SIZE=2>sysinfo.h</FONT></FONT> 
+        is missing - should be in <FONT FACE="Courier New, monospace"><FONT SIZE=2>%VMLABS%\include\nuon\</FONT></FONT></P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Should be in <span class="Filename">%VMLABS%\include\nuon\</span></P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P>Stub/bootrom compatibility info is missing.</P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>It's there, just the links were not clear. Made links more apparent. 
+        Added info to <span class="Filename">readme </span>and install docs.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents"> 
+      <P>&nbsp; </P>
+    </TD>
+    <TD WIDTH=301 class="TableContents"> 
+      <P><I>NUON Audio Library Functions</I><SPAN STYLE="font-style: normal"> 
+        (<FONT FACE="Courier New, monospace"><FONT SIZE=2>mmlAudio.pdf</FONT></FONT>) 
+        document can be deleted safely.</SPAN></P>
+    </TD>
+    <TD WIDTH=342> 
+      <P>Done.</P>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Llama 2.59</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p><span class="TableContents"><span class="TableContents"><span class="TableContents"><span class="TableContents">Includes 
+        the following functional changes:</span></span></span></span></p>
+      <ul>
+        <li><span class="TableContents"><span class="TableContents"><span class="TableContents"><span class="TableContents">Added 
+          a <span class="Teletype">,noversion</span> option to the <span class="Teletype">-fmpo</span> 
+          output format to suppress version specific information in the output 
+          file. This makes it possible to write tests for the <span class="Teletype">.MPO</span> 
+          file format which won't break every time we change the version number. 
+          </span></span></span></span></li>
+        <li><span class="TableContents"><span class="TableContents"><span class="TableContents"><span class="TableContents">Fixed 
+          the segment <span class="TableContents"><code>_start</code></span> and 
+          <code>_size</code> symbols to have their "segment" field indicate the 
+          segment for which they were created.</span></span></span></span></li>
+        <li>Changes to support building MAD.</li>
+      </ul>
+      <p><span class="TableContents"><span class="TableContents"><span class="TableContents"><span class="TableContents">The 
+        following changes are all "cosmetic" -- some errors and warnings were 
+        suppressed, and some messages made a little more clear.</span></span></span></span></p>
+      <ul>
+        <li><span class="TableContents"><span class="TableContents"><span class="TableContents">Suppressed 
+          most errors and warnings when the <span class="Teletype">-M</span> switch 
+          is given to generate makefile dependencies.</span></span></span></li>
+        <li><span class="TableContents"><span class="TableContents"><span class="TableContents">Fixed 
+          a bug in the <code>_section_start</code> symbol code (it was warning 
+          even if the symbol was never defined, only used).</span></span></span></li>
+        <li class="TableContents"><span class="TableContents"><span class="TableContents"><span class="TableContents">Clarify 
+          warning message about instruction cache stalls.</span></span></span></li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Most samples are obsolete or nonfunctional..</TD>
+    <TD WIDTH=342 class="TableContents">Some samples updated, more to follow in 
+      upcoming releases.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">How do I find code samples?</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Added a link from the main index and from the documentation index.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents"><img src="images/new.gif" width="32" height="16">How 
+      do I find out what version of the BIOS I'm running?</TD>
+    <TD WIDTH=342 class="TableContents">Added <span class="Filename"><a href="./biosver.html">biosver</a></span><a href="./biosver.html"> 
+      program</a> and associated scripts.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Flash images and scripts are incomplete.</TD>
+    <TD WIDTH=342 class="TableContents">Revamped <a href="./FlashROMInfo.html">images 
+      and scripts</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Linux install script points to wrong <span class="Filename">.gz</span> 
+      file. </TD>
+    <TD WIDTH=342 class="TableContents">Fixed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Linux install script is in DOS mode.</TD>
+    <TD WIDTH=342 class="TableContents">Fixed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">Puffin2K</TD>
+    <TD WIDTH=342 class="TableContents">Correctly handles file pathnames in <span class="Filename">.mpo</span> 
+      files. </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents"><span class="Filename">libmml2d.a</span> 
+      and <span class="Filename">libmltxt.a</span></TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Several upgrades since the 0.80 release. Details may be found in the 
+        <a href="./LibraryUpdates082.html"> <i>Library Updates</i></a>.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents"><img src="./images/new.gif" width="32" height="16">Impulse 
+      library</TD>
+    <TD WIDTH=342 class="TableContents">New inclusion with this SDK. Includes 
+      documentation (see the <a href="./index.html">documentation index</a>); 
+      libraries (<span class="Filename">libImpulseEffects.a</span>; <span class="Filename">libImpulse.a</span>; 
+      <span class="Filename">libNuonImpulse.a</span>); header files (in <span class="Filename">include/nuon/impulse</span>); 
+      and demos (in <span class="Filename">doc/demos/impulse</span>).</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">mload 4.9.0</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Several changes, including:</p>
+      <ul>
+        <li> better handling/reporting of networking errors.</li>
+        <li>file server no longer goes into infinite loop if stub disconnects.</li>
+        <li>bug fixes to profile</li>
+        <li>if -t flag is given, then load symbols</li>
+        <li>added printing of -d[dim] with parameterized scalars per line</li>
+        <li>added Ascii handling</li>
+        <li>added stub version checking</li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="TableContents">860 debug stub 4.9.0</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Several changes, including:</p>
+      <ul>
+        <li>improved file server handling</li>
+        <li>improved interrupt handling</li>
+        <li>added stub version checking</li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Filename">libmGL.a</TD>
+    <TD WIDTH=342 class="TableContents">Major improvements to functionality, performance, 
+      and reliability. Details may be found in the <a href="./LibraryUpdates082.html"> 
+      <i>Library Updates</i></a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Filename"><span class="Text">Incorrect </span>mml2d.h<span class="Text"> 
+      and </span>mrpcodes.h<span class="Text"> files included.</span></TD>
+    <TD WIDTH=342 class="TableContents">Correct files added to release.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">mml2d doc needs to be updated.</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Done.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Audio samples are out of date.</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Latest audio samples have been added. </p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">New <span class="Filename">vmdump</span>.</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Upgraded to version 2.9.5.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Bios doesn't handle old style joysticks.</TD>
+    <TD WIDTH=342 class="TableContents"> 
+      <p>Upgraded to version 1.TBD.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">The following changes have been 
+        made since the 0.81 Beta version was released.</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Added info on configuring dev system memory.</TD>
+    <TD WIDTH=342 class="TableContents"><img src="images/new.gif" width="32" height="16">See 
+      <a href="DevRAMInfo.html">Development System RAM Configuration Info</a> 
+      document.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">impulse demos belong in the <span class="Filename">doc/sample</span> 
+      directory.</TD>
+    <TD WIDTH=342 class="TableContents">Moved.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text"><span class="Filename">gmake</span> is not working 
+      for the Impulse demos</TD>
+    <TD WIDTH=342 class="TableContents">Corrected the Impulse demos.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">mGL library and sample updates</TD>
+    <TD WIDTH=342 class="TableContents">Extensive ongoing updates to this library 
+      and samples. See the <a href="./libmgl.pdf">mGL documentation</a> for more 
+      details.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text"> 
+      <p>audio library, sample, and doc updates</p>
+    </TD>
+    <TD WIDTH=342 class="TableContents">See the <a href="./GameAudio.pdf">audio 
+      documentation</a> for details.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">mload updates</TD>
+    <TD rowspan="2" class="TableContents">Updated to 4.9.2.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">file server implementation can corrupt data</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">860 stub updates</TD>
+    <TD rowspan="3" class="TableContents">Updated to 4.9.3. See the <i><a href="./DebugStubInfo.html">Debug 
+      Stub Info</a></i> document for details.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">stub disconnects if run overnight</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">stub fails to reset correctly after running the 
+      player </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">permissions on CD distributions are incorrect</TD>
+    <TD rowspan="4" class="TableContents">Linux distributions updated with correct 
+      permissions; install script updated, and new <span class="Filename">user-setup</span> 
+      script created for setting environment variables.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">my installation did not set the executable bits 
+      of <span class="Filename">cc1</span>, <span class="Filename">cc1plus</span>, 
+      <span class="Filename">collect2</span>, and <span class="Filename">cpp</span> 
+      in the egcs lib.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">linux install: if I type the wrong user name, it 
+      aborts </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">permissions on <span class="Filename">mgcc</span> 
+      and other files are incorrect</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text"><span class="Filename">$(VMLABS)/util/vml_make.mk</span> 
+      is a DOS text file</TD>
+    <TD rowspan="2" class="TableContents">SDK construction process now runs <span class="Filename">dos2linux</span>. 
+      For your convenience, this useful tool is included in the SDK in the <span class="Filename">$VMLABS/bin 
+      </span>directory. </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">source files are in DOS CR/LF format</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">samples in <span class="Filename">doc/sample/mediaaccess</span> 
+      do not work even after the typos in the load files are fixed </TD>
+    <TD WIDTH=342 class="TableContents">Extensive updates to the samples. See 
+      the <a href="./sample/index.html">Samples</a> documentation.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Added documentation for <span class="Filename">mtrace</span></TD>
+    <TD WIDTH=342 class="TableContents"><img src="images/new.gif" width="32" height="16">See 
+      the <a href="./index.html#mtrace">documentation index</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Added Makefile fragment documentation.</TD>
+    <TD WIDTH=342 class="TableContents"><img src="images/new.gif" width="32" height="16">See 
+      the <a href="./index.html#fragments">documentation index</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Makefile fragments were also in the <span class="Filename">$(VMLABS)/include</span> 
+      directory. </TD>
+    <TD WIDTH=342 class="TableContents">Removed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Ace stub is obsolete.</TD>
+    <TD WIDTH=342 class="TableContents">Removed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Windows, Linux, and NUON binaries live in the <span class="Filename">bin/ 
+      </span>directory. Why not the stub binaries?</TD>
+    <TD WIDTH=342 class="TableContents">Good point. Stub binaries have been moved 
+      to <span class="Filename">bin/860stub/</span>. See the <i><a href="./DebugStubInfo.html">Debug 
+      Stub Info</a></i> document for details.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Changes to compiler libraries to support patch 
+      capability. </TD>
+    <TD WIDTH=342 class="TableContents"><span class="Filename">lib/rc0</span> 
+      and related files updated.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301><span class="Filename">libmpeg.a</span> isn't used.</TD>
+    <TD WIDTH=342 class="TableContents">Removed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301><span class="Filename">vmsrec</span>, <span class="Filename">protoize</span>, 
+      <span class="Filename">unprotoize</span>, <span class="Filename"><span class="Text">and</span> 
+      vmocopy <span class="Text">are no longer needed</span>.</span></TD>
+    <TD WIDTH=342 class="TableContents">Removed.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">Samples are poorly documented.</TD>
+    <TD WIDTH=342 class="TableContents">Samples are extensively restructured. 
+      All samples have been tested and most of them are functional, exceptions 
+      are noted in the <a href="./sample/index.html">documentation</a>.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">What OS platforms are supported?</TD>
+    <TD WIDTH=342 class="TableContents"><img src="images/new.gif" width="32" height="16">See 
+      the <a href="./OSSupport.html"><i>OS Support</i></a> document.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text"><span class="Filename">authinfo</span> application 
+      added, along with a brief overview of blessing.</TD>
+    <TD WIDTH=342 class="TableContents"><img src="images/new.gif" width="32" height="16">See 
+      <a href="./Authentication.html"><i>Authentication</i></a> document.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents" height="30">&nbsp;</TD>
+    <TD WIDTH=301 class="Text" height="30"><span class="Filename">PuffinTK.exe</span> 
+      is obsolete.</TD>
+    <TD WIDTH=342 class="TableContents" height="30">Removed from this release. 
+      Please use <span class="Filename">puffin2k</span> instead.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text"><span class="Filename">merlin.i</span> is in the 
+      wrong place.</TD>
+    <TD WIDTH=342 class="TableContents">Replaced with <span class="Filename">include/nuon/nuon.i</span>. 
+      See the <a href="./IncludeFileUpdates082.html"><i>Include File Updates</i></a> 
+      document.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=125 class="TableContents">&nbsp;</TD>
+    <TD WIDTH=301 class="Text">The version of tcl/Tk in the SDK is conflicting 
+      with the one installed on my machine.</TD>
+    <TD WIDTH=342 class="TableContents">tcl/Tk is no longer integrated into the 
+      SDK release. It is bundled as a third party application, however. Please 
+      see the <a href="./ThirdParty.html"><i>Third Party Apps</i></a> documentation.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<hr>
+<span class="Copyright"><span class="Copyright"> Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">October 
+27 , 2000</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>.</span></span> 
+<p> <span class="Copyright"><i><font size="2">This page &copy; Copyright 2000 
+  VM Labs, Inc. Mountain View, CA. All rights reserved.<br>
+  </font></i></span></p>
+<p class="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<br>
+  All contents, unless otherwise noted, are:</span></i></font></p>
+<p class="copyright" style="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2000 VM Labs, Inc. All Rights Reserved</span></i></font></p>
+<p class="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></p>
+<P CLASS="copyright">Version Info: $Id: ReleaseChanges-0.82.html,v 1.2 2000/10/11 
+  23:28:04 cheiny Exp $<span class="Copyright"><span class="Copyright"> </span></span></P>
+</BODY>
+</HTML>

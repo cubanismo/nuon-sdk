@@ -1,0 +1,774 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; I) [Netscape]">
+   <TITLE>Deep Optimisation</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<CENTER>
+<H1>
+Deep Optimisation</H1></CENTER>
+
+<CENTER><IMG SRC="warp5.jpg" BORDER=3 ></CENTER>
+
+<CENTER></CENTER>
+
+<CENTER>&nbsp;ahhh, now <B><I>that's</I></B> more like it!</CENTER>
+<P>To assemble and run this example, use the batch file "m5" in the Warpcode directory.
+<I></I>&nbsp;
+
+<P>&nbsp;
+<HR>The framerate is, as you can see, a lot more acceptable than when we
+first started out. We are now cranking out bilerped pixels faster than
+the initial naive bit of code could just copy them.
+
+<P>&nbsp;For deep optimisation of an inner loop, it's generally not good
+enough to just pack up the instructions that you wrote for the unpacked
+version and hope for the best. I find it best to take myself away from
+in front of the computer altogether and make myself a really hot cup of
+tea and go and pace about in front of the whiteboard.
+
+<P>&nbsp;I find it helpful to first of all consider what the absolute minimum,
+best case timing could be for the task in hand. In the case of the bilinear
+interpolation I wrote down something like this (using a different colour
+for ALU and MUL unit operations, and with a,b,c and d representing the
+four pixels used in the interpolation). I assumed that at the start of
+the calculation, all four pixels were already loaded:
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>b=b-a</TD>
+</TR>
+
+<TR>
+<TD>d=d-c</TD>
+
+<TD>b*RU</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>d*RU</TD>
+</TR>
+
+<TR>
+<TD>b=b+a</TD>
+</TR>
+
+<TR>
+<TD>d=d+c</TD>
+</TR>
+
+<TR>
+<TD>d=d-b</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>d*RV</TD>
+</TR>
+
+<TR>
+<TD>(NOP)</TD>
+</TR>
+
+<TR>
+<TD>d=d+b</TD>
+</TR>
+
+<TR>
+<TD>(write pixel)</TD>
+</TR>
+</TABLE>
+This represented just the bare bones of the arithmetic operations necessary
+to produce the interpolated pixel, and I didn't worry too much about other
+stuff like loading the pixels in.
+
+<P>&nbsp;Looking at the algorithm, I realised I could start the third multiply
+one tick earlier by calculating one of the differences in parallel with
+the two initial multiplies, as follows:
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>b=b-a</TD>
+</TR>
+
+<TR>
+<TD>d=d-c</TD>
+
+<TD>b*RU</TD>
+</TR>
+
+<TR>
+<TD>c=a-c</TD>
+
+<TD>d*RU</TD>
+</TR>
+
+<TR>
+<TD>c=c+b</TD>
+</TR>
+
+<TR>
+<TD>d=d-c</TD>
+</TR>
+
+<TR>
+<TD>b=a+b</TD>
+
+<TD>d*RV</TD>
+</TR>
+
+<TR>
+<TD>(NOP)</TD>
+</TR>
+
+<TR>
+<TD>d=d+b</TD>
+</TR>
+
+<TR>
+<TD>(write pixel)</TD>
+</TR>
+</TABLE>
+Now, what would be cool would be to start loading pixels for the *next*
+time around the loop as soon as their respective registers become freed
+up in the course of the calculation. After a degree of drinking tea and
+scribbling on the whiteboard I came up with the following:
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>b=b-a</TD>
+</TR>
+
+<TR>
+<TD>d=d-c</TD>
+
+<TD>b*RU</TD>
+</TR>
+
+<TR>
+<TD>c=a-c</TD>
+
+<TD>d*RU</TD>
+
+<TD>copy a to e</TD>
+
+<TD>load a</TD>
+</TR>
+
+<TR>
+<TD>c=c+b</TD>
+</TR>
+
+<TR>
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD></TD>
+
+<TD>load c</TD>
+</TR>
+
+<TR>
+<TD>e=e+b</TD>
+
+<TD>d*RV</TD>
+
+<TD></TD>
+
+<TD>load b</TD>
+</TR>
+
+<TR>
+<TD>(NOP)</TD>
+</TR>
+
+<TR>
+<TD>e=d+e</TD>
+
+<TD></TD>
+
+<TD></TD>
+
+<TD>load d</TD>
+</TR>
+
+<TR>
+<TD>(write pixel)</TD>
+</TR>
+</TABLE>
+By introducing an extra pixel register e, for intermediate results, I could
+see that registers became free quickly enough that it should be possible
+to load all four pixels for the next iteration in parallel with the current
+calculation without lengthening the loop at all. This was looking good,
+but there were problems. The values of the RU and RV indices would need
+to be modified to point to the next pixel, *but* they are also needed for
+the multiplies in the calculation. I would have to delay incrementing them
+to point to the next pixel until the multiplies were started, and doing
+that would mean I couldn't do the loads as soon as the registers became
+available, so I'd be scuppered.
+
+<P>&nbsp;I did consider using the non-index-register version of mul_p to
+get around this, but that would have entailed fossicking around with the
+index values using the ALU to get them in the correct position for the
+shift inherent in the mul_p instruction, and the ALU is already very well
+loaded.
+
+<P>&nbsp;Then I remembered that I was basically wasting the XY index pair
+by just using it to address a pair of linear buffers. If I were to write
+to the destination buffer through a direct scalar address, rather than
+using the index registers, I could use (XY) to point to the next pixel,
+whilst maintaining the current pixel address in UV for the calculation.
+It might mean a little extra code to handle the double buffering, but not
+much - and if it would speed the inner loop, it would be well worth it.
+
+<P>&nbsp;Once I had that plan of attack in mind, it was just a case of
+looking to see how I could fit in the various increments and stores to
+set up the index registers. Eventually, assuming that before entry to the
+loop not only were the four initial pixels loaded but that the indices
+XY and UV had been set equal, I came up with this: (p is the pointer to
+the destination buffer)
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>addm xi,x</TD>
+
+<TD>b=b-a</TD>
+</TR>
+
+<TR>
+<TD>addm yi,y</TD>
+
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD></TD>
+
+<TD>addr yi,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=a-c</TD>
+
+<TD>b*RU</TD>
+
+<TD>mv a,e</TD>
+
+<TD>addr xi,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>p=p+4</TD>
+
+<TD>d*RU</TD>
+
+<TD>load a</TD>
+
+<TD>addr xi,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=c+b</TD>
+
+<TD></TD>
+
+<TD>st_io x,RU</TD>
+
+<TD>addr #1,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD>load c</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>e=e+b</TD>
+
+<TD>d*RV</TD>
+
+<TD>st_io y,RV</TD>
+
+<TD>addr #1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>(NOP)</TD>
+
+<TD></TD>
+
+<TD>load b</TD>
+
+<TD>addr #1,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>e=d+e</TD>
+
+<TD></TD>
+
+<TD>load d</TD>
+
+<TD>addr #-1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD></TD>
+
+<TD></TD>
+
+<TD>st_p e,(p)</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+</TABLE>
+This introduced an extra tick, due to the addm instructions at the start
+of the calculation delaying the first multiply. But, if I assumed that
+the first calculation (addm xi,x and b=b-a) were already done when I entered
+the main loop, I could squeeze those calculations into the latter part
+of the loop, once the next a and b were loaded:
+
+<P>&nbsp;[SETUP]
+
+<P>&nbsp;(load a,b,c,d)
+
+<P>&nbsp;(set xy and uv)
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>addm xi,x</TD>
+
+<TD>b=b-a</TD>
+</TR>
+</TABLE>
+[LOOP]
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>addm yi,y</TD>
+
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD></TD>
+
+<TD>addr yi,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=a-c</TD>
+
+<TD>b*RU</TD>
+
+<TD>mv a,e</TD>
+
+<TD>addr xi,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>p=p+4</TD>
+
+<TD>d*RU</TD>
+
+<TD>load a</TD>
+
+<TD>addr #1,RY</TD>
+
+<TD>dec rc0</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=c+b</TD>
+
+<TD></TD>
+
+<TD>st_io x,RU</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD>load c</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>e=e+b</TD>
+
+<TD>d*RV</TD>
+
+<TD>st_io y,RV</TD>
+
+<TD>addr #1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>add xi,x</TD>
+
+<TD></TD>
+
+<TD>load b</TD>
+
+<TD>addr #1,RY</TD>
+
+<TD>bra c0ne,LOOP</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>e=d+e</TD>
+
+<TD></TD>
+
+<TD>load d</TD>
+
+<TD>addr #-1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>b=b-a</TD>
+
+<TD></TD>
+
+<TD>st_p e,(p)</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+</TABLE>
+Which looked pretty promising. Further pondering and drinking of tea finally
+yielded the following organisation for the inner loop code, shaving another
+tick off the loop and bringing home the bacon for a total of 814398 ticks
+for a full screen of 352x256 pixels, or <B><I>well under one frame @ 60FPS</I></B>
+(with three processors still unused!).
+
+<P>&nbsp;[SETUP]
+
+<P>&nbsp;(load a,b,c,d)
+
+<P>&nbsp;(set xy and uv)
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD>addm xi,x</TD>
+
+<TD>b=b-a</TD>
+</TR>
+</TABLE>
+[LOOP]
+
+<P>&nbsp;
+<TABLE BORDER >
+<TR>
+<TD></TD>
+
+<TD>d=d-c</TD>
+
+<TD>b*RU</TD>
+
+<TD>mv a,e</TD>
+
+<TD>addr yi,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=a-c</TD>
+
+<TD>d*RU</TD>
+
+<TD>st_io x,RU</TD>
+
+<TD>addr xi,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>c=c+b</TD>
+
+<TD></TD>
+
+<TD>load a</TD>
+
+<TD>addr #1,RY</TD>
+
+<TD>dec rc0</TD>
+</TR>
+
+<TR>
+<TD>addm yi,y</TD>
+
+<TD>d=d-c</TD>
+
+<TD></TD>
+
+<TD>load c</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>e=e+b</TD>
+
+<TD>d*RV</TD>
+
+<TD>st_io y,RV</TD>
+
+<TD>addr #1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>add #4,p</TD>
+
+<TD></TD>
+
+<TD>load b</TD>
+
+<TD>addr #1,RY</TD>
+
+<TD>bra c0ne,LOOP</TD>
+</TR>
+
+<TR>
+<TD>addm xi,x</TD>
+
+<TD>e=d+e</TD>
+
+<TD></TD>
+
+<TD>load d</TD>
+
+<TD>addr #-1,RX</TD>
+</TR>
+
+<TR>
+<TD></TD>
+
+<TD>b=b-a</TD>
+
+<TD></TD>
+
+<TD>st_p e,(p)</TD>
+
+<TD>addr #-1,RY</TD>
+</TR>
+</TABLE>
+Here is the inner loop and setup/DMA code as it finally appeared in the
+source:
+<PRE>
+pixel_gen:
+
+; This is the pixel generation function.&nbsp; It collects *bilerped* pixels from the 8x8 pattern buffer and
+; deposits them in the linear destination buffer for output to external RAM.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; dma_dbase,r15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save this in a spare reggy in v3
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; out_buffer,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Generate the real address of the buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I am going to use v3 as an extra pixel holder.
+</PRE>
+<B>Because I am no longer using the xy index registers to address the output
+buffer, I get the actual address of it into <I>dma_dbase</I>, before I
+enter my loop. I also stack <FONT COLOR="#66FF99">v3</FONT>, so I can use
+it for an extra pixel holder ("e" in the pseudocode).</B>
+<PRE>
+; Now, outside of the actual loop, I am gonna load up my stuff.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; x,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear U pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; y,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear V pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; x,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear X pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; y,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear Y pointer
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Grab a pixel from the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to next horiz pixel
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel2&nbsp;&nbsp;&nbsp;&nbsp; ;Get a second pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to next vert pixel
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel4&nbsp;&nbsp;&nbsp;&nbsp; ;get a third pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go to prev horizontal pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub&nbsp;&nbsp;&nbsp;&nbsp; #4,dma_dbase&nbsp;&nbsp;&nbsp; ;point at start of buffer -4
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (uv),pixel3&nbsp;&nbsp;&nbsp;&nbsp; ;get a fourth pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;go back to original pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel,pixel2&nbsp;&nbsp;&nbsp; ;b=b-a
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xi,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;pre increment x</PRE>
+<B>By here, I have snarfed up my initial pixels, done the preliminary calculations,
+and set up XY and UV the way they need to be for entry into the loop proper.
+So now we are ready to dive into those 8 ticks o'glory...</B>
+<PRE>
+bilerp:
+
+; Here is the bilerp part.
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_v&nbsp;&nbsp;&nbsp; pixel,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save a copy of first pixel, freeing up pixel 1.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; ru,pixel2,>>#14,pixel2&nbsp; ;scale according to fractional part of ru
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel3,pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make vector between second 2 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; yi,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Point ry to next y
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; x,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Can now update ru, finished multiplying with it.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; ru,pixel4,>>#14,pixel4&nbsp; ;scale according to fractional part of ru
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel3,pixel,pixel3
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; xi,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;(XY) now points at next pixel 1
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Loading next pixel 1.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;POinting to next pixel 3.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel2,pixel3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get first intermediate result
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Decrementing the loop counter.
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;getting next pixel 3.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel3,pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get vector to final value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addm&nbsp;&nbsp;&nbsp; yi,y,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Point to next y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Working over to point to pixel 2.
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; y,rv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Can now update this as finished multiplying.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mul_p&nbsp;&nbsp; rv,pixel4,>>#14,pixel4&nbsp; ;scale with fractional part of rv
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel2,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add pix2 to the copy of pix1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;(xy) now points at pixel 2.
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;load up next pixel2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next pixel 4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #4,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Incrementing the output buffer pointer.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,bilerp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;start the branch
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get next pixel4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add_sv&nbsp; pixel4,pixel5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make final pixel value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,rx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;start putting these right&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addm&nbsp;&nbsp;&nbsp; xi,x,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;do x inc
+}
+{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_p&nbsp;&nbsp;&nbsp; pixel5,(dma_dbase)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Deposit the pixel in the dest buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #-1,ry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;finish putting these right
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub_sv&nbsp; pixel,pixel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;b=b-a
+}</PRE>
+<B><I>Heh! That made the bugger work for a living!</I></B>
+<PRE>
+; Postamble - get back v3 and the proper buffer address
+
+&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore dma stuff
+&nbsp;&nbsp;&nbsp; nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;empty delay slot
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; r15,dma_dbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;put this back where it was
+
+
+; Now, the pixel buffer is full, so it is time to DMA it out to external RAM.
+;
+; To implement simple double-buffering of the DMA out, we have to do
+; the following:&nbsp; wait for (a) the PENDING bit to go clear, which will
+; mean that DMA is ready to accept a command; and (b), make sure that
+; the ACTIVE level is never greater than (#buffers-1).&nbsp; Here we are using
+; 2 buffers, so we wait until it is 1.
+
+dma_avail:
+
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; mdmactl,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get the DMA status.
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; btst&nbsp;&nbsp;&nbsp; #4,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pending?
+&nbsp;&nbsp;&nbsp; bra ne,dma_avail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Yeah, gotta wait.
+&nbsp;&nbsp;&nbsp; bits&nbsp;&nbsp;&nbsp; #3,>>#0,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Extract the ACTIVE level
+&nbsp;&nbsp;&nbsp; cmp #1,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;check against (#buffers-1)
+&nbsp;&nbsp;&nbsp; bra gt,dma_avail,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Wait until it is OK.
+
+; Now we know DMA is ready, so we can proceed to set up and launch the DMA write.&nbsp;&nbsp;&nbsp;&nbsp;
+
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaFlags,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get DMA flags for this screentype.
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Address of external RAM screen base
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; destx,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination xpos
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; desty,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination ypos
+&nbsp;&nbsp;&nbsp; lsl #16,dma_len,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;shift DMA size up
+&nbsp;&nbsp;&nbsp; or&nbsp; r4,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and combine with x-position
+&nbsp;&nbsp;&nbsp; bset&nbsp;&nbsp;&nbsp; #16,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make Y size = 1
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dma__cmd,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;address of DMA command buffer in local RAM
+&nbsp;&nbsp;&nbsp; st_v&nbsp;&nbsp;&nbsp; v0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set up first vector of DMA command
+&nbsp;&nbsp;&nbsp; add #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next vector
+&nbsp;&nbsp;&nbsp; add out_buffer,dma_dbase,r0&nbsp;&nbsp;&nbsp;&nbsp; ;point to the buffer we just drew
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;place final word of DMA command
+&nbsp;&nbsp;&nbsp; sub #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point back to start of DMA command buffer
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r4,mdmacptr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;launch the DMA
+
+; Because we are double buffering, there is no need to wait for
+; DMA to complete.&nbsp; We can switch buffers, return and get straight on with the
+; next line.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Return to the main loops.
+&nbsp;&nbsp;&nbsp; eor #1,&lt;>#-8,out_buffer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Toggle the buffer offset twixt 0 and 256.
+&nbsp;&nbsp;&nbsp; nop
+</PRE>
+<B>There's a couple of extra ticks here for the unstacking of our v3, but
+given the ticks we saved in the inner loop, it was well worth it!</B>
+
+<P>&nbsp;
+<HR>
+<PRE><A HREF="recap.htm">jmp next
+</A><A HREF="warp4.htm">jmp prev
+</A><A HREF="llama.htm">rts
+</A>nop
+nop</PRE>
+
+</BODY>
+</HTML>

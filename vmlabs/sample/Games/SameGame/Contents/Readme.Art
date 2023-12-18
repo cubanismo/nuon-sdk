@@ -1,0 +1,153 @@
+
+
+ARTWORK SPECIFICS: 
+
+SameGame currently requires 4 .tga files which contain the artwork.
+They are: background.tga, extra.tga, tiles.tga, title_pic.tga.  As
+well, if mats are to be used, then one file for each mat: Mat0.tga,
+Mat1.tga, Mat2.tga, etc.  Also, if animation is to be used, the game
+requires animate.tga.
+
+The .tga files must have indexed colour (256 colours).  They have
+been saved using RLE compression.
+
+SameGame plays on either a 360 x 240 screen or a 512 x 352 screen.
+This can now be set in the sg.cnf file.  With the 512x352 screen one
+can have a 9x14 game using 31x31 tiles.  The smaller screen gives a
+better frame rate.
+
+Note Also: Because the .tga files use only 265 colours, it probably
+makes sense to create/modify the artwork in a format which
+uses true colour and then save a copy in .tga format with indexed
+colour.
+
+
+Details on the required .tga files:
+
+background.tga: The 360x240 or 512x352 background one sees when
+                actually playing the game.  I believe all three
+                flavours use the same grey rock-like background.
+
+extra.tga: Contains the blits of the cursor(s) used on the main menu,
+           the cursor used in the game itself, and the blits displayed
+           when the game is over (asking if the player wishes to have
+           another go).  The position of these blits in extra.tga is
+           recorded in sg.cnf.  Extra.tga is assumed to be 256x256
+           pixels.
+
+tiles.tga:  Contains the 16 tiles used in the game.  The first row
+            shows the 4 different tiles as they look when in a 
+            highlighted group.  The second row shows them as they
+            look normally (unhighlighted).  The third and fourth
+            rows go through the process again, this time with the
+            "special" version of the tile; these special tiles are
+            used in Challenge mode (they are the changeable tiles).
+
+            Tiles.tga is assume to be 256x256 pixels.    
+
+            The tiles are *square* and the width of them (in pixels)
+            is recorded in sg.cnf.  Once SameGame knows the width of
+            the tiles, it goes to tiles.tga and expects to find them
+            in a 4x4 block of tiles with a one pixel border running
+            between them.  As tiles.tga is assume to be 256x256; this
+            gives tile width an upper bound of 62 pixels.
+
+
+            Note: The Pokemon tiles.tga file (and possibly others)
+            contains artwork which SameGame does not use.  Mostly this
+            artwork consists of slight variants or alternatives to the
+            tiles.
+
+title_pic.tga: The 360x240 or 512x352 picture which forms the main
+               menu.  Though it is not obvious from the Toxic, Balls,
+               and Poke versions of SameGame; the menu options "Play,
+               Level, Demo, Exit" and menu sub-options "Normal,
+               Challange, Super Challenge" can appear anywhere in this
+               picture.  Once you decide where in the picture they
+               will go, record in sg.cnf all the locations where you
+               wish the cursor to go (so that it appears next to the
+               correct option).
+
+               Note: It is possible for the "Play" through "Exit"
+               options to have a different cursor than the "Normal"
+               through "Super Challenge".  See sg.cnf.
+
+               Note: Of course, you don't have to use the exact words
+               "Play", "Level", "Super Challenge", etc.  Call them what
+               you will.
+
+
+And the (optional Mat) .tga files:
+
+Mats are the pictures uncovered by deleting tiles.  Poke SameGame uses
+mats; whereas, Balls SameGame does not.  SameGame can read in up to 10
+different mats (the exact number of mats is set in sg.cnf).  Each mat
+is stored in one of Mat0.tga, Mat1.tga, Mat2.tga, etc.  These .tga
+files must be 288x192 though the actual picture used is generally
+smaller (the dimensions given as MAT_WIDTH and MAT_HEIGHT in sg.cnf).
+It is assumed that the picture to be used starts in the upper left
+corner of the .tga file.  Look at some examples in Poke or Toxic
+if this is unclear.
+
+Two guidelines if you wish to use mats: 
+
+1. The size of the picture should be the size of the tile playing
+   field.  So if you are using 31x31 tiles and the game is 6x9, then
+   optimally the picture should be 186x279.  SameGame places the mat
+   with the upper left corner at the same point as the first row of
+   tiles; so if your picture isn't the same size as the tile playing
+   field it won't be centred correctly.
+
+2. If you are using mats then you probably don't want the tiles to
+   have any transparency (like in Balls SameGame); otherwise the
+   player can peek behind the tiles and glimpse the mat.  Just turn
+   TILE_TRANSPARENCY off in sg.cnf.  For more on transparency read
+   below.
+
+
+A Note on Transparency: 
+
+ SameGame allows for transparency in the cursor and the tiles blits.
+ SameGame doesn't use alpha channels and so handles transparency by
+ defining one colour as the "transparent colour" in sg.cnf.  Then when
+ it loads in artwork .tga files, it changes all occurances of this one
+ colour to 0x108080ff and then the MML2D library handles the rest.
+ (Thus it's a good idea to choose a colour which doesn't appear any of
+ the artwork.)  Examples of transparency: the main menu cursor in
+ Toxic SameGame, the game cursor in all three versions of SameGame,
+ and the game tiles in Balls SameGame.
+
+
+A Note on (optional) Animation:
+
+ The animation pictures are found in animate.tga which must be
+ 352x272.  If the NUM_ANIM_STEPS variable in sg.cnf is a non-zero
+ number less than 11, SameGame expects to find animate.tga.  Set
+ NUM_ANIM_STEPS equal to 0 (zero) if there is no animation.  Don't
+ set NUM_ANIM_STEPS to any number bigger than 10.
+
+ The tiles in animate.tga are arranged similarly to those in
+ tiles.tga:
+ * There is a one pixel border around each tile.
+ * Each tile is square and the same size as the tiles in tiles.tga.
+
+ Each row makes up the entire animation sequence.  There will be 8
+ rows: the first 4 give the animation of the (highlighted) regular
+ tiles and the last four show give the animation of the 4
+ (highlighted) special tiles.  The order of the rows in animate.tga
+ should match the order of the tiles in tiles.tga.  For example, if
+ the tiles in tiles.tga are ordered red, green, purple, yellow then
+ the first row of animate.tga shoud be the red row, the next row the
+ green row, then the purple row, then the yellow row, followed by a
+ row of red special tiles, etc.
+
+ Take a look at animate.tga and tiles.tga from either Toxic or Balls
+ if the above is not clear.
+ 
+
+
+
+
+
+
+

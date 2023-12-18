@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 3</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 4</H1><P>
+
+Let's take a look at <B>llama.moo</B>, which is the high-level object that defines the
+vector llama.  Although it doesn't do anything exciting yet,
+it's worth taking a look at, because it introduces an extra feature - <B><I>secondary
+data space</I></B>.<P>
+
+<PRE>
+;
+; llama.moo = a MacrOObject that
+; defines a vector llama
+
+llm:
+
+; header
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$02000000		;2 longs of secondary space
+	.dc.s	0			;Address of parameter block if not local
+
+</PRE>
+Here in the first vector is where we declare secondary data space.  This space is a
+block of longs that may be accessed and stored to in the same way as the OLR object
+prototype; it can be either local to the object (and included in each instance), or
+remote from the object, stored elsewhere in external RAM.  Here, I am using a small
+amount of local secondary data space to store some constants that I need to customize
+the OLR template.  Bits 24-31 of longword 3 of the first vector define the amount of
+secondary data space, in longs.  At the moment, there are no variable parameters declared.
+<PRE>
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype to use
+	.dc.s	0			;local secondary data
+
+</PRE>
+In the second vector of the header we declare that the ranges table and command string are local
+to the object, that we are using an OLR prototype stored at "lineobj", and that the secondary data
+is local too.  Placing an address in the secondary data base address longword would declare it to be
+external to the object.
+<PRE>
+
+	.dc.s	llm_end-llm		;length
+	.dc.s	0				;init routine (called when object is first generated)
+	.dc.s	0,0
+
+	.dc.s	0,0,0,0
+
+</PRE>
+The rest of the header is pretty much the same as previous examples.
+<PRE>
+
+; ranges
+
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+
+</PRE>
+Here is the ranges table.  I'm not even using it yet, so it's empty.
+<PRE>
+
+; local secondary data space
+
+    .dc.s   llama       ;vector list address
+    .dc.s   $01000100   ;scales
+</PRE>
+Where secondary data is declared, and it's local to the object, it will always
+appear after the Ranges table and before the Command string.  Here I am storing two
+longs worth of constants which I will use to convert the generic vector OLR object
+template into what I actually want.
+<PRE>
+
+; command
+
+    .ascii  "_a=h"      ;set VL address
+    .ascii  "_b=e:"     ;set scales        
+
+    .align.v
+
+llm_end:
+
+</PRE>
+Here is the command string.  As you can see, it's pretty simple.  The only unusual
+feature is the lowercase indices prefixed by underscores.  These are references to
+secondary data space.  Just as the longwords in the OLR template space are referred
+to by lowercase indices, the longs in secondary data space are referred to by lowercase
+indices prefixed by underscores.  Looking at the OLR object template, we can see what the
+command string is doing:
+<PRE>
+lineobj:
+
+; Object List linedraw object
+
+	.dc.s	$00b40078			;x1:y1 (or centre position, for polyline) 
+	.dc.s	$00     			;x2:y2
+	.dc.s	$ba9b3000			;packed colour 1
+	.dc.s	$ba9b3000			;packed colour 2
+
+	.dc.s	$00080008			;packed scales x:y (polyline)
+	.dc.s	$cff00002			;Translucency/endpoint radius (radius in low 8 bits)
+	.dc.s	$0				;Rotate angle (polyline)
+	.dc.s 	playership			;Address of polyline list in external RAM (0 if not a polyline)
+
+    .dc.s   0,0,0,0
+
+    .dc.s	0					;unused (at the moment, future line modes may use)
+	.dc.s	0
+	.dc.s	0
+    .dc.s   (UseRecip|UseSine|UseSqrt|IgnoreSplit|line)
+</PRE>
+The command "_a=h" means "get the contents of longword 1 of secondary data space, and
+shove it into the OLR template, at longword #8".  So, it changes the default polyline
+address in the OLR template, which is "playership", to "llama", indicating the correct
+address of the polyline definition for tthis object.<P>
+Likewise, "_b=e" means "get the second long of secondary data space, and shove it into
+the OLR template at longword #5" - in this example, replacing the default scales of $00080008
+with what we want, $01000100.<P>
+
+So far, so boring though - the llama doesn't actually do anything except sit there and look
+llama-y.  In the <A HREF="hlob5.htm">next example</A> we'll make it move around a bit.<P>
+  
+
+
+
+
+</BODY>
+</HTML>

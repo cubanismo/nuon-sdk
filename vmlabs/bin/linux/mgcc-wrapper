@@ -1,0 +1,11 @@
+#!/bin/sh
+
+TMPSPECS="`mktemp -t mgccspecs-XXXXXXXX.spec`"
+
+trap "rm -f \"${TMPSPECS}\"; exit" EXIT
+
+sed -e s_%%VMLABSDIR%%_${VMLABS}_ "${VMLABS}/lib/specs" > "${TMPSPECS}"
+"$0-real" -specs "${TMPSPECS}" "$@"
+RETCODE=$?
+
+exit $RETCODE

@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; I) [Netscape]">
+   <TITLE>Defining the Objective</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>
+Defining the Objective</H1>
+
+<HR>
+<BR>You may be wondering why you should bother learning about assembler
+coding on the MPE at all.&nbsp; After all, the system can run C, and there
+are libraries available that cover many of the things that you need to
+have in order to write a game - why bother getting your brain dirty and
+actually descending to the lowest level?
+
+<P>Well, basically, it's because, if you're reading this document, you're
+probably not the kind of coder who is content to just slap something together
+through the nearest available API and leave it at that.&nbsp; You believe
+that that approach is best left to the shovelware merchants.&nbsp; You've
+got some neat voxel routine, or raycasting technique, or you've been eating
+polar sprouts, and you're frustrated with these graphics accelerator cards
+and consoles that are very good at doing <I>certain</I> things, but they're
+not quite what you <I>really</I> want.&nbsp; You don't want your game to
+look just like all the other games, with all the same effects all done
+the same way.&nbsp; You've got this mad vision, this wild algorithm that
+you're just burning to implement, and BIPS of hardware acceleration are
+no good at all if you can't harness that power to your own ends.&nbsp;
+You probably think polygons are past it.&nbsp; You want to try out some
+cool new technique that the hardware-assisted systems just flat-out can't
+do.&nbsp; Maybe you think our APIs are all a pile of wank and you want
+to show us how it's <I>really </I>done :-).
+
+<P>Well, if you're that kind of a coder, if you're a <I>true </I>hacker,
+then you're going to <I>love </I>Merlin.&nbsp; Because in Merlin we have
+an architecture that does not constrain you to any one way of doing things.&nbsp;
+Sure, load up the appropriate API and we can do polygons and sprites and
+all the rest of it, but if you can't get that killer effect or special
+technique from the APIs, you can write the code yourself - and unleash
+the awesome power of four VLIW processors tanking along in parallel to
+do precisely <I>your </I>bidding.&nbsp; Believe me, when you get into it,
+you'll love it, and you'll be<I> totally gobsmacked</I> at just how much
+amazingly cool stuff you can get up to.
+
+<P>Best of all, it really isn't very difficult to do.&nbsp; If you're already
+an assembler coder, you'll find that it's actually a piece of piss.&nbsp;
+Our variable-length VLIW architecture is considerably easier and more efficient
+to program than most exotic architectures.&nbsp; You can write the bulk
+of your setup and outer loop code just as you would on any other processor,
+using an instruction-set that's really rather nice.&nbsp; If you then take
+the trouble to learn how to polish and optimise that all-important inner
+loop, then you will be rewarded with code that just does an <I>insane amount
+of stuff</I> in <I>not very much time at all</I>.
+
+<P>Of course, when you're sat there with a new machine to learn, it's helpful
+to have some example code to pull apart, something that you can tweak and
+twiddle, something that actually assembles, loads and runs straight away,
+and which gets you up and running with something on the screen immediately.&nbsp;
+The aim of this document and these examples is to provide you with a worked
+example of creating a nice effect on the MPE, from initial coding to final
+optimisation, and to eplain to you what is going on, and why we're doing
+it.
+
+<P>So, here goes....
+
+<P>Okay, you may be thinking, here we are on this weird processor, we've
+got <B><I>bugger all</I></B> instruction RAM, <B><I>bugger all</I></B>
+data RAM, and we can't even get directly at the display RAM. How the hell
+are we going to have any fun with that?
+
+<P>&nbsp;Well, we can have a hell of a lot of fun. Sure, the MPE is a little
+bit weird if you're used to massive flat address spaces and sixteen gazillion
+addressing modes, but for a competent assembler hacker, it's really not
+that bad, and nowhere near as weird as it might seem at first glance. And
+you'll <B><I>totally get off</I></B> on the amazing speed with which you
+can pull off <B><I>outrageously</I></B> cool stuff. Trust me. You're gonna
+love it.
+
+<P>&nbsp;So what are we gonna do?
+
+<P>&nbsp;There comes a time when you want to lay down a screen background
+that's just outrageously psychedelic, technically impressive, extremely
+pretty, and which impresses the punters no end and just screams "<I>this
+ain't no Sega Saturn, matey</I>". You might want to put such a display
+behind a title screen or a hi-score table, or even have it as a funky background
+behind a game screen if you really want to trip people out. So it would
+be nice to have a <B><I>trippy warping pattern generator</I></B> that:
+<BR>&nbsp;
+<UL>
+<LI>
+Is nice and fast</LI>
+
+<LI>
+Not too big</LI>
+
+<LI>
+Is very versatile, and has lots of lovely parameters for twiddling</LI>
+
+<LI>
+Fits onto a single MPE, so you can be getting on with other stuff while
+it is running</LI>
+
+<LI>
+Could serve as the basis for bigger and better things</LI>
+</UL>
+...so let's make one.
+
+<P>&nbsp;In designing anything graphical on the MPE, it behooves one to
+remember Merlin Commandment Numbers One and Two, namely
+<BR>&nbsp;
+<H4>
+Thou shalt stay off the bus as much as possible</H4>
+and
+<H4>
+Thou shalt make thy DMA count.</H4>
+Although it can be construed as a <B><I>right pain in the arse</I></B>
+that we have to go through DMA to get stuff from and write stuff to main
+system RAM, it's actually quite a good thing. The fact that you have to
+explicitly set up your DMA voodoo every time you need to go external reminds
+you that not only is it a pain for <I>you</I>, it's also a pain for the
+<I>system</I>. Your data will have to wait in line for the bus to become
+available, like a granny at Basingstoke Bus Station, and then while <I>you
+</I>have the bus, processes on other MPEs will have to wait too. It helps
+to be polite, use the bus as infrequently as possible, and when you must
+go external, to make it worthwhile.
+
+<P>&nbsp;When you do go out to DMA, you want to make it a nice, big, hearty
+DMA. The optimal DMA size is 64 32-bit pixels. It's no good doing a foontling
+couple of pixels here and a couple there - you spend way too much time
+waiting for bus grant as opposed to actually writing pixels. This is going
+to be a full-screen effect, so ideally we want to be generating 64 output
+pixels in a buffer in on-chip RAM, then hurling them out the DMA all at
+once when necessary.
+
+<P>&nbsp;So the first thing we are going to need is a <B>64-pixel buffer
+for collecting up output pixels</B> in local RAM.
+
+<P>&nbsp;Those output pixels have to come from somewhere... in order to
+generate the pattern, what are we gonna do? I intend to use an extension
+of the old blitting formula - maintain two bilinear address generators,
+and as we traverse the destination rectangle with one AG, we will also
+traverse a source rectangle containing pattern data with another, in a
+<I>cool</I> and <I>interesting</I> manner.
+
+<P>&nbsp;So, for my source rectangle, I am going to specify an <B>8x8-pixel
+buffer</B> in local RAM.
+
+<P>&nbsp;Now, you may think that an 8x8 buffer is way too small to yield
+any interesting or cool patterns, but you're wrong, you wait and see. There
+are various reasons for choosing that size. It doesn't take up a huge amount
+of my precious local RAM, for one. And if I were to one day extend my warper
+to, say, do arbitrary warping of images of any size, then that size buffer
+would be ideal as cache RAM, as there is room enough in RAM to declare
+more than one for double-buffering purposes, and again, it's 64 pixels
+big, the optimal size for DMA.
+
+<P>&nbsp;Also, using a rectangle that is a power-of-2 on a side is good,
+because we can use the XY_TILE and UV_TILE functions of the bilinear addressing
+modes on the MPE to constrain the source address generator to within the
+source tile.
+
+<P>&nbsp;Right. So the basis of this effect is going to be that we are
+gonna walk over the destination rectangle, and as we do, we are going to
+traverse a source tile in a manner that is interesting, picking up pixels
+for output as we go, and maybe doing something interesting to them along
+the way. Time to write some code.
+
+<P>&nbsp;
+<HR>
+<PRE><A HREF="warp1.htm">jmp next
+</A><A HREF="llama.htm">rts
+</A>nop
+nop</PRE>
+
+</BODY>
+</HTML>

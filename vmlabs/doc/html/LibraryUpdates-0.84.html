@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: LibraryUpdates-0.84.html,v 1.4 2001/02/10 08:22:54 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Library 
+  Updates</B></FONT></FONT></FONT> </P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK Release 0.84<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">December 19</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2000</sdfield></b></font></font></font></p>
+<hr>
+<P>The following library updates with this release.<b></b></P>
+<TABLE WIDTH=499 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+  <COL WIDTH=114> <COL WIDTH=367> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=112> 
+      <P>File</P>
+    </TH>
+    <TH WIDTH=365> 
+      <P>Comments</P>
+    </TH>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename">crt0.o</td>
+    <td WIDTH=365 class="Text">Patches nuon57 to fix the audio streaming problem.</td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename">libmutil.a</td>
+    <td WIDTH=365 class="Text"> 
+      <p>Version 1.27</p>
+      <ul>
+        <li>Changed CopyToMPE to call the BIOS _MPELoad function, so it can work 
+          nicely on the mini-BIOS MPE.</li>
+        <li>Updated <a href="./mutil.pdf">documentation</a></li>
+      </ul>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename"> 
+      <div align="left">libmml2d.a</div>
+    </td>
+    <td WIDTH=365 class="Text"> 
+      <p>Version 2.22</p>
+      <ul>
+        <li>Now supports downward scrolling.</li>
+      </ul>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename">libmml3d.a</td>
+    <td WIDTH=365 class="Text"> 
+      <p>Version 1.09</p>
+      <p>No longer uses mini-bios; avoids possible DMA conflicts.</p>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename">libNISE.a</td>
+    <td WIDTH=365 class="Text"> 
+      <p>Version 1.51</p>
+      <ul>
+        <li>Added function PCMPause to accomodate browser interface.</li>
+      </ul>
+    </td>
+  </TR>
+  <TR VALIGN=TOP> 
+    <td WIDTH=112 class="Filename">libmgl.a</td>
+    <td WIDTH=365 class="Text"> 
+      <p>Version .84</p>
+      <p>Stabilized code. See <a href="./mgl_release.pdf">mgl release notes</a>.</p>
+    </td>
+  </TR>
+  <tr valign=TOP>
+    <td width=112 class="Filename">libm3dl.a</td>
+    <td width=365 class="Text">Version 3.05, (dated Sept 12 2000)</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=112 class="Filename"> 
+      <p><span class="Filename">libHALs.a</span></p>
+    </td>
+    <td width=365 class="Text"> 
+      <p>Removed.</p>
+      <p>Please update your makefiles appropriatly to point to: </p>
+      <p>HAL/export/lib </p>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+  </THEAD> <TBODY> </TBODY> 
+</TABLE>
+<P>After installing the new SDK on your system, you must re-link your NUON applications.</P>
+<hr>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --><span class="Copyright"><BR CLEAR=LEFT>
+</span> 
+</BODY>
+</HTML>

@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 5</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 5</H1><P>
+
+Okay, for this example, locate the include line that .includes "llama.moo", and
+change it to include "llama2.moo" instead.  (You may want to change back "cls3.moo" to
+plain old "cls.moo" again, or all that screen colour throbbing might give you a headache).
+Assemble and run the code.  You should now
+see the llama moving around the screen at a sedate pace, and bouncing off the sides of
+the screen.  Let's have a butchers at "llama2.moo", and see how that is set up:
+<PRE>
+
+;
+; llama2.moo = a MacrOObject that
+; defines a vector llama with simple
+; motion
+
+llm2:
+
+; header
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$04020000	;2 longs secondary space, 2 vects variables
+	.dc.s	0			;Address of parameter block if not local
+
+</PRE>
+The first vector is almost the same as before, except that now as well as
+the two longs of secondary data space, I've declared two variable parameter
+vectors - one each, for the X and Y position of the llama.
+<PRE>
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype to use
+	.dc.s	0				;no secondary data
+
+	.dc.s	llm2_end-llm2		;length
+	.dc.s	0				;init routine (called when object is first generated)
+	.dc.s	0,0
+
+	.dc.s	0,0,0,0
+
+</PRE>
+The rest of the header is as it was before.
+<PRE>
+
+; variables
+
+ 	.dc.s   $b00000     ;xpos
+    .dc.s   $10000      ;vel
+    .dc.s   $10000      ;fr.
+    .dc.s   $80000201   ;mode (bounce), limits
+
+</PRE>
+Okay, here is the first of the variable parameter vectors, and as you can see, it looks a bit
+different from the waveform definitions that we were using before.  This is a <I>positional</I> variable;
+positional mode is declared by setting bit 31 of the last longword in the variable's vector.  A positional
+variable has a position longword (naturally enough) at long 0 (here, the position is the X-position of the vector
+llama, expresed as a 16:16 fixed-point value); a velocity longword at long 1 which gets added
+to the position once per frame; and a "friction" longword at long 2 - this isn't "true" friction, it's a 16:16 number
+by which the velocity is multiplied, once per frame.<P>
+
+Longword 3 is the mode word.  As I already mentioned, setting bit 31 here declares the vector as a positional
+variable, rather than a waveform.  Often, it is desirable to have the resultant position respond to transition of
+low and high boundaries - so that an X-position can "bounce" off the left and right screen edges, for example.  Such
+behaviour is defined using the low 16-bits of the mode word.<P>
+
+First, low and high limits must be defined.  This is done by using bits 0-3 and bits 4-7 as indexes into the Ranges
+table.  Bits 4-7 point to the low boundary, and bits 0-3 to the high boundary.  In this example, the low byte of the word
+is "01", so the low limit is Ranges(0), the high limit is Ranges(1) - 0 and $1680000 in this case, which correspond to
+the left and right-hand screen edges (assuming that the position is treared as a 16:16 fixed-point value).<P>
+
+Bits 8-15 are a numeric value that defines the behaviour of the variable when one of the boundaries is crossed.  The
+following behaviours are currently defined:<P>
+
+<UL>
+<LI>0: Do nothing.  The positional value will just go on being updated as if nothing happened.
+<LI>1: Wrap.  As the position passes one boundary, it is reset to the opposite boundary, with the velocity unchanged.
+<LI>2: Bounce.  When the boundary is passed, the velocity is negated.
+<LI>3: Stop.  When the boundary is reached, the velocity is set to zero.
+</UL>
+
+Following the X-position variable is the Y-position variable:
+<PRE>
+
+ 	.dc.s   $780000     ;ypos
+    .dc.s   $8000       ;vel
+    .dc.s   $10000      ;fr.
+    .dc.s   $80000202   ;mode (bounce), limits
+
+</PRE>
+This is just like the X-position variable, except that it uses Ranges(0) and Ranges(2) as the limits, which correspond
+to the top and bottom of the screen.  You might like to have a play with the mode words of the variables - try the different
+boundary behaviours out, and verify that they do indeed do what you'd expect!<P>
+
+You can see the position values changing in the first word of the third OLR object (if you have the OLR display enabled, then
+the second OLR object is a Character Screen Overlay object).<P>
+
+Next comes the ranges table, which is straightforward enough - the X and Y limits set out as expected by the
+position variables:
+<PRE>
+
+; ranges
+
+    .dc.s   0,$1680000,$f00000,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+
+</PRE>
+And the secondary data space, the same as before:
+<PRE>
+
+; local secondary data space
+
+    .dc.s   llama       ;vector list address
+    .dc.s   $01000100   ;scales
+
+</PRE>
+And finally, the command string.
+<PRE>
+
+; command
+
+    .ascii  "A0!=a<"    ;set xpos
+    .ascii  "B0!=a>"    ;set ypos
+    .ascii  "_a=h"      ;set VL address
+    .ascii  "_b=e:"     ;set scales        
+
+    .align.v
+
+llm2_end:
+
+</PRE>
+The first two lines of the command string need explaining.  Before, when we were referring to the variables, we
+just used a capital letter to get the value of a waveform.  However, because the variables A and B are <I>not</I> waveforms,
+we don't want to interpret them as waveforms at all.  Instead, we just want to get the position out of longword 0.  We can
+do this by using a postfix numeric after the capital letter.<P>
+
+So, whereas "A" alone would return the value of a variable interpreted as a waveform, "A0" returns instead the value stored in
+the zeroth longword of the vector that defines the variable.  In this case, the zeroth long contains the position, which is what
+we want.<P>
+
+In the destination OLR template, the first longword contains the position of the centre of the object, stored as two integers of
+16-bits each, X in the high 16-bits, Y in the low.  Remember that, in the position variable, we're treating the position as a
+16:16 fixed-point value.  So, before storing the position in the destination structure, we've gotta chop off the fractional
+bits.  The operator "!" does just that, leaving the integer value in the low 16-bits.  So "A0!" represents the integer part of
+the position variable A.  This needs storing in the high 16-bits of the first long of the OLR template, so the total command to
+set the X position up is "A0!=a<", using the 16-bit store mode.<P>
+
+The second line is now easy to understand - we get the integer position from variable B, which is the Y-position, and store it
+in the low 16-bits of the OLR position longword.  The rest of the command string sets up the constants from the secondary data
+space, as before.<P>
+
+The next example is just a slight modification to this object which yields an interesting result.  <A HREF="hlob6.htm">Check it out!</A><P>
+
+</BODY>
+</HTML>

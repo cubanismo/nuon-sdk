@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+@import "../../SDK/SDK.css";
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF">
+<p class="Title">vmcrlf</p>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<p>vmcrlf converts text files between MS-DOS and Unix end-of-line conventions. 
+  Usage:</p>
+<blockquote>
+  <p> <span class="Filename">vmcrlf [ <i>arg arg arg ...</i> ]</span></p>
+</blockquote>
+<p> where <span class="Filename"><i>&lt;arg&gt;</i></span> is either a filename 
+  to process or an option specification. Valid options are:</p>
+<table width="56%" border="2">
+  <tr> 
+    <td width="32%" valign="top" class="Filename"> 
+      <p>-d<br>
+        -D<br>
+        --dos2linux<br>
+        --dos2unix</p>
+    </td>
+    <td class="TableContents" valign="top" width="68%">Convert from MS-DOS to 
+      Unix end-of-line convention.</td>
+  </tr>
+  <tr> 
+    <td width="32%" valign="top" class="Filename"> 
+      <p>-l<br>
+        -L<br>
+        -u<br>
+        -U<br>
+        --unix2dos<br>
+        --linux2dos</p>
+    </td>
+    <td class="TableContents" valign="top" width="68%">Convert from Unix to MS-DOS 
+      end-of-line convention.</td>
+  </tr>
+  <tr> 
+    <td width="32%" height="40" valign="top" class="Filename">-h<br>
+      -H<br>
+      --help</td>
+    <td class="TableContents" valign="top" width="68%" height="40">Print the help 
+      info and exit.</td>
+  </tr>
+  <tr> 
+    <td width="32%" valign="top" class="Filename">-q<br>
+      -Q<br>
+      --quiet</td>
+    <td class="TableContents" valign="top" width="68%">Quit hollerin' at me. Perform 
+      operations without any feedback.</td>
+  </tr>
+</table>
+<p> The default conversion is platform dependent: </p>
+<ul>
+  <li>if you are running on Windows, the default is <span class="Filename">--unix2dos</span>; 
+  </li>
+  <li>if you are running on Linux, the default is --dos2unix.<br>
+  </li>
+</ul>
+<p> Timestamp information for the file is preserved during the conversion.</p>
+<p>vmcrlf prints information about the files being processed and a summary line 
+  when it is all done. Use the <span class="Filename">--quiet</span> option to 
+  suppress this.</p>
+<hr>
+<p><span class="Copyright">Last updated: November 8, 2000 by <a href="mailto:cheiny@vmlabs.com">Christopher 
+  Heiny</a></span></p>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<p><span class="Copyright">VersionInfo: $Id: vmcrlf.html,v 1.19 2001/06/14 01:10:43 lreeber Exp $</span></p>
+</body>
+</html>

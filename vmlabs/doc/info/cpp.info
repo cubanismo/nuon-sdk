@@ -1,0 +1,80 @@
+This is Info file cpp.info, produced by Makeinfo version 1.68 from the
+input file ../../egcs/gcc/cpp.texi.
+
+INFO-DIR-SECTION Programming
+START-INFO-DIR-ENTRY
+* Cpp: (cpp).		       The GNU C preprocessor.
+END-INFO-DIR-ENTRY
+
+   This file documents the GNU C Preprocessor.
+
+   Copyright 1987, 1989, 1991, 1992, 1993, 1994, 1995, 1997, 1998 Free
+Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided also
+that the entire resulting derived work is distributed under the terms
+of a permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions.
+
+
+Indirect:
+cpp.info-1: 941
+cpp.info-2: 50072
+cpp.info-3: 91257
+
+Tag Table:
+(Indirect)
+Node: Top941
+Node: Global Actions3850
+Node: Directives6370
+Node: Header Files8057
+Node: Header Uses8716
+Node: Include Syntax10208
+Node: Include Operation13350
+Node: Once-Only15212
+Node: Inheritance17637
+Node: Macros20170
+Node: Simple Macros21084
+Node: Argument Macros24072
+Node: Predefined29870
+Node: Standard Predefined30300
+Node: Nonstandard Predefined37958
+Node: Stringification41534
+Node: Concatenation44460
+Node: Undefining47733
+Node: Redefining48772
+Node: Macro Pitfalls50072
+Node: Misnesting51176
+Node: Macro Parentheses52190
+Node: Swallow Semicolon54058
+Node: Side Effects55956
+Node: Self-Reference57654
+Node: Argument Prescan59930
+Node: Cascaded Macros64932
+Node: Newlines in Args66077
+Node: Conditionals67422
+Node: Conditional Uses68774
+Node: Conditional Syntax70197
+Node: #if Directive70783
+Node: #else Directive73072
+Node: #elif Directive73739
+Node: Deleted Code75117
+Node: Conditionals-Macros76178
+Node: Assertions79863
+Node: #error Directive84098
+Node: Combining Sources85583
+Node: Other Directives88494
+Node: Output89948
+Node: Invocation91257
+Node: Concept Index106041
+Node: Index109053
+
+End Tag Table

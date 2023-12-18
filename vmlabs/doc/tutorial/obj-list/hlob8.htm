@@ -1,0 +1,231 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 8</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 8</H1><P>
+
+Change the include "llama4.moo" to "llama5.moo", and re-assemble.  You should see that the llama now
+changes colour, scale and rotation, as well as moving around on a wibbly path.  The extra parameter
+frobbing is due only to a few extra lines in the command string, and when you look at the definition
+of "llama5.moo", it should be mostly familiar, as it's only doing stuff that we have already done before,
+in previous examples.  However, there is one extra in there which I'll deal with in a minute!
+
+<PRE>
+
+;
+; llama5.moo = a MacrOObject that
+; defines a vector llama with slightly
+; more complex motion, and adding some
+; frobbing of other parameters.
+
+llm5:
+
+; header
+
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$02060000		;2 longs of secondary space, 6 vects params
+	.dc.s	0			;Address of parameter block if not local
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype to use
+	.dc.s	0				;no secondary data
+
+	.dc.s	llm5_end-llm5		;length
+	.dc.s	3				;init routine (called when object is first generated)
+	.dc.s	0,0
+
+	.dc.s	0,0,0
+    .dc.s   0           ;local time slew
+
+</PRE>
+Aha!  What's this init routine thingie?  And what the smeg is local time slew?
+<PRE>
+
+; variables
+
+ 	.dc.s   $b00000     ;xpos
+    .dc.s   $10000      ;vel
+    .dc.s   $10000      ;fr.
+    .dc.s   $80000201   ;mode (bounce), limits
+
+ 	.dc.s   $200000     ;ypos
+    .dc.s   $0          ;vel
+    .dc.s   $10000      ;fr.
+    .dc.s   $80000202   ;mode (bounce), limits
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $18000
+    .dc.s   2           ;sine wave
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $13000
+    .dc.s   2           ;another sine wave
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $23000
+    .dc.s   2           ;another sine wave
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   $2c000
+    .dc.s   2           ;another sine wave
+
+</PRE>
+The variables are the same as they were before.
+<PRE>
+     
+; ranges
+
+    .dc.s   $400000,$1080000,$f00000,-$60
+    .dc.s   $80,-$40,$40,$f0
+    .dc.s   $10000,0,0,0
+    .dc.s   0,0,0,0
+
+</PRE>
+A couple of extra range values, for the extra param tweakage that is going to ensue.
+<PRE>
+
+; local secondary data space
+
+    .dc.s   llama       ;vector list address
+    .dc.s   $600        ;constant to add to Y velocity    
+
+</PRE>
+I removed the constant that was used to set the scales, because I am now generating the
+scale values from the waveforms.
+<PRE>
+
+; command
+
+    .ascii  "_b+B1=B1"  ;add _b to B1
+    .ascii  "A0!=a<"    ;set xpos
+    .ascii  "C*D[34]+a<=a<"     ;offset xpos
+    .ascii  "B0!=a>"    ;set ypos
+    .ascii  "E*F[56]+a>=a>"     ;offset ypos
+    .ascii  "C[67]=c0"  ;Colour gen Y
+    .ascii  "D[67]=c1"  ;Colour gen Cr
+    .ascii  "E[67]=c2"  ;Colour gen Cb
+    .ascii  "C[67]=e<"  ;Frob X scale
+    .ascii  "F[67]=e>"  ;Frob Y scale
+    .ascii  "C*F[98]=g" ;Frob rotate-angle
+    .ascii  "_a=h:"      ;set VL address
+
+    .align.v
+
+llm5_end:
+
+</PRE>
+The extra commands in the command string are all quite straightforward - just generating values from
+various waveforms and shoving them up the OLR template, nothing that we haven't done already.  So what is
+it that makes this object different?<P>
+
+Go to the top of ol_demo2.s, and change the statement "initlist = basic_initlist" to "initlist = multi_initlist".
+Save, and re-assemble.  You should now see a whole herd of llamas following one another on a twisty path.  And if
+you inspect "multi_initlist", you can see part of the reason why this happens...
+<PRE>
+multi_initlist:
+
+; real simple multi-instance init-list.
+
+    .dc.l   MooProtos               ;pointer to a list of prototypes
+    .dc.l   list_array              ;pointer to a list of linked lists
+    .dc.l   (clear_block<<16)|1      ;one instance of clear block
+    .dc.l   (llama_1<<16)|20         ;20 instances of a llama
+    .dc.l   -1
+
+</PRE>
+As you can see, the entry that specifies the llama_1 object now calls for 20 instances of the object to be generated.
+On its own, though, that isn't enough to yield the results that you see.  Twenty instances of any of the previous
+versions of the llama-object we have been using would just yield twenty llama-objects all in exactly the same position
+on the screen, all doing exactly the same things at exactly the same time, which would be super-boring, really, and a bit of a waste of effort.
+We need to make each instance of the llama object slightly different from the others, and that is indeed what is occurring.
+To see what is happening, let's check out the header of "llama5.moo" again...
+<PRE>
+	.dc.s	0			;Prev
+	.dc.s	0			;Next
+	.dc.s	$02060000		;2 longs of secondary space, 6 vects params
+	.dc.s	0			;Address of parameter block if not local
+
+	.dc.s	0			;Address of ranges table, if not local
+	.dc.s	0			;this'll be where the command string is, if not local
+	.dc.s	lineobj	    ;prototype to use
+	.dc.s	0				;no secondary data
+
+	.dc.s	llm5_end-llm5		;length
+	.dc.s	3				;init routine (called when object is first generated)
+	.dc.s	0,0
+
+</PRE>
+Right - notice that a value of 3 is specified for an <B>init routine</B>.  This specifies that, when the object is
+created, routine #3 from a list of special routines within <B>moo_cow.s</B> should be executed. (There is enough room inside
+<B>moo_cow</B> that you can write a few small routines to run locally there.  You can also call a routine to run on another
+MPE, too - but we'll cover that in later examples).<P>
+
+Load up <B>moo_cow.s</B> into an editor and examine the local memory definitions at the start.  You will see the following
+table:
+<PRE>
+local_routines:
+
+	.dc.l	bugger_all
+	.dc.l	set_prev
+	.dc.l	init_asteroid
+    .dc.l   init_llama
+</PRE>
+This is a list of local routines which can be made to execute at certain key times during the creation and use of an
+object.  As you can see, the zeroth routine is called bugger_all, which as you can imagine does nothing.  Ignore the
+others, except for routine #3 - init_llama.  This is what gets called when our llama objects are created.  If you examine
+the actual code for init_llama, you will find that it is extremely trivial:
+<PRE>
+init_llama:
+
+; All this does is set the local timeslew on an
+; object according to the value of "cownt".
+
+    rts
+    lsl #2,cownt,r0
+    st_s    r0,init_proto+60
+</PRE>
+I shall go into more detail later about what the environment is like when init-routines start to execute - for now, it's sufficient to
+know that the register labelled "cownt" contains a count that increments by one each time a new instance of an object is created;
+and that the header of the object being created is located at "init_proto".<P>
+
+Thus, you can see that the above code snippet is multiplying the instance number by 4, and sticking it in the last longword of
+the object's header.  What's that all about?  Well, check out the last vector of the header...
+<PRE>
+
+	.dc.s	0,0,0
+    .dc.s   0           ;local time slew
+</PRE>
+See that "local time slew"?  That's what is being set up by the init routine.  Local time slew is a special parameter that affects
+all the Waveform variables within an object.  The basic clock for Waveform variables is derived from a counter that is incremented
+once per frame.  When this clock is taken, the contents of Local Time Slew are added to it.  So, if you stick a number in Local
+Time Slew, it basically offsets all the waveforms in the object by that number of frames.  In this example, by multiplying the
+instance number by 4 and putting the result in the Local Time Slew longword, we cause each successive instance of the Llama object
+to be four frames "ahead" of the previous one.  Since elements of the final object's position, colour and rotation depend upon
+those waveforms, and the waveforms are all offset from one another, the result is that the chain of objects gets "smeared out" and
+they all appear to be following one another.  Actually they are just displaced in time.  You will notice that the underlying
+positional variables are not affected by local time slew - the clump of swirling llamas all move together very obviously tied
+to the pattern of the bouncing motion we defined way back in "llama3.moo".<P>
+
+To further inspect the effect of local time slew, try changing the value of that "lsl" in init_llama, and see what happens!<P>
+
+Actually, the llama-object that we created isn't particularly efficient, given that we are making loads of instances of it.
+To see why not, try the following: go to the top of <B>ol_demo2.s</B> and change it so that "initlist = asteroid_initlist".  Assemble
+and run the code, then have a butchers at the definition of "asteroid.moo".  It should be obvious why this object is more
+efficient than the llama-object, given that there are multiple instances!<P>
+
+If you have a joystick attached, you will also notice that, by using the analog stick and the primary FIRE button, you can
+actually fly the little Asteroids spaceship!  This is done without having to write any MPE code at all - it can all be done using
+the command string.  For the next example, we shall leave the llamas behind for awhile, and take a look at
+how the HL object system can be used to <A HREF="hlob9.htm">run routines on other MPEs</A>.
+
+</BODY>
+</HTML>

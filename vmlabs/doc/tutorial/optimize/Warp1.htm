@@ -1,0 +1,542 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.01 [en] (Win95; I) [Netscape]">
+   <TITLE>Initial Implementation</TITLE>
+</HEAD>
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<CENTER>
+<H1>
+Initial Implementation</H1></CENTER>
+
+<CENTER><IMG SRC="warp1.gif" BORDER=3 ></CENTER>
+
+<CENTER>&nbsp;The none-too-interesting output from the first piece of code
+- totally boring it may be, but it serves to let me know that the basic
+structure is OK.</CENTER>
+
+<P>To assemble and run this example, use the batch file "m1" in the Warpcode directory.
+
+<P>
+<HR>As you can see, this initial output is somewhat less graphically impressive
+than "Gridrunner" on the Commodore 64, to which it bears a passing resemblance.
+This early on, I'm not too bothered about that. The most important thing
+is just to lay the groundwork for your routine, make sure that video is
+coming up, screen buffering is working, the DMA is putting stuff where
+it ought to, and that you're getting the results you expect.
+
+<P>&nbsp;For any coders who have been worrying about this strange VLIW
+thang that the MPEs do - forget it, at least for now. At initial implementation,
+it's a big mistake to try and write packed instructions. Packed code is
+notoriously difficult to read and maintain, and you're well advised not
+to do <B><I>any</I></B> packing until your code is running and doing exactly
+what you want it to. For now, just code it like you would any other RISC
+processor.
+
+<P>&nbsp;You'll notice that I have done some Merlin-esque things - like
+putting instructions into the delay slots after my JSRs and branches -
+but that's more because I just can't <B><I>stand</I></B> to see a NOP if
+I can possibly avoid it, NOPs offend the eye, rather than for purposes
+of serious optimisation.
+
+<P>&nbsp;One good habit it's wise to get into is being a bit anal about
+commenting things. Try to put a good comment on every line of code that
+describes what that instruction is doing. When you <I>do </I>start to pack
+instructions, you'll be moving stuff around all over the place, so the
+old style of commenting "This block does this... and this next section
+does that..." doesn't really work any more.
+
+<P>&nbsp;Okay, let's take a stroll through the code and have a look at
+what's going on.
+
+<P>&nbsp;
+<PRE>;
+; warp1.a - just get something - anything - up on the screen!
+; This just tiles the screen with an 8x8 source tile.
+
+; here's some definitions
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "merlin.i"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;general Merlin things
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "scrndefs.i"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;defines screen buffers and screen DMA type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .start&nbsp; go
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .segment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local_ram
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .align.v</PRE>
+<B>Merlin.i</B> is an include file that names various bits of Merlin.&nbsp;
+We put this one in everything or else we'd be referring to hex addresses
+all the time, and a right pain that'd be.
+
+<P><B>Scrndefs.i </B>defines some screen addresses in external RAM, and
+defines the DMA mode flags for a display that is 360 pixels wide by 240
+high, and uses Pixel Mode 4 - 32 bit pixels.
+
+<P>Finally I make sure that I am aligned on a vector boundary before I
+begin to define the structures that I need.&nbsp; The buffers that follow
+need to be aligned at least to a long boundary, since they will be being
+accessed via the bilinear, XY and UV-address-generator load and store pixel
+commands.&nbsp; Being aligned to a vector boundary is usually a <B><I>Good
+Thing</I></B> - it's nice to be able to use vector loads and stores when
+you feel like it.&nbsp; <I>Tip</I> - if things start going <I>really strange</I>
+for <I>no apparent reason</I>, one of the first things to check is that
+one of your structures hasn't slipped out of alignment.&nbsp; Loading from
+a misaligned structure won't usually actually crash the system, but it
+can definitely mean that you don't get what you expect in the registers
+after the load.
+
+<P><B><I>If in doubt, vector-align.</I></B>
+<PRE>; buffer for internal pixel map (1 DMA's worth)
+
+buffer:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+; output line buffer (1 DMA's worth)
+
+line:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</PRE>
+These are my two 256-byte buffers - one for the 8x8 source tile, and the
+other for a 64-pixel linear output buffer.&nbsp; We'll hold the source
+tile in <B>buffer</B>, and generate lines of pixels for output to external
+RAM in <B>line</B>.
+<PRE>; DMA command buffer
+
+dma__cmd:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .dc.s&nbsp;&nbsp; 0,0,0,0,0,0,0,0</PRE>
+This is a small buffer where DMA commands are constructed before being
+passed to the DMA system.&nbsp; You launch a DMA by first building the
+command in a small buffer, and then pointing the DMA hardware at the command
+by storing the buffer's address in the DMA command pointer register.&nbsp;
+This command structure must lie on a vector boundary - and we know it does,
+because we were anal and aligned the preceding buffers on a vector, and
+this is 512 bytes afterwards, so we're still vector aligned.
+
+<P>We'll be using non-chained, bilinear DMA, and as such, this buffer really
+only needs to be 5 scalars long.&nbsp; However, I'm feeling anal about
+alignment, so I've padded it out to 8 scalars to keep my precious vector
+alignment.
+<PRE>; reg equates for this routine
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = r8
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; y = r9
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixel = v1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; destx = r12
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; desty = r13
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; destw = r10
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; desth = r11
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yi = r16
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xi = r17
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xs = r18
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ys = r19
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dma_mode = r20</PRE>
+These are my reg equates for the routine. I tend to leave r0-r7 for scratch
+registers and hacking the kind of small stuff that is too piffling to be
+bothered writing reg equates for. I'm going to be using <B>x </B>and <B>y
+</B>to address the source tile; the vector <B>pixel </B>for - you guessed
+it - holding a pixel; <B>destx </B>and <B>desty </B>are the position on
+the destination bitmap. <B>destw </B>and <B>desth </B>are the width and
+height of the destination rectangle. <B>xi </B>and <B>yi </B>are the <I>increment
+</I>steps taken over the source tile for every horizontal pixel stepped
+over in the destination space. <B>xs </B>and <B>ys </B>are the <I>step
+</I>offsets that are added to x and y for each vertical step through destination
+space. Finally, <B>dma_mode </B>holds a copy of the DMA flags for the destination
+bitmap.
+
+<P>&nbsp;okay, let's go!
+
+<P>&nbsp;
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .segment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; instruction_ram
+
+go:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$aa,intctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;turn off any existing video
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #(local_ram_base+4096),sp&nbsp;&nbsp;&nbsp;&nbsp; ;here's the SP</PRE>
+That store to <B><FONT COLOR="#66FF99">intctl </FONT></B>turns off any
+interrupts that might actually be running when the code begins to execute
+- there probably won't be, but it's best to be sure.&nbsp; Then, we initialise
+the SP to the top of MPE data RAM.&nbsp; (Well, actually, if you're on
+MPE0 or MPE3 there is more data RAM, but I want this code to run on any
+MPE, so I'm assuming a 4K maximum os DTRAM).
+<PRE>; clear the source buffer to black pixels
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$10808000,r0&nbsp;&nbsp; ;A black pixel
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Address of the source buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; #64,<FONT COLOR="#FFFFFF">rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT>;This is how many pixels to clear to black
+
+cl_srceb:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;dec the loop counter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,cl_srceb&nbsp;&nbsp; ;loop for all the pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;store the black pixel&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #4,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next pixel address</PRE>
+This clears the total source buffer to the pixel value loaded into r0 at
+the start. I could have pre-defined it in the .dc.s statements where I
+defined the buffer, but it's a lot easier to change here, and anyway, I'll
+be needing this loop to do something else later as the code develops.&nbsp;
+We use one of the counter registers, <B><FONT COLOR="#66FF99">rc0</FONT></B>,
+to count off the iterations of the loop - 64 of them, since we are writing
+to an 8x8 pixel buffer.
+<PRE>; set up a simple cross-shaped test pattern in the buffer RAM
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$51f05a00,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel colour (a red colour)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer+(32*4),r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Line halfway down buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #buffer+16,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Column halfway across top line of buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_io&nbsp;&nbsp; #8,rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Number of pixels to write
+
+testpat:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Store pixel value at row address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Store pixel value at column address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Decrement loop counter.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,testpat&nbsp;&nbsp;&nbsp; ;Loop if counter not equal to 0.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #4,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Increment row address by one pixel.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #32,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Increment column address by one line.</PRE>
+This draws a cross in the source buffer, in the colour loaded into r0 at
+the start. The buffer is 8 lines of 8 32-bit pixels, so the horizontal
+pointer advances by 4 and the vertical pointer advances by 32.
+<PRE>; now, initialise video
+
+&nbsp;&nbsp;&nbsp; jsr SetUpVideo,nop</PRE>
+Now, we need to set up a framework to actually generate a display, and
+buffer multiple screens so we can animate the display smoothly.&nbsp; The
+call to <FONT COLOR="#FF6666">SetUpVideo </FONT>invokes the necessary voodoo
+to do that - you don't really need to concern yourself with it right now,
+but basically it sets up an interrupt routine that mutters the appropriate
+stuff at the appropriate times to the video display hardware to yield a
+360x240, 32-bit, overscanned display area.
+
+<P>Once video is active, we are going to sit in a loop that does the following
+things, over and over:
+<UL>
+<LI>
+Generate a buffer address to draw on in SDRAM</LI>
+
+<LI>
+Call a routine to draw on the buffer just specified</LI>
+
+<LI>
+Upon return, pass the buffer address to the video subsystem for display</LI>
+
+<LI>
+Loop around, and generate the next screen buffer address, and do it all
+again.</LI>
+</UL>
+
+<PRE>frame_loop:
+
+; generate a drawscreen address&nbsp;
+
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreenSize,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;this lot selects one of
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreen3,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;three drawscreen buffers
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;this should be inited to a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;valid screen buffer address
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; cmp&nbsp;&nbsp;&nbsp;&nbsp; r3,r1
+&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; ne,updatedraw
+&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; r0,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaScreen1,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;reset buffer base
+updatedraw:
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r1,dest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set current drawframe address
+
+; actually draw a frame
+
+&nbsp;&nbsp;&nbsp; jsr drawframe,nop
+&nbsp;&nbsp;&nbsp;&nbsp;
+; set the address of the frame just drawn on the video system
+
+&nbsp;&nbsp;&nbsp; jsr SetVidBase
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r0
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp;&nbsp;
+; loop back for the next frame
+
+&nbsp;&nbsp;&nbsp; bra frame_loop,nop</PRE>
+This is the main drawing loop.&nbsp; The .include file <B>scrndefs.i</B>
+defines the three screen buffer addresses and the size of an individual
+screen (<B>dmaScreenSize</B>).&nbsp; In the data RAM section, we initialised
+<B>dest </B>to contain the address of one of the buffers.&nbsp; The code
+increments <B>dest </B>by one screen size, and resets it to the first screen
+if it gets incremented past the third screen - we're triple-buffering.&nbsp;
+We then call <B>drawframe</B>, which actually does the business on the
+screen pointed to by <B>dest</B>.&nbsp; Finally, once <B>drawframe</B>
+returns, the screen is ready for display, so we call the video driver routine
+<B><FONT COLOR="#FF6666">SetVidBase</FONT></B> to point the display hardware
+at the screen we just drew; then we loop back and do it all again.
+<PRE>drawframe:
+
+; save the return address for nested subroutine calls
+
+&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v7,rz
+&nbsp;&nbsp;&nbsp;&nbsp;
+; ensure that any pending DMA is complete.&nbsp; Whilst it
+; is not really necessary at the moment, it is good form,
+; for later on we may arrive at the start of a routine
+; while DMA is still happening from something we did before.
+
+&nbsp;&nbsp;&nbsp; jsr dma_finished,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</PRE>
+So here is the actual start of the routine to draw the screen.&nbsp; Since
+we are calling this as a subroutine, and will be calling subroutines within
+this one, we have to save the <B><FONT COLOR="#66FF99">rz </FONT></B>value
+so that the RTS will have the correct address, so first off we <B>push
+v7,rz</B>.&nbsp; Since we'll be doing DMA, we want to know that the DMA
+subsystem is not in the middle of something, so we call <B>dma_finished,
+</B>which returns when it determines that DMA is idle.
+<BR>&nbsp;
+<PRE>; initialise the bilinear addressing registers
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #buffer,xybase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;I want XY to point at the buffer here.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$104dd008,xyctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;XY type, derived as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Bit 28 set, I wanna use CH-NORM.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel type set to 4 (32-bit pixels).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;XTILE and YTILE both set to 13 (treat the buffer as an 8x8 tilable bitmap).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;The width is set to 8 pixels.
+</PRE>
+This initialises the xy bilinear pixel addressing registers to point to
+an 8x8 source map at <B>buffer</B>.&nbsp; We have set tiling on, which
+means that addresses outside of the 8x8 range get wrapped, and we never
+read from outside the tile area.
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #line,uvbase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set the line buffer address
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; #$10400000,uvctl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;UV type, derived as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Bit 28 set, I wanna use CH-NORM.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Pixel type set to 4 (32-bit pixels).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;XTILE and YTILE both set to 0 (no tiling).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;The width is set to 0 (effectively, V is not used in address generation, since this is a line buffer).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</PRE>
+This does the same as the last lot, but instead points the UV addressing
+at the linear output buffer. U- and v-tile are not used and the width is
+set to zero, which basically means that v has no effect (the linear buffer
+is addressed by u alone).
+
+<P>&nbsp;Right, now the initialisation is done, the source buffer contains
+an image of sorts, and all the DMA points to the right stuff.
+<PRE>&nbsp;
+; initialise parameters for the routine
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,desty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Start at dest y=0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,destx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Start at dest x=0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; __fieldcount,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Use __fieldcount, to make it move
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; __fieldcount,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Same for Y
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lsl #16,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make it one whole pixel per fieldcount
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lsl #16,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;same
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$10000,xi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source X inc is 1.0 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,yi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source Y inc is 0 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #0,xs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source X step is 0 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #$10000,ys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Source Y step is 1.0 pixels
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #360,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Width of dest rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #240,desth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Height of dest rectangle
+
+</PRE>
+Here we define some values for our draw routine.&nbsp; <B>x</B> and <B>y</B>
+will be used to index into the source tile; I have loaded them from <B>__fieldcount</B>,
+which is the field counter incremented once per video field by the display
+interrupt.&nbsp; Since this value is constantly incrementing, using it
+for the offset will make our display scroll diagonally.&nbsp; The xy offset
+is a 16:16 value, so the fieldcount is shifted up 16 bits, so the integer
+part gets incremented once per field.&nbsp; The dest origin is set to (0,0),
+the dest size to 360x240 pixels, the source increment to (1.0,0) and the
+source step to (0,1.0). The increment and step values are 16:16 fixed point
+values, because fractional increments are more funky. We're ready to rock.
+<PRE>&nbsp;
+
+; now the outer loop
+
+warp_outer:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save the source X and Y, and the width and height
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;save the dest X and Y</PRE>
+We save the source and dest positions. They are gonna get molested as we
+step horizontally across the source rectangle, and this way we can just
+pop them off when it comes time to add the step values at the end of the
+scanline.
+<PRE>; and now the inner.
+
+warp_inner:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #64,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;This is the maximum number of pixels for one DMA.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub&nbsp;&nbsp;&nbsp;&nbsp; r0,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Count them off the total dest width.</PRE>
+We intend to do a 64-pixel chunk of the destination scanline, so we deduct
+that from the remaining width. If that does not go negative, the dma length
+is 64 (in r0).
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; gt,w_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;do nothing if this is positive
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; #0,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Point ru at the first pixel of the output buffer</PRE>
+The previous two instructions get executed anyway regardless of the conditional
+branch, as they are in delay slots;&nbsp; here one is initialising RU and
+the other is empty. Always try and have your delay slots filled with some
+instructions, however piffling. Nops are <I>so </I>ugly.
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; destw,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;If negative, modify the number of pixels to generate.</PRE>
+If the width went negative or zero, then it's the end of the scanline,
+and the DMA length may well be shorter than 64 pixels. Adding the value
+to r0 leaves it with the correct DMA length.
+<PRE>w_1:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jsr&nbsp;&nbsp;&nbsp;&nbsp; pixel_gen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Go and call the pixel generation loop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; r0,dma_len&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Set the dma length in my dma vector
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp; r0,rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Set the counter for the pixgen loop</PRE>
+Here is where we actually call the pixel generation function. In the delay
+slots on the way, the dma length is copied to <B>dma_len</B>, and it also
+is used to initialise the counter <B><FONT COLOR="#66FF99">rc0</FONT></B>.
+The pixel generation function fills up the destination buffer with <B><FONT COLOR="#66FF99">rc0
+</FONT></B>pixels, and then dma's them out to the address in <B>destx </B>and
+<B>desty</B>.
+<PRE>; Pixel gen function will return here after having generated and DMA'd out the pixels
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cmp&nbsp;&nbsp;&nbsp;&nbsp; #0,destw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Did the width go negative?
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; gt,warp_inner&nbsp;&nbsp; ;No, it did not, carry on the horizontal&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;traverse of the dest rectangle
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; dma_len,destx&nbsp;&nbsp; ;add dma_len to the dest x position
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;empty delay slot</PRE>
+If the width did not go negative, we loop on around until it does, filling
+the destination scanline.
+<PRE>; Horizontal span is finished if we fall through to here
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore dest X and Y
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;restore source X and Y
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; #1,desty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next line of dest
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub&nbsp;&nbsp;&nbsp;&nbsp; #1,desth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;decrement the Y size
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jmp&nbsp;&nbsp;&nbsp;&nbsp; gt,warp_outer&nbsp;&nbsp; ;loop for entire height
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xs,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add the X step to the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; ys,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;add the Y step to the source</PRE>
+Here is the tail of the outer loop code, which gets executed when the scanline
+is complete. Source and destination addresses are restored, and 1 is added
+to the destination Y position, moving to the next scanline down. The height
+is decremented by one and if it isn't 0, we loop back for another pass,
+adding the source step values to the source XY address on the way.
+<PRE>; all done!
+
+&nbsp;&nbsp;&nbsp; pop v7,rz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get back return address
+&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp; rts t,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and return&nbsp;
+</PRE>
+And that's it for the actual draw subroutine, apart from the actual function
+to draw the pixels. It's pretty simple as you can see, and the DMA isn't
+<B><I>that </I></B>much of a pain in the arse, as we'll find out next.
+
+<P>&nbsp;Now comes the most important part of the routine, the pixel-generation
+function. Right now, just while I get things going, I'm keeping this stupidly
+simple. All it does is collect pixels from the source and copy them to
+the destination buffer, and increment the various buffer pointers.
+<PRE>pixel_gen:
+
+; This is the pixel generation function.&nbsp; It collects pixels&nbsp;
+; from the 8x8 pattern buffer and
+; deposits them in the linear destination buffer for output to&nbsp;
+; external RAM.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; x,(rx)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear X pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; y,(ry)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Initialise bilinear Y pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_p&nbsp;&nbsp;&nbsp; (xy),pixel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Grab a pixel from the source
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dec&nbsp;&nbsp;&nbsp;&nbsp; rc0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Decrement the counter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st_p&nbsp;&nbsp;&nbsp; pixel,(uv)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Deposit the pixel in the dest buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addr&nbsp;&nbsp;&nbsp; #1,ru&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;increment the dest buffer pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; c0ne,pixel_gen&nbsp; ;Loop for the length of the dest buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add&nbsp;&nbsp;&nbsp;&nbsp; xi,x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Add the x-increment
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; add yi,y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Add the y_increment</PRE>
+It's totally non-optimal, but it's plain to see what's going on. At this
+stage, it's important to do everything in a very obvious way, so you <I>know
+</I>everything's working properly. There's plenty of time to worry about
+being <I>optimal </I>later. You'll be spending a <B>lot </B>of time staring
+at this inner loop code.
+<PRE>; If it falls through here, the output buffer is full.
+; So I am gonna call my general dma out
+; function, which waits for DMA available, then
+; starts the command going
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; push&nbsp;&nbsp;&nbsp; v0,rz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Save the call stack pointer</PRE>
+We're about to call a subroutine from within a subroutine, so we need to
+push the call stack pointer before we do.
+<PRE>&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dmaFlags,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Get DMA flags for this screentype.
+&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; dest,r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Address of external RAM screen base
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; destx,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination xpos
+&nbsp;&nbsp;&nbsp; copy&nbsp;&nbsp;&nbsp; desty,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;destination ypos
+&nbsp;&nbsp;&nbsp; lsl #16,dma_len,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;shift DMA size up
+&nbsp;&nbsp;&nbsp; or&nbsp; r4,r2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;and combine with x-position
+&nbsp;&nbsp;&nbsp; bset&nbsp;&nbsp;&nbsp; #16,r3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;make Y size = 1
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #dma__cmd,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;address of DMA command buffer in local RAM
+&nbsp;&nbsp;&nbsp; st_v&nbsp;&nbsp;&nbsp; v0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;set up first vector of DMA command
+&nbsp;&nbsp;&nbsp; add #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point to next vector
+&nbsp;&nbsp;&nbsp; mv_s&nbsp;&nbsp;&nbsp; #line,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;address of line buffer in local RAM
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r0,(r4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;place final word of DMA command
+&nbsp;&nbsp;&nbsp; sub #16,r4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;point back to start of DMA command buffer
+&nbsp;&nbsp;&nbsp; st_s&nbsp;&nbsp;&nbsp; r4,mdmacptr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;launch the DMA
+</PRE>
+This code chunk launches a bilinear DMA event.&nbsp; <B>dmaFlags</B> is
+defined in <B>scrndefs.i</B> and is specific to our 360-pixel wide, Mode
+4 screen. It is the first scalar of the DMA command, and I get it into
+<FONT COLOR="#66FF99">r0</FONT>.&nbsp; Next, the base of the current screen
+buffer is loaded into <FONT COLOR="#66FF99">r1</FONT> from dest.&nbsp;
+The next two scalars define the x and y position of the DMA and the size
+- position in the low 16 bits, size in the high 16 bits of each scalar,
+one each for X and Y.&nbsp; We are transferring a line of pixels that is
+<B>dma_len</B> wide and 1 pixel high, so we set up <FONT COLOR="#66FF99">r2</FONT>
+and <FONT COLOR="#66FF99">r3</FONT> accordingly.&nbsp; Then we place the
+first four scalars of the DMA command into the buffer at <B>dma__cmd,</B>
+using a vector store.&nbsp; The final scalar of the command is the internal
+buffer address, so we add that to the command structure.&nbsp; Finally,
+we launch the DMA, by placing the address of the command buffer into <FONT COLOR="#66FF99">mdmacptr</FONT>.
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jsr&nbsp;&nbsp;&nbsp;&nbsp; dma_finished,nop&nbsp;&nbsp;&nbsp; ;Call a function that waits until DMA is finished -
+</PRE>
+Our mission here is almost done. The call to <B>dma_finished </B>ensures
+that the DMA system has completed writing out the output buffer, so we
+can return and start filling it with fresh pixels. Of course it's kind
+of silly to have to hang around and wait for that to happen, and we'll
+do something about that in a later version of the code.
+<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pop&nbsp;&nbsp;&nbsp;&nbsp; v0,rz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Restore the call stack pointer.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Delay while the pop completes.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rts t,nop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;Return to the main loops.
+</PRE>
+Finally, with the DMA done and the buffer ready for re-use, we pop off
+the old return address, and <B>rts </B>the hell out of here.&nbsp; The
+<B>t,nop</B> form just means that we don't have to put nops in for the
+delay slots of the RTS - it saves a bit of space, and there isn't really
+anything useful to do in those slots.
+<PRE>
+dma_finished:
+
+; Wait 'till all DMA has actually finished
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ld_s&nbsp;&nbsp;&nbsp; mdmactl,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;get DMA status
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bits #4,>>#0,r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;wait until Pending and Active Level are zero
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bra&nbsp;&nbsp;&nbsp;&nbsp; ne,dma_finished,nop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rts t,nop
+</PRE>
+This routine, dma_finished, simply polls <B>mdmactl </B>and loops until
+the status indicates that all DMA has completed, then returns.
+<PRE>
+
+; here is the video stuff
+
+&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp; "video.def"
+&nbsp;&nbsp;&nbsp; .include&nbsp;&nbsp;&nbsp; "video.s"
+</PRE>
+These two includes define the video parameters for our display mode, and
+include the interrupt and setup routines for the video display stuff.
+<BR><BR>
+<BR>
+<BR>&nbsp;And that's it - simple, non-optimised, not-trying-to-be-a-clever-git
+kind of code at the moment, but that's all we want at the moment, just
+to get something up and running, get a framework in place that we can build
+on. Next, we are going to add some simple DMA optimisation, to save having
+to use <B>dma_finished</B> at all.
+
+<P>&nbsp;
+<HR>
+<PRE><A HREF="warp2.htm">jmp next
+</A><A HREF="objectiv.htm">jmp prev
+</A><A HREF="llama.htm">rts
+</A>nop
+nop</PRE>
+
+</BODY>
+</HTML>

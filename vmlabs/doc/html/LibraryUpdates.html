@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: LibraryUpdates.html,v 1.57 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Library 
+  Updates</B></FONT></FONT></FONT> </P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<P>The following library updates with this release.<b></b></P>
+<TABLE WIDTH=836 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+  <COL WIDTH=114> <COL WIDTH=367> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=329> 
+      <P>File</P>
+    </TH>
+    <TH WIDTH=485> 
+      <P>Comments</P>
+    </TH>
+  </TR>
+  <tr valign=TOP> 
+    <td width=329 class="Filename"> 
+      <p class="Filename">librombios.a</p>
+    </td>
+    <td width=485 class="Text"> 
+      <p>Version 1.04.00.86</p>
+      <ul>
+        <li class="Text">_CacheConfig was updated to understand -1 as the parameter 
+          that flushes the cache without changing the settings.</li>
+        <li><a href="./bios.pdf">Updated documentation</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libpe.a</td>
+    <td width=485 class="Text">Version 1.04.00.86</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename"> 
+      <p><span class="Filename">crt0.o, <span class="Filename">crt0p.o, gcrt0.o, 
+        gcrt0p.o, crtend.o</span></span></p>
+      <p>&nbsp;</p>
+    </td>
+    <td width=485 class="Text"> 
+      <p>crt_version 1.24, patch_version 1.31, cpatches_version 1.14</p>
+      <p>See the <a href="./html/patch_notes.html">patch release notes</a>.</p>
+      <p>Things to watch out for: The Extiva2 patch relies on all BIOS versions 
+        1.03.xx.yy being essentially the same. The Extiva2 BIOS is frozen, so 
+        this should be the case. If we ever do change the Extiva2 BIOS (even recompiling 
+        with a different toolchain may do this!) then we will have to change its 
+        minor version number from 03 to something else. </p>
+      </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename"><span class="Filename">libg.a, libg_p.a, libc.a, 
+      libc_p.a, libm.a, libm_p.a, libgcc.a, <span class="Filename">libstdc++.a, 
+      specs</span> </span></td>
+    <td width=485 class="Text"> 
+      <p>newlib version 1.7.0 nuon version 12</p>
+      <ul>
+        <li>Updated for MGCC 2.95.3</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename"> 
+      <p class="Filename">libNuonImpulse.a, libNuonImpulseDebug.a, libImpulse.a, 
+        libImpulseDebug.a, libImpulseEffects.a, libImpulseEffectsDebug.a</p>
+    </td>
+    <td width=485 class="Text"> 
+      <p>AlphaMask version 2.2</p>
+      <p>Impulse Changes/NuonRaster rewrite:</p>
+      <ul>
+        <li>New source code and expanded behaviors for libNuonImpulse.a (NuonRaster 
+          class definition has changed to be platform-independent; platform-dependent 
+          code encapsulated in new objects called channel managers) will probably 
+          break any existing code that uses a NuonRaster class object </li>
+        <li>Introduction of a Nuon color table class which encapsulates Nuon clut 
+          (for download to the hardware) and an associated AGL color table, and 
+          keeps the two tables synchronized.</li>
+        <li>DirectDraw functionality: direct writing to the display pixmap without 
+          using an application pixmap, to save memory.</li>
+        <li>New, more extensive sample program illustrates the use of the libNuonImpulse.a 
+          objects as well as AGL itself.</li>
+      </ul>
+      <p>New <a href="./AGL-3-13-01.chm">documentation</a>.</p>
+      <p>Known problems:</p>
+      <ul>
+        <li>Please use libNuonImpulseDebug.a instead of libNuonImpulse.a if you 
+          experience problems such as bitmaps not being displayed correctly on 
+          your NUON system. This will be fixed in a future release.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libjpeg.a</td>
+    <td width=485 class="Text"> 
+      <p>Version .86</p>
+      </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libNISE.a</td>
+    <td width=485 class="Text"> 
+      <p>Version 1.52</p>
+      <ul>
+        <li><a href="./GameAudio.pdf">Updated documentation</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libmutil.a</td>
+    <td width=485 class="Text"> 
+      <p>Version 1.31</p>
+      <p>Added FixRecip function as a C interface to the low level recip function.</p>
+      <p>Updated <a href="./mutil.pdf">documentation</a>. </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libmgl.a</td>
+    <td width=485 class="Text"> 
+      <p>Version .86</p>
+      <p>See <a href="./mgl_release.txt">mgl release notes.</a></p>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <td colspan="2" class="TableHeading"> 
+      <div align="center">Unchanged For This Release</div>
+    </td>
+  </TR>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libmml2d.a</td>
+    <td width=485 class="Text"> 
+      <p>Version 2.24</p>
+      <p>NOTE: This library is dependent on libmutil.a; you must include <span class="UserInput">-lmutil<span class="Text"> 
+        and </span>-lm</span> after <span class="UserInput">-lmml2d </span>when 
+        linking.</p>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <td WIDTH=329 class="Filename">libmml3d.a</td>
+    <td WIDTH=485 class="Text"> 
+      <p>Version 1.09</p>
+      <p>&nbsp;</p>
+    </td>
+  </TR>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libmovie.a</td>
+    <td width=485 class="Text">&nbsp;</td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <td WIDTH=329 class="Filename">libmltxt.a</td>
+    <td WIDTH=485 class="Text">Version 2.4</td>
+  </TR>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libsynth.a</td>
+    <td width=485 class="Text">Version 1.4</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename">libm3dl.a</td>
+    <td width=485 class="Text">Version 3.05, (dated Sept 12 2000)</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=329 class="Filename"><span class="Filename">libio.a, libiostream.a</span></td>
+    <td width=485 class="Text">&nbsp;</td>
+  </tr>
+  </THEAD> <TBODY> </TBODY> 
+</TABLE>
+<P>After installing the new SDK on your system, you must re-link your NUON applications.</P>
+<hr>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --><span class="Copyright"><BR CLEAR=LEFT>
+</span> 
+</BODY>
+</HTML>

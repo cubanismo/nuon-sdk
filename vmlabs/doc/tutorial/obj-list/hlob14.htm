@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 14</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 14</H1><P>
+
+<B><I>Creating a Vehicle</I></B><P>
+
+Creating a vehicle is slightly more complex than creating a cursor.  For this example there is no need to alter the code -
+just keep running the demo with the little ships on it.  Look for the little yellow bat-wing-shaped ship - this is one of the
+simplest vehicles, and it is the one we will look at first.  Ignore the others, and watch that little yellow ship while you
+move the joystick.<P>
+
+The definition of this ship is in <B>ship2.moo</B>.  Again, I shall omit the header, and just concentrate on the naughty bits.<PRE>
+; Variables
+
+	.dc.s	plship2     ;Address of polyline definition
+    .dc.s   $d2921000   ;Colour     
+    .dc.s   $00100010   ;Scale   
+    .dc.s   $8000       ;Phase offset to make thrust vector correct
+</PRE>Once again, some constants set up in a dummy variable.<PRE>
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000002   ;sine   (stopped)
+
+    .dc.s   0           ;Phase
+    .dc.s   0           ;Phase offset
+    .dc.s   0           ;Speed
+    .dc.s   $40000003   ;cos    (stopped)
+</PRE>But what is the point of this?  A pair of sinusoidal waves with velocity set to zero?<P>
+Well, these waveforms are used to generate the correct X and Y velocities to move the vehicle correctly
+according to its rotational orientation.  Normally, when updating a waveform variable, the value in the
+first Phase word of the waveform definition is subtracted from a continuously-incrementing timer.  However, when
+bit 30 of the fourth long of a waveform is set, the current timer value is instead copied into the Phase long.
+This effectively freezes the waveform, since (timer-phase) always comes out to 0.<P>
+This may sound useless, but there are times when you want to stop a waveform.  In this case, we want to stop the
+waveform because then, by using the Phase Offset value, we can effectively work out sines and cosines  - quite
+handy when calculating a velocity vector!<PRE>
+
+    .dc.s   $b00000     ;Xpos
+    .dc.s   0           ;vel
+    .dc.s   $10000      ;fr
+    .dc.s   $80000101   ;lim, type (Wrap)
+
+    .dc.s   $780000     ;Ypos
+    .dc.s   0           ;vel
+    .dc.s   $10000      ;fr
+    .dc.s   $80000102   ;lim, type (Wrap)
+
+</PRE>Here are the positional variables, similar to those in the previous example.<PRE> 
+
+; Ranges
+
+	.dc.s	0
+	.dc.s	$1680000    ;max X	
+	.dc.s	$f00000     ;max Y
+	.dc.s	-$18000     ;min angle
+	.dc.s	$18000      ;max angle
+	.dc.s	-$20000     ;min velocity
+	.dc.s	$20000      ;max velocity
+	.dc.s	$7c000000
+	.dc.s	$20
+	.dc.s	0,0,0,0,0,0,0
+
+</PRE>And the ranges.  Note that there are now values for angle, as well as velocity, ranges.<PRE>
+
+; Command
+
+    .ascii  "A0=h"              ;set address of polyline in object
+    .ascii  "A1=c"
+    .ascii  "c=d"               ;set colour
+    .ascii  "A2=e"              ;set scale
+
+</PRE>Just setting up the constants.<PRE>
+
+    .ascii  "@x[34]=g"          ;set rotate angle from stick
+</PRE>Straightforward enough: set the rotate angle g from the X-axis of the joystick.<PRE>
+    .ascii  "g+A3=B1"           ;set phase of wave B from angle+$8000
+    .ascii  "g=C1"              ;set phase of wave C from angle
+</PRE>This sets the phase offset of the two stopped waveforms.  This means that, when evaluated,
+B will return sin(rotate_angle+$8000), and C will return cos(rotate_angle).<PRE>
+    .ascii  "@y*B[56]=D1"       ;set X-velocity from sine
+    .ascii  "@y*C[56]=E1"       ;set Y-velocity from cosine
+</PRE>And here is where we use the Y-axis position of the joystick to turn the sine and cosine values into
+velocities.  "@y*B" yields a value that is the sine of the target angle, scaled by the Y-position of the joystick;
+this is mapped onto the velocity range (+/- $20000), and then stored in the velocity word of the X-position vector D.
+A similar calculation using the cosine results in the Y-velocity component, which is stored in the Y-position vector in
+the same manner.<PRE>
+    .ascii  "D0!=a<"            ;set X position
+    .ascii  "E0!=a>:"           ;set Y-position and finish
+</PRE>And finally, the integer parts of the position vector are shoved into the XY position of the object, just like in almost
+every other example we have ever looked at.<P>
+
+Of course, now that the basic technique for orienting a vehicle and giving it the proper velocities is understood, we can refine it
+to yield ships that move a bit more nicely than the yellow bat-wing ship.  We could smooth out the rotation, for a start, using the
+same trick as we used to smooth out the motion of the cursor in <B>cursor2.moo</B> - mapping the joystick axis to a velocity instead of
+an absolute position.  Look at the ships again, and notice the red one with the same, bat-wing shape as the last ship, but stretched out a
+bit, so it looks a bit leaner and smarter than the yellow one.  Play with it, and notice mow much nicer and proper-videogame-like it is to
+manipulate, just because the rotation action is nice'n'smooth.  The modification to implement this is a trivial change from the last example,
+so I'll only show the changed parts of <B>ship3.moo</B>:<PRE>
+; Limits
+
+	.dc.s	0
+	.dc.s	$1680000    ;max X	
+	.dc.s	$f00000     ;max Y
+	.dc.s	-$400       ;min angle increment
+	.dc.s	$400        ;max angle increment
+	.dc.s	-$30000     ;min velocity
+	.dc.s	$30000      ;max velocity
+	.dc.s	$7c000000
+	.dc.s	$20
+	.dc.s	0,0,0,0,0,0,0
+
+</PRE>In the ranges, note that the angle ranges are much reduced - since they now represent an increment rather
+than an absolute value.<PRE>
+; Command
+
+    .ascii  "A0=h"              ;set address of polyline in object
+    .ascii  "A1=c"              ;set colour in c
+    .ascii  "c=d"               ;set colour in d
+    .ascii  "A2=e"              ;set scale
+
+    .ascii  "@x[34]+C1=C1"     ;add to rotate angle from stick
+    .ascii  "C1=g"             ;set angle in object
+</PRE>Rather than storing the rotate value from the stick directly into <B>g</B>, as before, we are adding it to the existing
+value in C1, which is the phase of the cosine wave.  Then, we move the result out of C1 into <B>g</B>.<P>
+Why not use "@x[34]+g=g" instead?  Well, that is because the lowercase letters are used to place values into a prototype of
+the OLR object, and that prototype is loaded fresh each time the object is used.  Therefore the value in g is not persistant, and
+"@x[34]+g=g" would yield only the default value of <B>g</B> plus a small delta from the joystick.<P>
+The values inside variables, referenced by the capital letters, are saved after being updated, and therefore the sum to C1 will work as
+expected.  We need the value in C1 anyway to evaluate the cosine, so it's an ideal spot to maintain the angle.<PRE>
+    .ascii  "g+A3=B1"          ;set phase of wave B from angle + $8000
+</PRE>The sine angle is set to the cosine angle, negated.<PRE>
+    .ascii  "@y*B[56]=D1"      ;set X-velocity from sine
+    .ascii  "@y*C[56]=E1"      ;set Y-velocity from cosine
+    .ascii  "D0!=a<"           ;set X position
+    .ascii  "E0!=a>:"          ;set Y-position and finish
+</PRE>And the rest of the command string proceeds exactly as before.
+	
+With rotation sorted out, now it is time to look at how to give a vehicle thrust, acceleration and inertia.  Just having the velocity set
+from an absolute joystick position lacks videogame elegance.  Proceed to the <B><A HREF="hlob15.htm">next example</A></B>, and soon you'll be thrusting like a good'un.<P>
+
+</BODY>
+</HTML>

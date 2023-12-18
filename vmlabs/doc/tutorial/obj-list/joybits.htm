@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<TITLE>Joybits</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Joybits</H1><P>
+
+Actually, the command string phrase "@0" does not have to refer to physical button 0 on the joystick.  In
+<B>moo_cow.s</B>, the main bit of the high-level object system, there is a table called <B>joybits</B>, in the current example
+defined thusly:<PRE>
+
+joybits:
+
+	.dc.b	24,25
+
+</PRE>"@0" tests the joystick button whose status bit is the number of the first entry in this table, in this case 24, which corresponds
+to fire-button A on the hacked Nintendo joysticks we are curremtly using.  "@1" would choose the next entry in the table, here bit 25.  If you
+need to use more buttons, you just add to the table accordingly.  By using
+this table it should make it easy to reassign buttons according to the whim of Johnny User whilst keeping the underlying logic <I>nice'n'sane</I>.<P>
+
+</BODY>
+</HTML>

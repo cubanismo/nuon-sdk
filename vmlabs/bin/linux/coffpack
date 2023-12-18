@@ -1,0 +1,58 @@
+#!/bin/sh
+
+OUTPUT="b.out"
+INPUT=""
+
+usage()
+{
+	echo ""
+	echo "Usage is:"
+	echo " coffpack <options> [input file name] <options>"
+ 	echo " The default input file name is 'a.out'"
+ 	echo " -p <num>    Set maximum padding between merged sections (default 32)"
+ 	echo " -v          Set verbose mode (for debugging)"
+ 	echo " -o <name>   Set output file name to <name> (default 'b.out')"
+}
+
+while [ -n "$1" ]; do
+	case "$1" in
+	-o)
+		shift
+		if [ -z "$1" ]; then
+			usage
+			exit 1
+		fi
+		OUTPUT="$1"
+		;;
+	-p)
+		# Ignore padding parameter
+		if [ -z "$1" ]; then
+			usage
+			exit 1
+		fi
+		shift
+		;;
+	-v)
+		# Ignore
+		;;
+	-h)
+		usage
+		exit 0
+		;;
+	*)
+		INPUT="$1"
+		;;
+	esac
+
+	# Next parameter
+	shift
+done
+
+if [ -z "${INPUT}" ]; then
+	usage
+	exit 1
+fi
+
+echo "*** WARNING: Using no-op version of coffpack ***"
+
+cp "${INPUT}" "${OUTPUT}"

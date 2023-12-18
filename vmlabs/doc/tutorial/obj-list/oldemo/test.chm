@@ -1,0 +1,74 @@
+;
+; test.chm
+;
+; this is a test char-mapped screen, pitch=48
+
+; first 16 words are colour table
+
+	.dc.s	$10808000			;black
+	.dc.s	$306ef000			;blue
+	.dc.s	$51f05a00			;red
+	.dc.s	$71deca00			;pink
+	.dc.s	$91223600			;grn
+	.dc.s	$b0902600			;cyn
+	.dc.s	$d2921000			;yel
+	.dc.s	$f0808000			;wht
+	.dc.s	$40808000			;gry1
+	.dc.s	$2276bf00			;drk blu
+	.dc.s	$35bf6b00			;drk red
+	.dc.s	$47b5aa00			;drk pur
+	.dc.s	$584b5600			;drk grn
+	.dc.s	$6a419500			;drk cyn
+	.dc.s	$7f8a4000			;drk yel
+	.dc.s	$80808000			;gry2
+
+; here is the char map
+
+	.dc.b	$96
+	.ascii	"        OLR List Viewer  "
+	.dc.b	$a0,$20,$b0,$20,$c0,$20,$d0,$20,$80,$20
+	.ascii	"            "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$87
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+	.dc.b	$8f
+    .ascii	"    nn: dddddddd dddddddd dddddddd dddddddd    "
+
+
+
+	.align.v

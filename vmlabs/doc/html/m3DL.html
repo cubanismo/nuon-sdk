@@ -1,0 +1,73 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>M3DL Library</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">M3DL Library</h1>
+
+<hr>
+
+<p><font color="#000000" size="4"><span class="680034500-12121998">The M3DL
+library has had many updates since the last SDK release.&nbsp; These include:</span></font></p>
+
+<ul>
+  <li><font color="#000000" size="4"><span class="680034500-12121998">Ability to
+    draw large images into the frame buffer.&nbsp; It is no longer necessary to
+    break a large image into smaller images arranged in a grid.&nbsp; However,
+    please note that this is not the same thing as full-blown support for large
+    textures.&nbsp; This feature draws only rectangles that are parallel to the
+    viewplane, and would primarily be used for drawing background images prior
+    to rendering other graphics.<br>
+    </span></font></li>
+  <li><font color="#000000" size="4"><span class="680034500-12121998">Now runs
+    properly under MPE 3 and the ROM-based BIOS.&nbsp;&nbsp; However, it does
+    not yet support the ability to run rendering code on MPE 0 at the same time
+    as the mini-BIOS.&nbsp; This means that your application must either avoid
+    using MPE 0 for rendering, or it must shut down the mini-BIOS (and give up
+    those services) in order to use MPE 0.<br>
+    </span></font></li>
+  <li><font color="#000000" size="4"><span class="680034500-12121998">Improved
+    documentation -- More detailed information on many items.<br>
+    </span></font></li>
+  <li><font color="#000000" size="4"><span class="680034500-12121998">More
+    samples - New samples include a blending demonstration, and how to mix M3DL
+    graphics with scaled text output from MML2D.</span></font></li>
+</ul>
+<p><font color="#000000" size="4"><span class="680034500-12121998">Please see
+the <a href="../Graphics/M3DL-Library.PDF">M3DL library documentation</a> for more
+information.</span></font></p>
+
+</body>
+</html>

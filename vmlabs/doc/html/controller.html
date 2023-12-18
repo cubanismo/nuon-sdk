@@ -1,0 +1,217 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Controller Handling Changes</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Controllers</h1>
+
+<hr>
+<h3 align="center"><big>Controller Jumper Settings</big></h3>
+<p><big>The latest revisions of the NUON BIOS only include support for
+production NUON game controllers.&nbsp; The older prototype controllers are no
+longer supported.&nbsp; If you do not have any production controllers, please <a href="contacts.html">
+contact your developer account executive</a>.</big></p>
+<p><big>If you originally used one of the prototype game controllers that
+required a black interface box between the controller and the NUON development
+system, then it may be necessary for you to change some jumper settings before
+you will be able to use a production NUON game controller.</big></p>
+<p><big>There are three jumpers which require changes.&nbsp; The picture below
+shows where to find them.</big></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="3">
+    <tr>
+      <td><img border="0" src="../images/JoystickJumpers.jpg" width="480" height="360"></td>
+      <td valign="top"><big>U26 is a 3-pin header located near the backplane in
+        between the first and second expansion slots.&nbsp; You need to change
+        this jumper to pins 1 and 2, which are the pins farthest away from the
+        backplane.</big>
+        <p><big>J21 and JP23 are both two pins, and there may be no jumper
+        present in the first place.&nbsp; You need to add a jumper to both
+        positions.</big></p>
+        <p><big>Assuming that everything else about your system is configured
+        properly, then these three jumpers should be all you need to
+        change.&nbsp; After the change, your system should work properly with
+        production controllers.&nbsp; It should also still with the older
+        prototype controller, provided that you are using a BIOS version that
+        supports it.&nbsp; However, it will only work with one or the other at
+        any given time.&nbsp; Don't connect both types of controller at the same
+        time.</big><p><big>In some systems, if OTHER jumpers have been changed
+        (on purpose or otherwise) then it's possible that additional changes may
+        be required.&nbsp; If you experience problems, please <a href="contacts.html">contact
+        developer support</a>.</big></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p><big>&nbsp;</big></p>
+<hr>
+<h3 align="center"><big>Determining Controller Properties</big></h3>
+<p><big>It is very, very important that your application examine the <i>properties</i> field
+of the controller data structure to determine which attributes are available on
+the current game controller.</big></p>
+<p><big>Furthermore, it is very important that your application is not hardwired
+to work with a single combination of controller attributes.&nbsp; For example,
+your application generally needs to know how to work with either the D-PAD or
+the analog stick.&nbsp; Some controllers will have both, but some controllers,
+including the pack-in controller that comes with a DVD player, may only have one
+device or the other.&nbsp; If your game only works with a D-PAD, then users who
+have a controller without a D-PAD will be left out, and vice-versa.</big></p>
+
+<p><big>In particular, make sure that you:</big></p>
+
+<ul>
+  <li><font color="#FF0000"><big>Do not assume that all controllers will have a
+    D-PAD.<br>
+    </big></font></li>
+  <li><font color="#FF0000"><big>Do not assume that a controller without an
+    analog joystick will have a D-PAD.&nbsp; It's possible for a controller to
+    have neither (like a mouse).<br>
+    </big></font></li>
+  <li><font color="#FF0000"><big>Do not assume that all controllers will have a
+    full complement of buttons</big></font></li>
+</ul>
+<p><big>It's perfectly OK to require that a controller have certain attributes
+in order to be used with your application.&nbsp; If your application really
+wants a gamepad and the user plugs in a mouse, then feel free to throw up a
+screen that politely explains that the user must use a different controller.</big></p>
+<p><big>On the other hand, it's a good idea in most cases to make sure that your
+game can be played with either the D-PAD or an analog joystick.</big></p>
+<p><big>The most common controller configurations will probably be:</big></p>
+<ul>
+  <li><big>D-PAD, full complement of buttons</big></li>
+  <li><big>D-PAD, analog joystick, full complement of buttons</big></li>
+  <li><big>Analog joystick, full complement of buttons except for D-PAD</big></li>
+</ul>
+
+<hr>
+
+<h3 align="center"><big>Controller Ports &amp; Controller Data</big></h3>
+
+<p><big>The BIOS maintains an array of 9 <b> ControllerData</b> elements.&nbsp; This
+array is accessible through the global BIOS variable <i><b>_Controller</b></i>,
+which is a pointer to the array of <b>ControllerData</b> structures.</big></p>
+
+<p><big>The <b> ControllerData</b> structure is defined in the JOYSTICK.H
+file.&nbsp; If you have older source code that needs updating, please note that the structure definition has changed recently to
+provide more descriptive names for controller data fields.</big></p>
+
+<p><big>_Controller[0] refers to data received from the DVD player's infrared remote
+control.</big></p>
+
+<p><big>_Controller[1] refers to the data obtained from the first plug-in
+controller on the 1st front panel port, or the first slot of a 4-port adapter
+connected to that port.</big></p>
+
+<p><big>_Controller[5] refers to the first controller on the 2nd front panel
+port, or the first port of a 4-port adapter connected to that port.</big></p>
+
+<p><big>Slots 2-4 refer to the remainder of the slots on a 4-port adapter
+connected to the 1st front panel port.</big></p>
+
+<p><big>Slots 6-8 refer to the remainder of the slots on a 4-port adapter
+connected to the 1st front panel port.</big></p>
+
+<p><big>Please see the JOYSTICK.H file and <a href="../Misc/bios.pdf"> BIOS documentation</a> for detailed information on
+controller usage.</big></p>
+
+<p><big>Also, please take a look at the included sample programs which use the joystick.</big></p>
+
+<hr>
+
+<h3 align="center"><big>Infrared Remote Control</big></h3>
+
+<p><big>Every effort is being made to ensure that a NUON DVD player's infrared
+remote control (IRR) is useable as a game controller to some degree.&nbsp;
+However, there are unavoidable differences which must be carefully
+considered.&nbsp; Please be aware of the following issues:</big></p>
+
+<ul>
+  <li><big>Controller 0 is always marked as &quot;connected&quot;<br>
+    </big></li>
+  <li><big>Many IRRs cannot support more than one button being pressed at a
+    time.<br>
+    </big></li>
+  <li><big>Button debounce time for an IRR is usually greater than for a wired
+    controller.&nbsp; (i.e. the button stays &quot;pressed&quot; longer after
+    being released)<br>
+    </big></li>
+  <li><big>Not all IRRs support the idea of a button being held down.&nbsp; Many
+    will generate a single button press &quot;event&quot; no matter what.<br>
+    </big></li>
+  <li><big>Some IRRs support the idea of a button being held down only for
+    particular buttons.<br>
+    </big></li>
+  <li><big>It's difficult to predict what the exact button layout will be.</big></li>
+</ul>
+<p><big>For games where reaction time is not the biggest factor in game play, it
+should always be possible to play the game with an IRR.&nbsp; Every effort
+should be made to ensure this is the case.&nbsp; However, for games where the
+controller gets more of a workout, it's recognized that an IRR may not be
+practical.&nbsp;&nbsp;</big></p>
+
+<hr>
+
+<h3 align="center"><big>Replacing The GetJoyData() Macro</big></h3>
+
+<p><big>If you're using an older SDK which used the GetJoyData() macro, you'll have to
+change your joystick handling code to use the new ControllerData structure defined in
+JOYSTICK.H.</big></p>
+
+<p><big>Generally, &quot;GetJoyData()&quot; can be replaced with &quot;<font
+color="#0000FF">_Controller[1].buttons</font>&quot;, but this only returns button data.</big></p>
+
+<p><big>In some cases with older code, you may need to use &quot;<font color="#0000FF">_Controller[1].buttons
+^ 0xffff</font>&quot; to get the desired results.</big></p>
+
+<p><big>To get the analog joystick data it is necessary to use &quot;<font color="#0000FF">_Controller[1].d1.xAxis</font>&quot;
+and &quot;<font color="#0000FF">_Controller[1].</big><big>d2.yAxis</font>&quot;.</big></p>
+
+<hr>
+
+<h3 align="center"><big>_Controller = _ControllerData</big></h3>
+
+<p><big>Some versions of the SDK required that your program manually initialize the controller
+routine.&nbsp;&nbsp;</big></p>
+
+<blockquote>
+  <p><font face="Courier New"><b><big><font color="#0000FF">ControllerData </font></big><font color="#0000FF"><big>*_Controller;</big></font></b></font></p>
+  <p><font color="#0000FF"><big><b>_Controller= _ControllerInitialize();</b></big></font></p>
+</blockquote>
+
+<p><big>This initialization is now done automatically for C/C++ programs using
+the standard startup code.</big></p>
+</body>
+</html>

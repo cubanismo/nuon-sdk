@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: JoystickInfo.html,v 1.25 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Joystick 
+  Info</B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">There are two 
+  kinds of joysticks, old style and new style. The two types of joystick are not 
+  interchangable, since they have different connectors and speak different protocols. 
+  <font color="#990000"><b>Only the new style joysticks work with the 0.81 or 
+  later release.</b></font></P>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">The pictures 
+  and drawings in this document are representative samples only - your joystick, 
+  adaptor, or development system it may not look exactly like those pictured here.</P>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Joysticks, cables, 
+  and associated adaptors and connectors can be obtained from the VM Labs Hardware 
+  Lab (located downstairs), or by contacting <a href="mailto:georgec@vmlabs.com">George 
+  Campbell</a>.</P>
+<h2 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Joystick Identification</h2>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Old and new 
+  style joysticks are fairly easy to tell apart.</P>
+<table width="75%" border="1">
+  <tr class="TableHeading"> 
+    <td width="21%"> 
+      <div align="center"></div>
+    </td>
+    <td width="36%"> 
+      <div align="center">Old Style</div>
+    </td>
+    <td width="43%"> 
+      <div align="center">New Style</div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="21%" class="Text" height="625"> 
+      <div align="right">Physical unit</div>
+    </td>
+    <td width="36%" class="Text" align="left" valign="top" height="625"> 
+      <p>Colorful converted Nintendo device. &quot;NINTENDO&quot; is molded into 
+        the top of the case. <font size="-1">(green shown - may be any color)</font><br>
+        <a href="./images/oldjoystick-large.jpg"><img src="./images/oldjoystick.jpg" alt="Joystick Classic" border="2"></a></p>
+    </td>
+    <td width="43%" class="TableContents" align="left" valign="top" height="625"> 
+      <div align="left"> 
+        <p>black and grey with colored buttons <font size="-1">(Winter CES model)</font>;<a href="./images/newjoystick-ces-large.jpg"><img src="./images/newjoystick-ces.jpg" alt="Amorphous Blob" border="2"></a></p>
+        <p>black with grey/green buttons <font size="-1">(Samsung Extiva model)</font><br>
+          <a href="./images/newjoystick-extiva-large.jpg"><img src="./images/newjoystick-extiva.jpg" alt="The Bat" border="2"></a></p>
+        <p>candy color <font size="-1">(NUON product model; </font><font size="-1">tangerine 
+          shown, color may vary)<img src="./images/newjoystick-nuon.jpg" alt="Kandy kolor tangerine flake streamline baby"></font></p>
+      </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="21%" class="Text"> 
+      <div align="right">Converter</div>
+    </td>
+    <td width="36%" class="Text" align="left" valign="top">Black box goes between 
+      joystick and NUON system.<img src="./images/oldconverter.jpg" width="266" height="199" alt="Converter box."></td>
+    <td width="43%" class="TableContents" align="left" valign="top"> 
+      <div align="left">No converter.</div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="21%" height="102" class="Text"> 
+      <div align="right">Connector</div>
+    </td>
+    <td width="36%" height="102" class="Text" align="left" valign="top"> 
+      <p>DB9 (RS-232) style connector<img src="./images/oldconnector.jpg" alt="DB-9 style connector."></p>
+      <p>Will not have NUON logo.</p>
+    </td>
+    <td width="43%" height="102" class="TableContents" align="left" valign="top"> 
+      <p align="left">Black molded plastic, either:</p>
+      <div align="left"> 
+        <ul>
+          <li>IEEE-1394 (Firewire) style connector<img src="./images/newconnector-nuon.jpg" alt="NUON connector (Firewire style)"></li>
+          <li>USB style connector<img src="./images/newconnector-usb.jpg" alt="USB style connector"></li>
+        </ul>
+      </div>
+      <p align="left">Will have NUON logo.</p>
+    </td>
+  </tr>
+</table>
+<h2 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Joystick support</h2>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">OEM systems 
+  support only the new style joysticks.</P>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">There are two 
+  types of development systems in general use - the &quot;clearcase&quot; systems 
+  based on the 5.3 board, and the &quot;whitebox&quot; system based on the 5.1 
+  board or 5.2 board. These are fairly easy to tell apart.</P>
+<h3 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Clearcase</h3>
+<p align=left style="margin-top: 0.17in; page-break-after: avoid"><b>5.3 &quot;clearcase&quot;</b> 
+  systems have a slab aluminum case with a clear acrylic cover. This cover must 
+  be removed to insert a debug card or to change the jumpers.<br>
+  <img src="./images/dev-5-3.jpg" border="2" align="top" alt="Clearcase system with top removed to install debug card.">Clearcase 
+  systems only support the new style joysticks. The joystick connectors are on 
+  the front, to the left of the NUON logo (centered below the drive tray).</p>
+<h3 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Whitebox</h3>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">There are 2 
+  flavors of whitebox, those based on the 5.1 board and those based on the 5.2 
+  board. All whitebox systems have a PC-style case. They usually do not have an 
+  LED/LCD display attached.<br>
+  <img src="./images/dev-5-1.jpg" border="2" alt="Representative whitebox system (yours might look different!)"></p>
+<h4 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Whitebox systems 
+  with 5.2 boards</h4>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid"><img src="./images/backside-5-2.jpg" width="307" height="105" border="2" align="left" alt="The back side of a 5.2 board system.">5.2 
+  based whitebox systems support only the new style joysticks. They have a pair 
+  of NUON (IEEE-1394 style) connectors on the back (yellow box in the accompanying 
+  picture). If you have 5.2 based whitebox, you probably already have new style 
+  joysticks. The joysticks with USB style connectors can be used with these systems 
+  in conjunction with the appropriate adaptor (obtainable from anyone in the VM 
+  Labs hardware lab).</p>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">These systems 
+  are not very common, and it is unlikely that you have one.</p>
+<h4 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Whitebox systems 
+  with 5.1 boards</h4>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid"><img src="./images/backside-5-1.jpg" width="318" height="117" align="left" border="2" alt="The back side of a 5.1 board system">This 
+  is the most common kind of development system. All 5.1 based systems have a 
+  pair of 9-pin DB-9/RS-232 style connectors on the back (yellow box in the accompanying 
+  picture). The upper of these two connectors supports old style joysticks. Most 
+  5.1 based systems also have a pair of USB style connectors on the back (blue 
+  box in the accompanying picture). <b>Not all 5.1 based systems have these USB 
+  connectors.</b> If your system is lacking these connectors, the VM Labs hardware 
+  lab can install a set.</p>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">If you are not 
+  already using the new joysticks with your 5.1 system, you will have to set the 
+  jumpers as described in the next section.</p>
+<h4 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">5.1 Jumper 
+  Settings For New Joysticks</h4>
+<p ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Three jumpers 
+  must be set appropriately in order for the new joysticks to work with 5.1 boards. 
+  These are J23, J21, and U26. To set these jumpers, you will need to open the 
+  case of your dev system. The only tool you will need for this task is a screwdriver. 
+  You will need to obtain two jumpers (for use on J21 and J23, one each) - these 
+  may be obtained from anyone in the VM Labs Hardware Lab. Once you have all the 
+  materials and tools on hand, perform the following steps.</p>
+<table width="75%" border="0">
+  <tr valign="top"> 
+    <td class="TableContents" height="91">0</td>
+    <td class="TableContents" height="91" colspan="2"> 
+      <p>Before you start: you will need the following items:</p>
+      <ul>
+        <li>a screwdriver for removing the dev system cover</li>
+        <li>two jumpers for J23 and J21. Jumpers may be obtained from anyone in 
+          the VM Labs Hardware Lab</li>
+      </ul>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">1</td>
+    <td class="TableContents">Power off your dev system</td>
+    <td class="TableContents" rowspan="2"><img src="images/dev-5-1-open.jpg" border="2" align="left" alt="Dev system with its pants off."></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">2</td>
+    <td class="TableContents">Remove the top panel of the dev system. This is 
+      usually done by removing from 1 to 3 screws that hold the top panel to the 
+      case, then slide the panel back slightly to disengage it from the retaining 
+      clips, and lift it free of the case. Your case may require different steps 
+      than this however!</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents" height="249">&nbsp;</td>
+    <td class="TableContents" height="249">The inside of your system should look 
+      something like the picture at the right. Note that the front of the system 
+      is towards the bottom of the picture. The approximate locations of the connectors 
+      we're working with are called out here.</td>
+    <td class="TableContents" height="249"><img src="images/dev-5-1-jumpers.jpg" width="320" height="241" align="left" alt="Reading the entrails." border="2"></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">3</td>
+    <td class="TableContents">Locate J21 and J23. J21 and J23 are two pin connectors 
+      located near the joystick connectors, towards the back of the board. J23 
+      may be labelled JP23 <font size="-1">(at least it is on my board)</font>.</td>
+    <td class="TableContents" rowspan="2"><a href="images/J21andJ23-large.jpg"><img src="images/J21andJ23.jpg" border="2" alt="Where are J21 and J23?"></a></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">4</td>
+    <td class="TableContents">
+      <p>Since these are two pin connectors, you want to just take the jumpers 
+        and put them on so that the two pins of each jumper connector are connected.</p>
+      <p> Make sure that both pins are captured by the jumper (it's kind of easy 
+        to get only one pin and have the other side of the jumper dangling in 
+        space).</p>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">5</td>
+    <td class="TableContents"> 
+      <p>Now locate connector U26. This is a 3-pin connector hidden toward the 
+        back of the board very close to the debug card. Right next to it (toward 
+        the front of the machine) is a two pin jumper JP8. Also nearby is an array 
+        of connectors labelled JP24. U26 already has a jumper on it. The picture 
+        below shows the location of U26.</p>
+      <p>Note that for this series of pictures, the front of the system is toward 
+        the leftof this picture, with the rear toward the right. It may take a 
+        moment to reorient your point of view.</p>
+    </td>
+    <td class="TableContents"><a href="./images/U26-large.jpg"><img src="images/U26.jpg" alt="U26, lurking in the shadowy depths." border="2" align="left"></a></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">&nbsp;</td>
+    <td class="TableContents">However, since it's kind of hard to see down there 
+      in the shadows, here's a picture of the board out of the box, with no debug 
+      card attached. Connector JP8 is also called out for convenience - you do 
+      not have to do anything with JP8..</td>
+    <td class="TableContents" rowspan="4"> 
+      <div align="left"><a href="./images/U26-open-large.jpg"><img src="images/U26-open.jpg" alt="Board out of case, showing U26 and JP8." border="2" align="left"></a></div>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents" height="158">6</td>
+    <td class="TableContents" height="158">The jumper probably connects the rearmost 
+      and the center of the three pins on U26. This is the configuration for supporting 
+      the old style joystick.<img src="images/U26-old.jpg" width="316" height="110"></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">&nbsp;</td>
+    <td class="TableContents">You will need to change the jumper to connect the 
+      frontmost and center of the three pins in order to support the new style 
+      joystick.</td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">&nbsp;</td>
+    <td class="TableContents"><img src="images/U26-new.jpg" width="256" height="110"></td>
+  </tr>
+  <tr valign="top"> 
+    <td class="TableContents">7</td>
+    <td class="TableContents">Close the case back up and power your system back 
+      on again.</td>
+    <td class="TableContents">&nbsp;</td>
+  </tr>
+</table>
+<br>
+<hr>
+<span class="Copyright"><span class="Copyright"> Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">August 
+29, 2000</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>.</span></span> 
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">VersionInfo: $Id: JoystickInfo.html,v 1.25 2001/06/14 01:10:42 lreeber Exp $</P>
+</BODY>
+</HTML>

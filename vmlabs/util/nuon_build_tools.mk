@@ -20,13 +20,13 @@ AR = vmar
 ########################
 ifeq ($(BUILDHOST),LINUX)
 
-ROOT = /usr/local/merlin-local
+ROOT = $(VMLABS)
 RM = rm -f
 CP = cp
 
 else
 
-ROOT = /vmlabs
+ROOT = $(VMLABS)
 RM = erase
 CP = copy
 

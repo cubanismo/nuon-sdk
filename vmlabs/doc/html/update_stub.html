@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Updating Your Stub</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Updating Your Development System's Stub</h1>
+
+<div align="center">
+  <center>
+  <table border="0" cellpadding="5" cellspacing="5">
+    <tr>
+      <td align="center"><big><a href="#Checking Your Current Stub Version">Checking Your Current Stub Version</a></big></td>
+      <td align="center"><big><a href="#Boot/BIOS ROM -VS- &quot;The Stub&quot;">Boot/BIOS ROM -VS- &quot;The Stub&quot;</a></big></td>
+    </tr>
+    <tr>
+      <td align="center"><big><a href="#Revision 5.x with PPC860 interface">Instructions for Revision 5.x systems<br>
+        with PPC860 interface</a></big></td>
+      <td align="center"><big><a href="#Revision 4 with ACE360 Interface">Instructions for Revision 4 systems<br>
+        with ACE360 interface</a></big></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<hr>
+
+<h1 align="center"><a name="Checking Your Current Stub Version">Checking Your Current Stub Version</a></h1>
+
+<p><big>In order to take full advantage of improvements in other tools, you may
+have to update the stub in your
+development system.&nbsp;&nbsp;</big></p>
+
+<p><big>The current SDK release requires stub version 4.9.3 or later.&nbsp; If
+your system has an older version installed, you will have to update it.</big></p>
+
+<p><big>You may check your stub version by entering the command &quot;</big><big><b>mload
+-v</b>&quot;.&nbsp; The MLOAD program will print its version and the version of
+the stub.&nbsp;&nbsp;</big></p>
+
+<p><big>If you do need to update, the SDK includes all of the files necessary to do this. &nbsp;
+Please choose the appropriate set of instructions below.</big></p>
+
+<hr>
+
+<h1 align="center"><a name="Boot/BIOS ROM -VS- &quot;The Stub&quot;">Boot/BIOS ROM -VS- &quot;The Stub&quot;</a></h1>
+
+<p><big>Before you update anything, please make sure you understand the
+difference between the two parts of your NUON development system which use FLASH
+ROM.&nbsp; They are:</big>
+<ul>
+  <li><big>Boot ROM / BIOS ROM -- The NUON development system has a 4mb Flash
+    ROM built into the motherboard.&nbsp; The motherboard also has a socket for
+    a ROM or EPROM.&nbsp; A jumper (labeled &quot;Flash&quot; and
+    &quot;ROM&quot;) selects which one of these is active.&nbsp; (Normally it's
+    set to FLASH).<br>
+    <br>
+    This is what we usually mean when we refer to the &quot;Flash&quot;, the
+    &quot;Flash ROM&quot;, or the &quot;Boot ROM&quot;.<br>
+    <br>
+    This Flash ROM contains the BIOS (if a ROM BIOS is installed) as well as
+    whatever startup code is installed.&nbsp; Older versions of the NUON startup
+    code displayed color bars or a NUON logo graphic.&nbsp; Some more recent
+    versions would draw an animated fractal image.&nbsp; The current version
+    shows a NUON logo and text prompts that allow you to go to a system
+    configuration menu or the DVD player.<br>
+    <br>
+    The boot code does not really interact with the stub.&nbsp; The BIOS only
+    interacts to the degree that the stub may occasionally download a small
+    piece of code to do some debugging function or to speed up a data transfer.<br>
+    <br>
+    Please see &quot;<a href="update_flashrom.html">Updating Your Flash ROM</a>&quot;
+    for information on how to update your Boot/BIOS ROM.<br>
+    <br>
+    </big></li>
+  <li><big>Debug / Ethernet Interface Card -- The debug card in your development
+    system uses a flash ROM so that the debugging stub may be updated when
+    needed.&nbsp; However, as a general rule, the NUON documentation does not
+    refer to this as &quot;flash ROM&quot;.&nbsp; Instead, we normally refer to
+    this simply as the &quot;stub&quot;.&nbsp; We would say &quot;update your
+    stub&quot; instead of &quot;update your debug card flash ROM&quot;.<br>
+    <br>
+    The debug card contains a PowerPC 860 processor, and most of the code on the
+    stub's ROM is intended for that processor, not the NUON chip on the
+    motherboard.&nbsp; This code does not have anything to do with the BIOS or
+    the startup code, except that it must safely co-exist on those occasions
+    when it must ask one of the NUON processor's MPEs to do something.&nbsp; In
+    those cases, it may download a small piece of code to an MPE to facilitate
+    some debugging function, or to speed up transfers over the Ethernet
+    interface.&nbsp;&nbsp;<br>
+    <br>
+    Please see the remainder of this document for information how to update your
+    stub.</big></li>
+</ul>
+
+<hr>
+
+<h1 align="center"><a name="Revision 5.x with PPC860 interface">Revision 5.x with PPC860 interface</a></h1>
+
+<p><big>To update the PPC860 stub, change to the \VMLABS\STUBS\860STUB directory and
+follow the directions below.&nbsp; However, first please make sure you have read the
+README.TXT file in that directory for updated instructions.</p>
+
+<p align="left">First, determine which version of the stub is already installed in your
+system.&nbsp; Execute the command &quot;<strong>mload -v</strong>&quot;.&nbsp; This will
+print the current revision of MLOAD followed by the stub revision.&nbsp; Then follow the
+directions below.</big></p>
+
+<blockquote>
+  <ol>
+    <li><big>Reset your system.</big></li>
+    <li><big>Make sure that the MD_PORT environment variable is set to the IP address of your
+      system.</big></li>
+    <li><big>Execute the <strong>new860</strong> batch file and wait for the prompt to return.</big></li>
+    <li><big>Reset your system.</big></li>
+  </ol>
+</blockquote>
+
+<p><big>Please note that you should have your VMLABS\BIN directory listed in the PATH
+environment variable before doing this.</big></p>
+
+<h3 align="center"><big>Update Troubleshooting</big></h3>
+
+<p><big>If you experience problems during the update, and you have a stub
+version prior to 4.0.0, then the problem may be that the new version of MLOAD
+included with this SDK cannot communicate properly with the older stub.&nbsp;
+The usual solution to this problem is simply to use an older version of MLOAD
+that is closer to the stub version that is already installed.&nbsp; Once you
+have performed the update, you should make sure that you have switched to the
+current MLOAD, as the old MLOAD may not be able to communicate with the newer
+stub.</big></p>
+
+<hr>
+
+<h1 align="center"><a name="Revision 4 with ACE360 Interface">Revision 4 with ACE360 Interface</a></h1>
+
+<p><big>Older revisions of the development system used an ACE360 interface
+rather than the PPC860.&nbsp; These older systems are no longer supported and if
+you still have one you should <a href="contacts.html">contact VM Labs</a> for a
+replacement.</big></p>
+
+</body>
+</html>

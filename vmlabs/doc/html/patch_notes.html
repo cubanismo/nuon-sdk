@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Patch Notes</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+          <p align="center"><b>June 13, 2001</b> 
+        </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Patch Notes</h1>
+
+<hr>
+<P><big>The following changes have been made to the patches for the SDK .86.2 
+  release.</P>
+<P>(1) Made the new MiniBIOS patch apply to Extiva2 systems (this fixes a problem 
+  where if there was a lot of DMAs going on in the system _MediaRead could get 
+  bad data but not report an error). </P>
+<P>(2) Re-enabled the dual layer patch code for Toshiba SD2300 systems. </P>
+<P>(3) Added a sanity check to the _MediaRead timeout code to avoid a NULL pointer 
+  access (for both Toshiba SD2300 and Extiva1 systems). </P>
+<P>&nbsp;</P>
+<P>The following changes have been made to the patches for the SDK .86 release.</big></P>
+<p><big>(1) Patched a handle leak in _MediaOpen which was causing Extiva1 systems 
+  to run out of media handles after 8 _MediaOpen/_MediaClose calls (basically 
+  each _MediaOpen used up 2 handles, and _MediaClose restored only 1). </big></p>
+<p><big>(2) Moved a number of patches out of the application area and into the 
+  BIOS patch space, so that they can survive reset and will work correctly with 
+  code overlays. </big></p>
+<p><big>(3) Extended the range available for _ControllerPollRate on older systems 
+  from 0-15 to 0-1023, and fixed some bugs in the implementation of this patch 
+  on Extiva-1 and SD2300. </big></p>
+<p><big>(4) Disabled a layer 2 patch on the Toshiba SD2300. Dual layer discs may 
+  not work correctly with this version of crt0.o on the SD2300. The dual layer 
+  patch was causing Iron Soldier not to boot correctly on the SD2300, even on 
+  single-layer discs. </big></p>
+<p><big>(5) Fixed a chroma display problem with MPEG pixel displays on the Toshiba 
+  SD2300, Extiva1, and Extiva2. </big></p>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: ReleaseChanges-0.85.html,v 1.9 2001/06/15 01:24:59 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-size: 18pt; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Release 
+  Changes </B></FONT></FONT></FONT></P>
+<p align=CENTER style="margin-top: 0.17in; page-break-after: avoid"><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.85<br>
+  <sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">March 12</sdfield></b></font></font></font><font color="#800000"><font face="Helvetica"><font size=4 style="font-size: 16pt"><b><sdfield type=DATETIME sdnum="1033;1033;MMMM D, YYYY">, 
+  2001</sdfield></b></font></font></font></p>
+<hr>
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"> 
+<!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<p></P>
+<P>The following changes have been made to the release install scripts, documentation, 
+  and directory structure for SDK Release.</P>
+<TABLE WIDTH=794 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 class="TableProps">
+  <COL WIDTH=125> <COL WIDTH=301> <COL WIDTH=342> <THEAD> 
+  <TR VALIGN=TOP class="TableHeading"> 
+    <TH WIDTH=78> 
+      <P>Problem ID#</P>
+    </TH>
+    <TH WIDTH=273> 
+      <P>Description</P>
+    </TH>
+    <TH WIDTH=411> 
+      <P>Changes</P>
+    </TH>
+  </TR>
+  <tr valign=TOP>
+    <td colspan="3" class="TableContents">
+      <p><font size="+1" color="#FF0000">Please Note: This is an internal version 
+        of the SDK. </font></p>
+      <p>For an external version of the SDK, please contact sdk-release@vmlabs.com.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Scripts, Executables 
+        and Documentation</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents" height="175">&nbsp;</td>
+    <td class="Text" width="273" height="175">Windows installation.</td>
+    <td class="Text" width="411" height="175"> 
+      <p>If you do not have the ROOTDIR environment set, you must set it for the 
+        <span class="Filename">sh.exe <span class="Text">(from the MKS tools)</span> 
+        </span> that we include with the internal SDK release:</p>
+      <blockquote> 
+        <p><span class="TableContents"><font face="Courier New, monospace"><font size=2><span class="Filename">set 
+          ROOTDIR=C:</span></font></font></span></p>
+      </blockquote>
+      <p>See the <a href="../install/win-local.html">windows installation documentation</a> 
+        for more information.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents" height="175">&nbsp;</td>
+    <td class="Text" width="273" height="175"> 
+      <p>Aries Debug Stub 4.9.5</p>
+    </td>
+    <td class="Text" width="411" height="175">File Server connectivity has been 
+      stabilized. 
+      <ul>
+        <li>Includes polling to recover from missed interrupts on the 860</li>
+        <li>Prevent the stub from sending an extra packet to an mpe after receiving 
+          an xoff</li>
+      </ul>
+      See the <a href="./DebugStubInfo.html">Debug Stub Documentation</a> for 
+      more information.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273"> 
+      <p>Mload 4.9.5</p>
+    </td>
+    <td class="Text" width="411">Allows the -fs, -me and -ms options to appear 
+      after the filename to be loaded.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">BIOS 1.03.16.00</td>
+    <td class="Text" width="411">Extended the timeout period to 20 seconds. The 
+      new bios is used with the new stub to improve file server connectivity. 
+      See <a href="./FlashROMInfo.html">Flash Rom Documentation</a> for more information.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">PAL/NTSC firmware</td>
+    <td class="Text" width="411"> 
+      <p>Movies and audio cds now work in PAL mode. Video games can be played 
+        in PAL mode, though there are black bars displayed at the top and bottom 
+        of the screen. </p>
+      <p>The default video mode set by the firmware is NTSC. To switch to PAL 
+        video mode, execute <span class="UserInput">set-pal</span>. To switch 
+        back to NTSC video mode, execute <span class="UserInput">set-ntsc</span>.</p>
+      <p>See <a href="./FlashROMInfo.html">Flash Rom Documentation</a> for more 
+        information.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273"> 
+      <p>Updated <span class="Filename">vml_make.mk</span>; there is now a <span class="Filename">vml_make_os.mk</span> 
+        file.</p>
+    </td>
+    <td class="Text" width="411"> 
+      <p class="Text">Split the OS determination part out into its own fragment, 
+        <span class="Filename">vml_make_os.mk</span>. See new <a href="./MakefileFragments.pdf">Makefile 
+        Fragments documentation</a>.</p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">Added <span class="Filename">bin/windows/DataTool.exe</span></td>
+    <td class="Text" width="411"> 
+      <p>The NUON Data Tool is used to concatenate a list of smaller data files 
+        into a larget NUON.DAT file. Currently it is only available for Windows.</p>
+      <p>See <a href="./DATATOOL.HLP">help file</a> or the <a href="./De-Re-NUON.pdf">NUON 
+        Application Programming Guide</a>. </p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">Updated <span class="Filename">bin/windows/rgb2ycrcb.exe</span></td>
+    <td class="Text" width="411">&nbsp;</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">Added <span class="Filename">bin/windows/m3dinfo.exe</span></td>
+    <td class="Text" width="411">M3DL library utility that dumps information about 
+      the M3D files output by the 3D Studio MAX plug-in.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273"> 
+      <p>Updated <span class="Filename">bin/windows</span></p>
+      <ul>
+        <li><span class="Filename">which.exe</span></li>
+        <li><span class="Filename">cp.exe</span></li>
+        <li><span class="Filename">sh.exe</span></li>
+      </ul>
+    </td>
+    <td class="Text" width="411"> 
+      <p>Since the SDK is an internal release, we included the MKS version of 
+        these tools. If you do not have ROOTDIR set, please set it to your C: 
+        drive by doing either of the following:</p>
+      <ul>
+        <li> Add the following to your autoexec.bat file: 
+          <blockquote> 
+            <p class="UserInput">set ROOTDIR=C:</p>
+          </blockquote>
+        </li>
+        <li>You can also set these environment variables on Windows NT/2000 systems 
+          by executing Start-&gt;Settings-&gt;Control Panel, double click on System, 
+          select the Advanced tab, click on the <b>Environment Variables</b> button, 
+          and finally add the ROOTDIR variable and set it to C:</li>
+      </ul>
+      <p>Other UNIX like tools are from the GNU royalty-free set of Win32 gnu 
+        utilities provided at <a href="http://www.edv.agrar.tu-muenchen.de/%7Esyring/win32/UnxUtils.html">http://www.edv.agrar.tumuenchen.de/~syring/win32/UnxUtils.html 
+        </a></p>
+      <p>The Unix tools that we include are: <span class="Filename">cat.exe, less.exe, 
+        gawk.exe, echo.exe, m4.exe, diff.exe, touch.exe, sed.exe, rmdir.exe, rm.exe, 
+        mv.exe, ls.exe, grep.exe, find.exe and chmod.exe</span></p>
+      <p></p>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">Updated <span class="Filename">bin/linux/h2i<span class="Text"> 
+      and </span>bin/windows/h2i.exe</span></td>
+    <td class="Text" width="411">Fixed bug.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273">Updated the 3D Studio Max Plug-ins in the bundled 
+      directory</td>
+    <td class="Text" width="411">Now includes MAX v3.1 as well as MAX v2.5.</td>
+  </tr>
+  <tr valign=TOP> 
+    <td width=78 class="TableContents">&nbsp;</td>
+    <td class="Text" width="273"> 
+      <p>Removed from bin/windows:</p>
+      <ul>
+        <li><span class="Filename">msvcrt.dll</span></li>
+        <li><span class="Filename">mmath.dll</span></li>
+      </ul>
+    </td>
+    <td class="Text" width="411">No longer needed.</td>
+  </tr>
+  </THEAD> <TBODY class="TableContents"> 
+  <TR VALIGN=TOP> 
+    <TD colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Updated Libraries and Include 
+        files</b></div>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="273">Updated <span class="Filename">lib</span> directory.</TD>
+    <TD class="Text" width="411"> 
+      <p>See the <a href="./LibraryUpdates.html">Library Updates documentation</a>.</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="273">Updated <span class="Filename">include <span class="Text">directory</span></span>.</TD>
+    <TD class="Text" width="411">See the <a href="./IncludeFileUpdates.html">Include 
+      File Updates documentation</a>.</TD>
+  </TR>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Platforms Tested</b></div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center">Windows 98, Windows 2000, Red Hat Linux 6.2</div>
+    </td>
+  </tr>
+  <tr valign=TOP> 
+    <td colspan="3" class="TableContents"> 
+      <div align="center"><b class="TableHeading">Known Problems</b></div>
+    </td>
+  </tr>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="273">Firmware Problems</TD>
+    <TD class="Text" width="411"> 
+      <ul>
+        <li>PAL version: 
+          <ul>
+            <li>Video games and samples have black bars displayed at the top and 
+              bottom.</li>
+            <li>After setting your system to PAL mode, the Flash Programming window 
+              will be distorted when you flash the PAL/NTSC boot images again. 
+              Your boot images are being loaded into your system though. This 
+              will be fixed in a future release. To avoid this problem, set your 
+              system to NTSC mode before flashing the boot images, by typing <span class="UserInput">set-ntsc</span>. 
+            </li>
+          </ul>
+        </li>
+        <li>There is a problem playing &quot;enhanced&quot; audio cd's; they may 
+          take awhile before they begin to play. This bug is being looked into 
+          and will be resolved as soon as possible.</li>
+        <li>Audio cds sometimes crash the dev system. This bug is being looked 
+          into and will be resolved as soon as possible.</li>
+      </ul>
+      <p>&nbsp;</p>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="273">Compiler Problems</TD>
+    <TD class="Text" width="411"> 
+      <ul>
+        <li>The extiva2 firmware built with the new compiler is incorrectly displaying 
+          the first chapter of the DVD movie starting at 117:00:00:00 instead 
+          of 00:00:00:00. This bug will be resolved as soon as possible. </li>
+        <li> 
+          <div align="left">There is a register allocation bug in the reload pass 
+            of the compiler. This can cause the compiler to crash when compiling 
+            some functions with a lot of local variables, particularly with <font color="#0000FF">-O2</font> 
+            and better optimization. Using a lower optimization level will usually 
+            fix this. (This bug seems to be a general gcc 2.95.2 bug.)</div>
+        </li>
+        <li>On Windows OS machines, if you see cc1.exe crashing, check to see 
+          if you have the ROOTDIR environment variable set. If it is not set, 
+          update your autoexec.bat file or your System control panel environment 
+          variables to set this: 
+          <blockquote> 
+            <p><span class="TableContents"><font face="Courier New, monospace"><font size=2><span class="Filename">set 
+              ROOTDIR=C:</span></font></font></span></p>
+          </blockquote>
+        </li>
+      </ul>
+    </TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Text" width="273">Puffin Problems</TD>
+    <TD class="Text" width="411">On Windows 98/2000, Puffin is not working correctly 
+      with Day5 (<span class="Filename">bright.d</span>) of the tutorial; it doesn't 
+      load the <span class="Filename">dmademo.cof</span> file into the dev system. 
+      This bug is being looked at and will be fixed as soon as possible. It works 
+      correctly on Windows NT. On Linux, it loads the cof file but then core dumps.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="273">bin/linux/mgcc</TD>
+    <TD class="Text" width="411">Uses hardcoded paths to libraries before using 
+      your specified library paths.</TD>
+  </TR>
+  <TR VALIGN=TOP> 
+    <TD WIDTH=78 class="TableContents">&nbsp;</TD>
+    <TD class="Filename" width="273">bin/windows/sendmidi.exe</TD>
+    <TD class="Text" width="411">Needs to be updated to use TCL81.dll. Currently 
+      it uses TCL80.dll.</TD>
+  </TR>
+  </TBODY> 
+</TABLE>
+<p>For changes to the SDK .85 beta release, please see <a href="./ReleaseChanges-0.85beta.html">ReleaseChanges-0.85beta.html</a>. 
+</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+<P CLASS="copyright">&nbsp;</P>
+</BODY>
+</HTML>

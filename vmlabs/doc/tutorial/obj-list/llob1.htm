@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+<TITLE>LL Object Example 1</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Low-Level Object Example 1</H1><P>
+
+As explained in the individual sections that describe the 2D routine types, the interface to
+the routines is via a data structure called a Low-Level Object.  Although it is possible to
+just set up an object and then run the relevant code directly, stating explicitly which MPE to
+use, it is more convenient to make use of the <B>Object List Renderer</B>.  This routine loads
+onto however many MPEs you designate as being rendering MPEs, and traverses a list of Low-Level
+Objects, breaking up the task of rendering amongst the participating MPEs in order to draw the
+display.<P>
+
+In the first example of using an Object List, we will just draw a static frame by setting up the
+OLR on the participating MPEs, and then passing the OLR the address of an Object List that is
+explicitly defined in RAM.<P>
+
+To run the demo, load up the example code "ol_demo2.s", and examine the first few lines.  Note that
+a few lines are commented - by making certain of these lines active, you will set up the demo code
+to correspond to whichever example you're looking at,  For now, ensure that the lines stating "drawloop = drawframe_olr"
+and "initlist = 0" are uncommented, and that the others are commented out.  Assemble and run the code,
+and you should see a stripy background screen with a couple of sprites, a vector llama, a circle and a
+disk.<P>
+
+What is happening here is that the OLR is displaying a simple, static Object List, once per frame.  To view the
+List, examine the definitions that follow the label "raw_olrlist" in ol_demo2.sw.  The actual parameters which
+go into each 16-longword-length OLR object depend on the object type, and are documented along with the
+description of the object type elsewhere in this documentation.  The only object type that is not mentioned
+there is the Test object, which is a very simple object which does nothing except draw the stripy background.
+We will look further at the Test object when we look at how to design your own object rendering code so that
+it fits into the OLR system.  For now, the Test object is just used as a good example so you can see how the
+rendering task is spread across the MPEs.  Each MPE draws the background to its render zone in its own colour.<P>
+
+The actual code that runs per frame is quite simple.  Here is the frame rendering routine in full:
+<PRE>
+drawframe_olr:
+
+; draw a raw OLR list.
+
+    st_s    #0,param0       ;zero means list mode
+    mv_s    #raw_olrlist,r0 ;list to draw
+    st_s    r0,olbase       ;base of the OL
+    push    v0,rz
+    jsr LoadRunOLR,nop         
+    jsr WaitMPEs,nop
+    pop v0,rz
+    nop
+    rts t,nop
+
+
+</PRE>
+Not much to it, as you can see.  The address of the list to draw is stored in olbase.  The routine
+"LoadRunOLR" loads up the OLR code onto the relevant MPEs, passes in some parameters, and starts them
+up.  WaitMPEs waits and returns when all the renderers have completed.<P>
+
+In the <A HREF="llob2.htm">next example</A>, we will run the OLR in its "one-shot" mode - where it draws one Object and then halts - and, by
+re-using a Sprite object, generate a herd of moving Sprites on the screen.<P>
+
+
+</BODY>
+</HTML>

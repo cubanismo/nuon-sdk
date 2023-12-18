@@ -1,0 +1,498 @@
+<HTML>
+<HEAD>
+<TITLE>Setting Up the OLR</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Setting Up the OLR</H1><P>
+
+In this example we will look at how to set up the OLR, using as example code a
+little chunk that sets up and displays three objects - one sprite, one warp,
+and one polyline.<P>
+
+The code in question is "simpleolr.s".  There is a batch file to assemble and
+run the code - from the source code directory, just type "simplolr" to see
+the example running.<P>
+
+Okay, let's go through the code step by step, and see how it works:<P>
+
+<PRE>
+;
+; SimpleOLR.s
+;
+; This does a really simple OLR setup.
+
+	.include	"merlin.i"
+    .include    "ol_demo.i"
+
+</PRE>
+
+<B><A HREF="olrinc.htm">ol_demo.i</A></B> just contains some definitions used by the OLR routines on all MPEs.
+
+<PRE>
+
+; some useful constants for the object definitions
+
+    UseSine = $200000
+    UseRecip = $100000
+    UseSqrt = $400000
+    IgnoreSplit = $10000                        
+
+</PRE>
+<B>UseSine</B>, <B>UseRecip</B> and <B>UseSqrt</B> are bits that are set in the Mode
+longword of an OLR object, to signify that the object requires use of the equivalent
+math tables.  <B>IgnoreSplit</B> is set where an object contains its own screen-splitting
+code, rather than having the OLR do it.  This is usually the case where the object generates
+a lot of smaller graphics primitives, for example, in a polyline.<P>
+<PRE> 
+
+; define th number of rendering MPEs and the screen split height
+    
+    slice_height = 16
+    n_mpes = 3
+    base_mpe = 1
+
+</PRE>
+These three equates define how many MPEs to use, where they are, and how much of the screen
+each one gets to do at a time.  OLR expects to use a contiguous clump of MPEs for rendering.
+The number to use is in <B>n_mpes</B>, and the first MPE of the clump is in <B>base_mpe</B>.  So
+in this example, OLR will run on mpes 1, 2 and 3.<P>
+
+OLR uses a simple task division system where the screen is divided into horizontal strips, each
+<B>slice_height</B> scanlines high.  Generally, a value between 16 and 32 is fine, but depending on
+the size and nature of the graphics you're drawing, other settings may be appropriate.<P>
+
+Try having a fiddle with these params and see how it affects the speed of the display.  Don't set up
+anything impossible though - <B>n_mpes = 3</B> won't work with <B>base_mpe = 2</B>, for example, since in Oz there
+are only MPEs 0 to 3!<P>   
+
+<PRE>
+
+        .segment    external_ram
+        .align.v
+_status:
+    .dc.s   0,0,0,0         ;status
+    .dc.s   0,0,0,0                             
+
+_routines:
+
+; external copy of the Routines table
+
+    .ds.s   256
+
+recips:
+     .include    "_reciplut.i"
+sines:
+     .include    "_sinelut.i"
+sqrts:
+     .include    "_rsqrtlut.i"
+
+</PRE>
+The preceding stuff is necessary in external RAM to be able to use OLR.
+<B>_status</B> is an area of memory used by all the MPEs running OLR.  <B>_routines</B>
+is a table which contains details about the location and size of code and
+data overlays - it doesn't have to be 256 longs in size; in fact, the minimum size of
+the table is 8*n longs, where n is the total number of routines included in the Binaries
+section.  I tend to leave it at 256, just for the convenience of not having to change it
+every time I add a new routine.<P>
+The three included files after the <B>_routines</B> table are the math tables for the most commonly needed
+functions.  The OLR will load these as necessary.<P>
+Since all the participating MPEs need to know the locations of these things, their addresses are also defined in
+ol_demo.i, which is included in the OLR overlay controller, <B>ol_render.s</B>.<P>  
+<PRE>
+
+; default environment, to be placed on rendering MPEs
+
+init_state:
+
+    .dc.s   0,0,0,$ff00             ;mem status
+
+; now the screen state
+
+	.dc.s	dmaFlags				;DMA mode
+	.dc.s	dmaScreen2			;Address
+	.dc.s	$01680000			;X hi:lo clip
+	.dc.s	$00ef0000			;Y hi:lo clip
+
+; render zone info - set up according to the definitions above
+
+	.dc.s	0
+	.dc.s	slice_height					;Size of render zones
+	.dc.s	n_mpes					;Total number of MPEs
+	.dc.s	base_mpe					;to keep vect align
+
+</PRE>
+
+This information block is loaded onto all the rendering MPEs before the OL is traversed.
+The first vector contains status about the state of the environment that the overlay handler
+needs - like which math tables are loaded, and which code overlay is active.  The second
+vector defines the address and DMA nature of the destination screen buffer, and the clipping
+window on the buffer.  The third vector contains the information about the number of participating
+MPEs and the screen subdivision that we defined earlier.<P> 
+<PRE>
+
+; here are the binary images of the functions that we wanna use
+
+binaries:
+
+	.include	"ol_sprite.hex"		;let's have some sprites...
+	.include	"ol_warps.hex"		;and one of those warp thingies
+	.include	"ol_line.hex"		;and some linedraw...
+	.include	"test_ob.hex"		;this is the very basic test object
+
+	.dc.s	$f00baaaa				;EOL
+
+	sprite = 0						;function numbers
+	warps = 1
+	line = 2
+	test = 3
+	olr = 3
+
+</PRE>
+In the binaries section we define which OLR modules we need.  Here, we are using <B>sprite</B>, <B>warp</B> and <B>linedraw</B>.
+I have also included <B>test_ob</B>, because I shall be using it in the next example, to illustrate how to add modules to the OLR.
+The ".hex" files are simply the unmodified output of the LLAMA assembler in "-fm68k" mode.  When the code is initially run, a
+small utility subroutine looks at the <B>binaries</B> section, determines the size and location of the code and data sections of each
+module, and places the information in the <B>_routines</B> table.  The word "$f00baaa" delimits the end of the binaries
+to the utility subroutine.  If you build the _routines table via other means, you wouldn't need $f00baaa.<P>
+
+The equates that follow the binaries simply define the function number of each module, which is used in the mode word of
+an OLR object.<P>  
+
+<PRE>
+
+	.align.v
+
+tile_img:
+
+	.include	"llama.hex"
+	.align.v
+
+</PRE>
+"llama.hex" is a 16x16 tile definition of a llama, used by the Warps module.
+<PRE>
+
+; here is the OL that we are going to draw
+
+my_ol:
+
+; here is a Sprite object.
+
+	.dc.s	$00b40078			;packed 16bit x:y destination position
+	.dc.s	$016800f0			;size X:Y 
+	.dc.s	$00000000			;base page offset (16:16, x)
+	.dc.s	$00000000			;base page offset (16:16, y)
+
+	.dc.s	$00010a80			;X scale
+	.dc.s	$00010a80			;Y scale
+	.dc.s	$0041				;Rotate angle
+	.dc.s	$3f000000			;Translucency/Mix  (2:30)
+
+    .dc.s   (dmaFlags|$2000)
+	.dc.s	external_ram_base			;base page address
+	.dc.s	$00808000			;transparent pixel value
+	.dc.s	$40c08000			;target value for tint
+
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+	.dc.s	(UseSine|UseRecip|sprite)
+
+
+; here is a Second Order Warp object.
+
+	.dc.s	$00a40070			;packed 16bit x:y destination position
+	.dc.s	$00200020			;size X:Y 
+	.dc.s	$0000000			;u
+	.dc.s	$0000000			;v
+
+	.dc.s	$00001000			;tui
+	.dc.s	$00000400			;tvi
+	.dc.s	$ffe00004			;tuii/tvii
+	.dc.s	$00000000			;tus
+
+    .dc.s   0
+	.dc.s	tile_img			;tile source address
+	.dc.s	$0001000			;tvs
+	.dc.s	$fff30012			;tuss/tvss
+
+    .dc.s   0             
+    .dc.s   0
+    .dc.s   0
+    .dc.s   (UseRecip|warps|$200)	;subtype 2 of Warps
+
+; Object List linedraw object
+
+	.dc.s	$00b40078			;x1:y1 (or centre position, for polyline) 
+	.dc.s	$00     			;x2:y2
+	.dc.s	$71deca00			;packed colour 1
+	.dc.s	$71deca00			;packed colour 2
+
+	.dc.s	$00c000c0			;packed scales x:y (polyline)
+	.dc.s	$0ff00008			;Translucency/endpoint radius (radius in low 8 bits)
+	.dc.s	$0				;Rotate angle (polyline)
+	.dc.s 	llama			;Address of polyline list in external RAM (0 if not a polyline)
+
+    .dc.s   0,0,0,0
+
+    .dc.s	0					;unused (at the moment, future line modes may use)
+	.dc.s	0
+	.dc.s	0
+    .dc.s   (UseRecip|UseSine|UseSqrt|IgnoreSplit|line)
+
+; OLR End object
+
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,$800000ff   ;OL terminator
+
+</PRE>
+The preceding was the actual Object List we are going to draw with the OLR.  One Sprite, one Warp, and
+one Polyline object, to be precise.
+<PRE>
+
+test_ol:
+
+	.dc.s	$51f05a00	;red
+	.dc.s	$91223600	;green
+	.dc.s	$306ef000	;blue
+	.dc.s	$71deca00	;pink
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+
+	.dc.s	0
+	.dc.s	0
+	.dc.s	0
+	.dc.s	test		;object type
+
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,0
+    .dc.s   0,0,0,$800000ff   ;OL terminator
+
+</PRE>
+And this is a small OL for the next example, containing nothing but a test object and a terminator.
+<PRE>
+
+llama:
+
+	.dc.s	$ffc6ffd9,$ffd0ffe0,$fff0ffe3,$fff3fff0			;a llovely llovely llama
+	.dc.s	$fff3002a,$fff00030,$fff20035,$fff70037
+	.dc.s	$fff50034,$fff30030,$fff6002a,$0035002a
+	.dc.s	$00350020,$00300026,$00130025,$000e0018
+	.dc.s	$0010fff9,$0014fff0,$0035fff0,$0035ffe4
+	.dc.s	$0030ffe9,$0010ffe8,$000affe0,$0000ffd9
+	.dc.s	$ffdcffd7,$ffd9ffce,$ffd4ffce,$ffd0ffdb
+	.dc.s	$ffc6ffd9,$80000001
+
+</PRE>
+Finally in external RAM, here is the polyline definition of a llama.
+<PRE>
+
+	.segment	local_ram
+	.align.v
+
+ctr:    .dc.s   10
+param0: .dc.s   0
+dest:   .dc.s   0                      
+last:   .dc.s   0
+olbase: .dc.s   0
+cframe:  .dc.s   0
+    .align.v
+buffer: .ds.s   64						;a handy buffer
+routines:   .ds.s   16                  ;used in accessing the Routines table  
+dma__cmd:   .dc.s   0,0,0,0,0,0,0,0     ;to set up DMA
+
+</PRE>
+In local RAM, a few odds and sods used by OLR (ctr is a framecount, param0 used
+to set up certain modes on OLR, dest the current destination screen, last the
+previous destination screen, and olbase is the address of the current object list.<P>
+ 
+Now the actual code:
+<PRE>
+
+	.segment	instruction_ram
+
+goat:
+
+
+	st_s	#(local_ram_base+4096),sp
+    st_s    #$aa,intctl           ;turn off any existing video
+
+    jsr InitBinaries,nop        ;set up the Routines table    
+    jsr InitOLREnv,nop    
+    jsr SetUpVideo,nop         ;initialise video
+
+</PRE>
+Setting everything up.  The call to <B>InitBinaries</B> calls the utility routine that
+prepares the _routines table from the included binaries.  The call to InitOLREnv loads up
+the OLR environment, containing the information about the screen size, DMA nature, and clip
+window, onto the OLR MPEs.  Since I am not running anything else on those MPEs, I am setting up the
+OLR environment here rather than inside the rendering loop.  In Real Life, if you ran other code
+on the OLR MPEs that smashed the OLR environment, you'd have to do this every frame, before running
+OLR.<P>
+
+<B>SetUpVideo</B>, errm, sets up video.<P>
+<PRE>
+
+loop:
+
+; here is the main loop that draws the screen
+
+    ld_s    ctr,r0          ;run a framecounter
+    nop
+    add #1,r0
+    st_s    r0,ctr
+    mv_s    #dmaScreenSize,r0       ;this lot selects one of
+    mv_s    #dmaScreen3,r3          ;three drawscreen buffers
+    ld_s    dest,r1                 ;this should be inited to a
+                                    ;valid screen buffer address
+    nop
+    cmp     r3,r1
+    bra     ne,updatedraw
+{
+    mv_s    r1,r2                   ;save prevFrame (feedback
+    add     r0,r1                   ;effects can use it)
+}
+    st_s    r2,last                 ;save prev frame
+    mv_s    #dmaScreen1,r1          ;reset buffer base
+updatedraw:
+    st_s    r1,dest                 ;set current drawframe address
+    ld_s    __fieldcount,r0
+    nop
+    st_s    r0,cframe                ;set current frame #
+    jsr drawframe,nop
+
+</PRE>
+Basically, just generate a screen address, whap it in <B>dest</B>, and save the previous
+one in <B>last</B>, then call <B>drawframe</B>.  Why save the previous screen address?  Because
+we need it to use as the source address of the sprite object - that's how we get the funky feedback.<P> 
+<PRE>
+
+    ld_s    dest,r0         ;get address we just wrote to...
+    jsr SetVidBase,nop
+
+</PRE>
+This calls SetVidBase to put the address of the screen we just drew onto the display hardware.
+<PRE>
+
+oneframe:
+
+; wait until at least one frame is passed
+
+    ld_s    __fieldcount,r0
+    ld_s    cframe,r1
+    nop
+    cmp r1,r0
+    bra eq,oneframe,nop
+    bra loop,nop
+
+</PRE>
+Loop forever.
+<PRE>
+
+drawframe:
+
+    push    v0,rz
+
+; load in the list, massage it a bit
+
+	mv_s	#my_ol,r1
+	jsr	dma_read
+	mv_s	#buffer,r2
+	mv_s	#48,r0
+	jsr	dma_finished,nop
+
+</PRE>
+Although the list is already defined in external RAM, I want to update some of
+the parameters every frame, to make the objects move.  So, I'm loading in the first
+three OLR objects to local RAM for mungeing.<P>
+<PRE>
+
+; set address of prev frame in the Sprite object,
+; to make it do feedback; also, move the warp tile
+; origin, using __fieldcount
+
+	ld_s	last,r0
+	ld_s	__fieldcount,r1
+	st_s	r0,buffer+36
+	copy	r1,r2
+	ld_s	buffer+128,r3
+	bits	#8,>>#0,r2
+	bits	#15,>>#0,r3
+	lsl	#16,r2
+	or	r2,r3
+	st_s	r3,buffer+128
+	lsl	#8,r1
+	st_s	r1,buffer+152
+	lsl	#5,r1
+	st_s	r1,buffer+72
+	lsl	#1,r1
+	st_s	r1,buffer+76
+
+</PRE>Munge, munge....<PRE>
+
+;write the list back out
+
+	mv_s	#my_ol,r1
+	jsr	dma_write
+	mv_s	#buffer,r2
+	mv_s	#48,r0
+	jsr	dma_finished,nop
+	
+</PRE>And write the list back out to external RAM.<PRE>	
+
+; draw a raw OLR list.
+
+    mv_s    #my_ol,r0 	;list to draw
+    st_s    r0,olbase       ;base of the OL
+    jsr LoadRunOLR,nop         
+    jsr WaitMPEs,nop
+    pop v0,rz
+    nop
+    rts t,nop
+
+</PRE>
+As you can see, actually drawing the OL is quite trivial.
+<PRE>
+
+drawtestframe:
+
+	push	v0,rz
+    mv_s    #test_ol,r0 	;list to draw
+    st_s    r0,olbase       ;base of the OL
+    jsr LoadRunOLR,nop         
+    jsr WaitMPEs,nop
+    pop v0,rz
+    nop
+    rts t,nop
+
+</PRE>This is the drawframe for the next example, and as you can see it is very simple.<PRE>
+
+
+    .include    "video.def"
+    .include    "olr.s"
+    .include    "video.s"
+    .include    "comms.s"
+    .include    "dma.s"
+
+</PRE>Finally, here are the various necessary included routines.  "olr.s" is the file that contains all
+the necessary routines to set up and run the OLR.<P>
+
+If you wish to examine the <A HREF="olrbat.htm">batch file</A> that assembles the example, please feel free to do so.  It shows how the
+assembler is invoked to produce the ".hex" files that are then used in the binaries section.   Otherwise, if
+you are curious about how to add new functionality to the OLR system, then proceed to the <A HREF="llob4.htm">next example</A>.<P>
+
+ 	     
+</BODY>
+</HTML>

@@ -1,0 +1,145 @@
+;
+; bilerp texture
+;
+
+;	bufaddr = r4
+;    temp = r7
+
+
+;foo:
+
+	mv_s	#test_dma,r4
+    ld_s    buffnum,r5
+    nop
+    bits    #0,>>#0,r5
+    lsl #8,r5
+    add r5,r4
+;    add tuii,tui
+;    add tvii,tvi
+
+{
+    st_s    tu,ru
+    asr #8,tui,r5
+}
+{
+    st_s    tv,rv
+    asr #8,tvi,r6
+}
+
+{
+        ld_pz    (uv),pixel0      ;Grab a pixel from the source
+        addr    #1,ru           ;go to next horiz pixel
+;		add	r5,tu
+}
+{
+        ld_pz    (uv),pixel2     ;Get a second pixel
+        addr    #1,rv           ;go to next vert pixel
+;		add	r6,tv
+}
+crbilerploop:
+
+{
+        ld_pz    (uv),pixel4    
+        addr    #-1,ru          ;go to prev horizontal pixel
+    copy    scrx,r22
+}
+{
+        ld_pz    (uv),pixel3   
+        sub_sv  pixel0,pixel2    ;b=b-a
+    addr    #-1,rv
+    mul r22,r22,>>#0,r22        ;scrx squared; r23 already gopt scry squared  
+}     
+{
+		mul_sv	ru,pixel2,>>#14,pixel2	;scale lerp pixel2        
+    add tuii,tui
+}
+{
+		sub_sv	pixel3,pixel4	;vector for pixel2 on source2
+}
+{
+		mul_sv	ru,pixel4,>>#14,pixel4
+		add_sv	pixel2,pixel0	;pixel2 is now free
+}
+{
+    mv_s    #$3fff0000,r3       ;should make plasma nonzero
+    sub_sv  pixel0,pixel3
+}
+{
+    ld_p    (bufaddr),pixel3        ;Original source pixel
+    add_sv  pixel3,pixel4
+    addm    tvii,tvi
+}
+{
+		mul_sv	rv,pixel4,>>#14,pixel4		;rv is now free       
+    asr #8,tvi,r6
+}
+{
+;    ld_s    object+28,temp       ;translucency
+    addr    r6,rv
+    asr #8,tui,r5
+        dec rc1
+}
+{
+;    mv_s    #4,temp
+        addr    r5,ru    
+		add_sv	pixel0,pixel4		;pixel4 is result of first bilerp
+;    addm    r23,r22,r22         ;sum of squares
+}
+
+; do circle edge cutoff
+{
+    add scry,r22                ;x2+y2
+    ld_s    cippy,temp
+}    
+{
+    cmp r23,r22
+    subm    r22,r23,r22
+}
+{
+    bra ge,wrib,nop
+    mul temp,r22,>>#14,r22      ;fraction of intensity in 16:16
+}    
+
+    ld_s    object+28,temp
+    nop
+    mul r22,temp,>>#16,temp    
+    
+
+; this is transparency
+
+    sub_p  pixel3,pixel4
+    mul_p   temp,pixel4,>>#14,pixel4
+    nop
+    add_p   pixel4,pixel3
+wrib:
+{
+    mv_s    #4,temp
+    bset    #27,r15
+}
+    
+{
+    bra c1ne,crbilerploop
+;    mul_p   r22,pixel4,>>#14,pixel4
+        ld_pz    (uv),pixel0      ;Grab a pixel from the source
+        addr    #1,ru           ;go to next horiz pixel
+        add #1,scrx
+}
+{
+        ld_pz    (uv),pixel2     ;Get a second pixel
+        addr    #1,rv           ;go to next vert pixel
+		add	r5,tu
+}
+{
+    st_pz    pixel3,(bufaddr)
+    addm temp,bufaddr,bufaddr
+		add	r6,tv
+}
+  	rts
+;{
+;    sub r5,tu
+;    subm    r6,tv,tv 
+;}
+    nop
+    nop
+    
+    

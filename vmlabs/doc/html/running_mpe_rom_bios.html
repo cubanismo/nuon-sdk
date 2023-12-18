@@ -1,0 +1,148 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Updating Your Flash ROM</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+
+<h1 align="center">Running on MPE 3 With the ROM-Based BIOS</h1>
+
+<p><big>If you started your NUON development back in ancient times when the BIOS
+was a library linked with your application, some changes may be necessary in
+order to make your program work with this SDK release.</big></p>
+
+<p><big>As of February 2000, the standard system has used a ROM-based
+BIOS.&nbsp; On a development system, this is contained in the flash ROM on your
+motherboard.</big>&nbsp; <big>If you don't already have the current version of
+the ROM BIOS installed in your motherboard's flash ROM, then you will need to update
+your system.&nbsp; Please see </big><big><a href="update_flashrom.html">Installing the ROM-Based BIOS</a>
+for instructions.</big></p>
+
+<p><big>Another change that was made at the same time is that we are now using
+MPE 3 as the primary processor, rather than MPE 0.&nbsp; Some simple programs
+may require nothing more than a few changes to their build process in order to
+work, but chances are that additional changes are needed.&nbsp; The information
+below will help you begin the process.&nbsp; If you require additional
+assistance, please <a href="contacts.html">contact VM Labs Developer Support</a>.</big></p>
+
+<hr>
+
+<h1 align="center">Compiling Your Code</h1>
+
+<p><big>Compiling your code normally requires no changes in order to target MPE 3.&nbsp;
+However, some changes may be required to target the ROM-based BIOS
+properly.&nbsp; See <a href="#Running Your Code">Running Your Code</a> below.</big></p>
+
+<p><big>You must make some changes in order to link your final executable
+correctly.</big></p>
+<hr>
+<h1 align="center">Linking Your Code</h1>
+
+<p><big>In order to target MPE 3, do the following:</big></p>
+<ul>
+  <li><big>Add the option &quot;<font color="#0000FF">-mpe3</font>&quot; to your
+    MGCC command line.&nbsp; This is only needed for linking.<br>
+    </big></li>
+</ul>
+<p><big>In order to target a ROM-based BIOS, do the following:</big></p>
+<ul>
+  <li><big>Remove references to &quot;-lbios&quot; or LIBBIOS.A from your
+    compile and link commands.<br>
+    </big></li>
+  <li><big>Add the </big><big>option &quot;<font color="#0000FF">-mrom</font>&quot;
+    to your MGCC command line.&nbsp;&nbsp; This is only needed for linking.</big></li>
+</ul>
+<p><big><br>
+If you are not using MGCC to drive your link, we suggest you compile and link a
+sample program using the &quot;-v&quot; option so that you can see what changes
+you need to make to your linker command.</big></p>
+<hr>
+<h1 align="center"><a name="Running Your Code">Running Your Code</a></h1>
+<p><big>Running a program on MPE 3 with the ROM BIOS is a little different than
+with a program linked against a RAM-based BIOS for MPE 0.</big></p>
+<p><big>First of all, the ROM BIOS is already running when you download your
+program.&nbsp; This means that special steps must be taken in order to avoid
+stepping on the BIOS.</big></p>
+<ul>
+  <li><big>Do not specify internal MPE memory as a load address.&nbsp; Anything
+    loaded to internal memory should be copied over at runtime, not loaded
+    directly into that memory because you've linked your program file that way.<br>
+    </big></li>
+  <li><big>Please note that there is not much internal memory on MPE 3 available
+    to applications, since it is mostly used by the BIOS and the cache.&nbsp;
+    See the BIOS documentation for information on obtaining a temporary scratch
+    buffer in internal MPE memory.<br>
+    </big></li>
+  <li><big>Add &quot;-n&quot; to your MLOAD command line, following the
+    &quot;-p3&quot; option.&nbsp; This tells MLOAD that a ROM-based BIOS is
+    already executing so that it can avoid corrupting it.<br>
+    </big></li>
+  <li><big>If you do not explicitly tell MLOAD which processor is the target for
+    a load, then it automatically selects MPE 0.&nbsp; In order to load onto MPE
+    3, you must always explicitly add &quot;-p3&quot; to your MLOAD command
+    line.</big></li>
+</ul>
+<p><big>A sample command line for MLOAD to download and execute on MPE 3 is:</big></p>
+<blockquote>
+  <h4 align="center"><big>mload -! -w -w -w -w -p3 -n file.cof -r</big></h4>
+</blockquote>
+<p align="left"><big>This tells MLOAD to reset the machine, wait 4 seconds (1
+second for each &quot;-w&quot;), target MPE 3, avoid corrupting the BIOS, download &quot;file.cof&quot;, and then
+start MPE 3.&nbsp;</big></p>
+<hr>
+<h1 align="center">Loading Old Code Onto MPE 0</h1>
+<p align="left"><big>Loading old code on to MPE 0 with a RAM-based BIOS is still
+possible, even after you have installed the ROM BIOS.&nbsp; However, because the
+ROM BIOS is now running on your system, you do have to make a few changes to the
+procedure for loading.</big></p>
+<p align="left"><big>Without the ROM BIOS, you would download and run a program
+using a command line like one of these:</big></p>
+<h4 align="center"><big>mload file.cof -r<br>
+mload -p0 file.cof -r -fs<br>
+mload -! -w file.cof -r<br>
+mload -! -w -p0 file.cof -r -fs</big></h4>
+<p align="left"><big>After installing the ROM BIOS, you should change those
+command lines to look like this:</big></p>
+<h4 align="center"><big>mload </big><big>-p3 -h -p0 </big><big>file.cof -r<br>
+mload </big><big>-p3 -h </big><big>-p0 file.cof -r -fs<br>
+mload -! -w </big><big>-p3 -h -p0 </big><big>file.cof -r<br>
+mload -! -w </big><big>-p3 -h -p0 </big><big>file.cof -r -fs</big></h4>
+<p align="left"><big>The main change we've made is that we always specify MPE 3
+and then halt execution on that processor before we do anything else, with the
+exception of reset.&nbsp; Since a reset would restart the ROM BIOS code, we
+always do that first.&nbsp; Also, because we've previously specified MPE 3 as a
+target, we must always explicitly specify MPE 0 as a target for the command that
+come after that.</big></p>
+<p></p>
+</body>
+</html>

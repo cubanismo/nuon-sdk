@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: Authentication.html,v 1.24 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Authentication</B></FONT></FONT></FONT></P>
+<p>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> 
+<h3>&nbsp;</h3>
+<h3>What Is Authentication?</h3>
+<p>Authentication is the process that ensures that only authorized versions of 
+  your software run on NUON enhanced products.</p>
+<h3>What Happens</h3>
+<p>Authentication consists of two parts: <b><i>blessing</i></b> the application, 
+  which is done by VM Labs, and <b><i>authenticating</i></b> the application, 
+  which is done by the NUON enhanced product whenever the application is loaded.</p>
+<h4>Blessing</h4>
+<p>The during the blessing process, information is added to your application in 
+  an encrypted format. This information is used at load time to verify that the 
+  application being loaded is authorized to run on that particular product.</p>
+<p>Some sanity checks and additional processing are also executed during the blessing 
+  process. These include:</p>
+<ul>
+  <li><b>Checking to ensure that the application is loaded into MPE3.</b> Virtually 
+    all NUON applications are written with the expectation that they will be executing 
+    on MPE3. If the <span class="Filename">.cof</span> file headers specify that 
+    the application is to be loaded into an MPE other than MPE3, a warning is 
+    written to the authentication log. The application will still be bless, however 
+    it may not actually run when it is loaded. If you are experiencing load time 
+    crashes of your application, check the authentication log that was returned 
+    to you at the time the application was blessed.<br>
+    <br>
+  </li>
+  <li><b>Padding the application. </b>A few early NUON products have a bug in 
+    the authentication code that will cause the system to crash if the amount 
+    of application information to be processed is 8 bytes less than an integral 
+    multiple of 64 bytes. This problem is known as the &quot;fencepost&quot; problem, 
+    and is fixed in almost all NUON enhanced products produced after September 
+    2000.<br>
+    <br>
+    The fix for this problem is to pad all applications to contain an integral 
+    multiple of 64 bytes of loadable information. This is done by introducing 
+    a new section (named <span class="Filename">bless_p</span>) into the coff 
+    file which pads it out to the correct size. Although this section contains 
+    loadable 0x00 bytes, it is overlaid by your <span class="Filename">.bss</span> 
+    section at load time, and thus does not actually occupy any extra memory. 
+    Files that already contain an integral multiple of 64 bytes of information 
+    will not be padded. <br>
+    <br>
+    <font color="#CC0033"><b><font size="+1">Warning!</font> </b></font>If your 
+    application does not have a <span class="Filename">.bss</span> section, the 
+    current blessing process cannot pad your file. If this is the case, a warning 
+    message will be placed in the authentication log file. If your application 
+    cannot be padded and is one that triggers the fencepost problem, a notification 
+    that it will not run on early NUON systems will be placed in the authentication 
+    log file. The workaround for this is to manually add some bytes (16 will typically 
+    be enough) to your loadable data and have the file blessed again. This restriction 
+    will be removed with a future SDK release.</li>
+</ul>
+<h4>Authenticating</h4>
+<p>Authenticating is the process of checking your application when it is loaded 
+  into a NUON enhanced system. This consists of two parts:</p>
+<ol>
+  <li>decrypting the blessings</li>
+  <li>checking the contents of the <span class="Filename">.cof</span> file against 
+    the blessings.</li>
+</ol>
+<p>If the file loading firmware detects a mismatch between the blessings and the 
+  other contents of the file, the application will not be loaded and the DVD media 
+  will be ejected.</p>
+<h3>Getting an application blessed</h3>
+<p>When you submit an application to VM Labs for blessing, it will usually be 
+  turned around with in one business day. You will receive 3 or 4 files back, 
+  depending on whether the application was padded during the blessing process. 
+  These files are:</p>
+<table width="75%" border="0">
+  <tr class="TableHeading"> 
+    <td>Filename</td>
+    <td>What it contains</td>
+  </tr>
+  <tr> 
+    <td class="Filename" valign="top"> 
+      <div align="right"><i>appname</i>.cof</div>
+    </td>
+    <td>Your original application.</td>
+  </tr>
+  <tr> 
+    <td class="Filename" valign="top"> 
+      <div align="right"><i>appname</i>.cof.padded</div>
+    </td>
+    <td><b>Optional</b>. If your application required padding (see above), this 
+      file is generated. It contains your original application, plus an additional 
+      section required to achieve the correct application size.</td>
+  </tr>
+  <tr> 
+    <td class="Filename" valign="top"> 
+      <div align="right"><i>appname</i>.cof.app</div>
+    </td>
+    <td>The blessed application.</td>
+  </tr>
+  <tr> 
+    <td class="Filename" valign="top"> 
+      <div align="right"><i>appname</i>.cof.auth</div>
+    </td>
+    <td>The authentication log for the application. This contains useful information 
+      as described in the following section.</td>
+  </tr>
+</table>
+<p>Thus if you submit the application <span class="Filename">pong.cof</span>, 
+  you could expect to receive the files <span class="Filename">pong.cof</span>, 
+  <span class="Filename">pong.cof.padded</span> (if padding was needed), <span class="Filename">pong.cof.app</span>, 
+  and <span class="Filename">pong.cof.auth</span>.</p>
+<h4>The authentication log</h4>
+<p>The authentication log file contains important information about your blessed 
+  application. <b>You should always check this file for any error or warning messages 
+  relating to your application.</b> The following information is contained in 
+  the authentication log:</p>
+<ul>
+  <li>the date/time the file was blessed;</li>
+  <li>the name of the file being blessed;</li>
+  <li>the version of the blessing application;</li>
+  <li>(optional) warning messages if the application is targeted to an MPE other 
+    than MPE3;</li>
+  <li>(optional) information about padding;</li>
+  <li>(optional) warning messages if the file required padding but could not be 
+    padded; </li>
+  <li>(optional) for non-padded files, a warning if the application will encounter 
+    the fencepost problem;</li>
+  <li>the name of the file that was actually blessed (either <span class="Filename"><i>appname</i>.cof</span> 
+    or <span class="Filename"><i>appname</i>.cof.padded</span>);</li>
+  <li>the name of the encryption key used;</li>
+  <li>the application type (either game or hybrid);</li>
+  <li>checksum info for: 
+    <ol>
+      <li>the file that was blessed; and</li>
+      <li>the <span class="Filename">.cof </span>contents of the <span class="Filename"><i>appname</i>.cof.app</span> 
+        file.</li>
+    </ol>
+  </li>
+</ul>
+<p>The checksum information is a 32-bit CRC generated using the Linux <span class="Filename">cksum</span> 
+  utility (available under Windows as part of the MKS toolkit). This information 
+  can be used to verify that the contents of the file are correct. </p>
+<h3>The <font size="-1"><span class="Filename">authinfo</span></font> application 
+</h3>
+<p>The <span class="Filename">authinfo</span> application dumps some basic information 
+  about an authenticated application. <span class="Filename">authinfo</span> can 
+  also be used extract the blessed <span class="Filename">.cof</span> file from 
+  the authenticated application. It runs on both Windows and Linux platforms. 
+  More information is available in the <a href="./authinfo.html"><i>authinfo</i> 
+  documentation</a>.</p>
+<hr>
+<span class="Copyright"><span class="Copyright"> Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">October 
+20 , 2000</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>. 
+<br>
+<span class="Copyright"></span> </span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --><span class="Copyright">VersionInfo: 
+$Id: Authentication.html,v 1.24 2001/06/14 01:10:42 lreeber Exp $ </span> 
+</BODY>
+</HTML>

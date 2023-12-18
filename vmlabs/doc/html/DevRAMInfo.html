@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: DevRAMInfo.html,v 1.23 2001/06/14 01:10:42 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TH P { font-family: "Times New Roman", serif }
+		KBD { font-size: 10pt; font-weight: bold }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid" class="Page"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Development 
+  System RAM Configuration Info</B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=5><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY"></SDFIELD></B></FONT></FONT></FONT></P>
+<p><!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --></p>
+<p>Here are instructions for how to jumper a development system down to 8MB. </p>
+<p>Some of you may not already know that NUON development platforms have 16 MB 
+  of DRAM on the system bus, but most production NUON systems will have only 8 
+  MB there. Note that certain production systems do have 16 MB of DRAM, such as 
+  the Samsung N2000 Extiva-1. </p>
+<h3>On a rev 5.3 system (metal case reference player, aka &quot;clearcase&quot;)</h3>
+<p> Jumper U56 (3-pin header at the bottom right of the board)</p>
+<table width="50%" border="1">
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">jumper across pins 1-2</div>
+    </td>
+    <td class="TableContents">8MB</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">jumper across pins 2-3</div>
+    </td>
+    <td class="TableContents">16MB</td>
+  </tr>
+</table>
+<p>Pin 1 is nearest the corner of the board 2.</p>
+<h3>On a rev 5.1 system (PC housing developer system, aka &quot;whitebox&quot;)</h3>
+<p>Jumper U56 (3-pin header near NUON)</p>
+<table width="50%" border="1">
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">jumper across pins 1-2</div>
+    </td>
+    <td class="TableContents">8MB</td>
+  </tr>
+  <tr> 
+    <td class="TableContents"> 
+      <div align="right">jumper across pins 2-3</div>
+    </td>
+    <td class="TableContents">16MB</td>
+  </tr>
+</table>
+<p>Pin 1 is nearest the joystick ports on the top/back of the board </p>
+<hr>
+<span class="Copyright"><span class="copyright"><span class="copyright"><span class="Copyright"><span class="Copyright"><span class="Copyright"> 
+<BR>
+Last updated: <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">August 28, 
+2000</SDFIELD> by <A HREF="mailto:cheiny@vmlabs.com">Christopher Heiny</A>.</span></span></span></span></span></span><!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem -->
+<p class="copyright" style="margin-bottom: 0.2in">VersionInfo: $Id: DevRAMInfo.html,v 1.23 2001/06/14 01:10:42 lreeber Exp $<span class="copyright"><span class="copyright"><span class="Copyright"> 
+  </span></span></span> </p>
+</BODY>
+</HTML>

@@ -1,0 +1,67 @@
+*asm:
+-nologo -compiled -fcoff -c %{mreopt:-O} %{mreopt-more:-O2}
+
+*vmlabsdir:
+%%VMLABSDIR%%
+
+*asm_final:
+
+
+*cpp:
+-isystem %(vmlabsdir)/include %{.S:-P}
+
+*cc1:
+
+
+*cc1plus:
+
+
+*endfile:
+%(vmlabsdir)/lib/crtend.o
+
+*link:
+-e __start %{mbl:-T iram=0x20300000 -T dtram=0x20100000 %{mpe0:-T intcode=0x20301000 -T intdata=0x20101000}%{!mpe0:-T intdata=0x20100c00 } -B 0x80010000}%{!mbl:%{mpe0:-T intcode=0x20301000 -T intdata=0x20101000}%{!mpe0:-T intdata=0x20100c00:0x80} %{!mnopatch:-R patches=0x807fc000:0x4000} -B 0x80010000}
+
+*lib:
+%{g*:-lg} %{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p} %{mbl:-lbios}%{!mbl:-lrombios}
+
+*libgcc:
+-lgcc
+
+*startfile:
+%{mbl:%{p:%(vmlabsdir)/lib/gcrt0l.o}%{pg:%(vmlabsdir)/lib/gcrt0l.o}%{!p:%{!pg:%(vmlabsdir)/lib/crt0l.o}}}%{!mbl:%{p:%(vmlabsdir)/lib/gcrt0.o}%{pg:%(vmlabsdir)/lib/gcrt0.o}%{!p:%{!pg:%(vmlabsdir)/lib/crt0.o}}}
+
+*switches_need_spaces:
+
+
+*signed_char:
+%{funsigned-char:-D__CHAR_UNSIGNED__}
+
+*predefines:
+-Dmerlin -Asystem(merlin)  -Asystem(merlin) -Acpu(mpe) -Amachine(merlin) -Dnuon -Asystem(nuon) -Amachine(nuon)
+
+*cross_compile:
+1
+
+*version:
+2.95.3
+
+*multilib:
+. ;
+
+*multilib_defaults:
+
+
+*multilib_extra:
+
+
+*multilib_matches:
+
+
+*linker:
+collect2
+
+*link_command:
+%{!fsyntax-only:  %{!c:%{!M:%{!MM:%{!E:%{!S:vmld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} 			%{r} %{s} %{t} %{u*} %{x} %{z} %{Z}			%{!A:%{!nostdlib:%{!nostartfiles:%S}}}			%{static:} %{L*} %D %o			%{!nostdlib:%{!nodefaultlibs:%G %L %G}}			%{!A:%{!nostdlib:%{!nostartfiles:%E}}}			%{T*}			
+ }}}}}}
+

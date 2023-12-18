@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+<TITLE></TITLE>
+<META NAME="VERSION" CONTENT=" $Id: FlashROMInfo.html,v 1.46 2001/06/14 04:02:01 lreeber Exp $ ">
+<META NAME="AUTHOR" CONTENT="Christopher Heiny">
+<STYLE>
+	<!--
+		@page { size: 8.27in 11.69in; margin: 0.75in }
+		P { font-family: "Times New Roman", serif }
+		H1 { font-family: "Helvetica"; font-size: 16pt; font-weight: medium; text-align: left }
+		TD P { font-family: "Times New Roman", serif }
+		TT { font-size: 10pt }
+	-->
+	</STYLE>
+<link rel="stylesheet" href="../SDK.css">
+</HEAD>
+<BODY class="Page">
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=6><B>Flash
+ROM Info</B></FONT></FONT></FONT></P>
+<!-- #BeginLibraryItem "/Library/Version info.lbi" -->
+<P ALIGN=CENTER STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B>VM 
+  Labs SDK <font color="#FF0000">Internal</font> Release 0.86.2<BR>
+  <SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">June 14</SDFIELD></B></FONT></FONT></FONT><FONT COLOR="#800000"><FONT FACE="Helvetica"><FONT SIZE=4 STYLE="font-size: 16pt"><B><SDFIELD TYPE=DATETIME SDNUM="1033;1033;MMMM D, YYYY">, 
+  2001</SDFIELD></B></FONT></FONT></FONT></P>
+<hr><!-- #EndLibraryItem --> <!-- #BeginLibraryItem "/Library/Mandatory Upgrades.lbi" -->
+<div align="center">
+  <table width="75%" border="3" bordercolorlight="#FFCCCC" bordercolordark="#FF0033" bordercolor="#FF0033">
+    <tr bgcolor="#FFFF33"> 
+      <td> 
+        <div align="center"> 
+          <h2>Important Upgrades</h2>
+        </div>
+      </td>
+    </tr>
+    <tr> 
+      <td> 
+        <p>The following changes are recommended for the SDK release.</p>
+        <ul>
+          <li>You should upgrade your <b>debug stub</b> to version 4.9.5. See 
+            the Debug Stub Info document for details on how to do this.</li>
+          <li>You should upgrade your <b>flash ROM</b> to the latest firmware 
+            versions (included in this release). See the <i>Flash ROM Info</i> 
+            document for details on how to do this. </li>
+        </ul>
+        <p>If these upgrades are not performed, the development tools and downloaded 
+          code may produce unexpected results or fail to operate.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- #EndLibraryItem --> 
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid"><FONT SIZE=3><SPAN STYLE="background: #ffff00">WARNING: 
+  These instructions are for revision 5.x systems only!<FONT COLOR="#800000"> 
+  </FONT><FONT COLOR="#000000"> </FONT></SPAN><FONT COLOR="#000000"><SPAN STYLE="background: transparent">Revision 
+  4.x and prior systems are no longer supported by VM Labs. If you have a revision 
+  4.x or earlier system, please contact your VM Labs support contact for an upgrade.</SPAN></FONT></FONT></P>
+<h2 ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">Changes for 
+  the 0.86 release</h2>
+<P ALIGN=left STYLE="margin-top: 0.17in; page-break-after: avoid">For this release 
+  of the SDK, there have been changes to the Flash images and scripts included. 
+  These are:</P>
+<ul>
+  <li>There is now a separate BIOS for the PAL and NTSC versions. To switch the 
+    movie and music player from to PAL/NTSC mode, use the Setup menu, Display 
+    Options. </li>
+  <li>Can now play MP3 disks.</li>
+  <li>There is no longer a separate HAL for systems without remote control panels. 
+  </li>
+  <li>The start address of the UI Data (refUIeuro.dat) has changed from 0xf0300000 
+    to 0xf0280000</li>
+  <li>Known Problems - These bugs will be fixed in a future release: 
+    <ul>
+      <li>The front panel doesn't display the type of media that is currently 
+        being played. This will be fixed in a future release. </li>
+      <li>PAL version: 
+        <ul>
+          <li>Video games and samples are not displayed at the correct height 
+            for PAL; you will see black bars displayed at the top and bottom of 
+            the screen.</li>
+          <li>The Flash Programming window will be distorted when you flash the 
+            PAL boot images after flashing the NTSC boot images and vise versa. 
+            Your boot images are being loaded into your system though.</li>
+        </ul>
+      </li>
+      <li>There is a problem playing &quot;enhanced&quot; audio cd's; they may 
+        take awhile before they begin to play. </li>
+    </ul>
+  </li>
+  <li><span class="Filename"></span>The <span class="Filename">flash*</span> scripts 
+    will be replaced by the <span class="Filename">nuon-flash.tcl</span> in an 
+    upcoming release. </li>
+</ul>
+<H1>Flash ROM and the debug stub</H1>
+  <P STYLE="font-style: normal; font-weight: medium"><FONT SIZE=3>Before
+you update anything, please make sure you understand the difference
+between the two parts of your NUON development system which use FLASH
+ROM.&#160; They are: </FONT>
+</P>
+<UL>
+	<LI><P><SPAN STYLE="font-style: normal"><FONT SIZE=3><B>Debug /
+	Ethernet Interface Card - </B><SPAN STYLE="font-weight: medium">The
+	debug card in your development system uses a flash ROM so that the
+	debugging stub may be updated when needed.&#160; However, as a
+	general rule, the NUON documentation does not refer to this as
+	&quot;flash ROM&quot;.&#160; Instead, we normally refer to this
+	simply as the &quot;stub&quot;.&#160; We would say &quot;update your
+	stub&quot; instead of &quot;update your debug card flash ROM&quot;.</SPAN></FONT></SPAN></P>
+</UL>
+<P STYLE="margin-left: 0.79in"><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal"><FONT SIZE=3>The
+debug card contains a PowerPC 860 processor, and most of the code on
+the stub's ROM is intended for that processor, not the NUON chip on
+the motherboard.&#160; This code does not have anything to do with
+the BIOS or the startup code, except that it must safely co-exist on
+those occasions when it must ask one of the NUON processor's MPEs to
+do something.&#160; In those cases, it may download a small piece of
+code to an MPE to facilitate some debugging function, or to speed up
+transfers over the Ethernet interface.</FONT></SPAN></SPAN></P>
+<P STYLE="margin-left: 0.79in"><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal"><FONT SIZE=3>Please 
+  see &quot;</FONT></SPAN></SPAN><A HREF="./DebugStubInfo.html">Debug Stub Info</A><SPAN STYLE="font-weight: medium"><SPAN STYLE="font-style: normal"><FONT SIZE=3>&quot; 
+  for information how to update your stub.</FONT></SPAN></SPAN></P>
+<UL>
+	<LI>
+    <P STYLE="font-style: normal; font-weight: medium"><FONT SIZE=3><B>Boot ROM 
+      / BIOS ROM</B> - The NUON development system has a 4mb Flash ROM built into 
+      the motherboard.&#160; The motherboard also has a socket for a ROM or EPROM.&#160; 
+      A jumper (labeled &quot;FLASH&quot; and &quot;ROM&quot;) selects which one 
+      of these is active.&#160; (Normally it's set to FLASH). See the next section 
+      for info on how to locate and set this jumper.</FONT></P>
+</UL>
+<P STYLE="margin-left: 0.79in; font-style: normal; font-weight: medium">
+<FONT SIZE=3>This is what we usually mean when we refer to the
+&quot;Flash&quot;, the &quot;Flash ROM&quot;, or the &quot;Boot ROM&quot;.</FONT></P>
+<P STYLE="margin-left: 0.79in; font-style: normal; font-weight: medium">
+<FONT SIZE=3>This Flash ROM contains the BIOS (if a ROM BIOS is
+installed) as well as whatever startup code is installed.&#160; Older
+versions of the NUON startup code displayed color bars or a NUON logo
+graphic.&#160; The newest version which ships with this SDK draws an
+animated fractal image.<BR><BR>The boot code does not really interact
+with the stub.&#160; The BIOS only interacts to the degree that the
+stub may occasionally download a small piece of code to do some
+debugging function or to speed up a data transfer.<BR><BR>Other than
+the BIOS and startup code, the items which may optionally be
+installed into your Flash ROM would be the DVD player firmware and a
+copy of the NUON Synth's wavetable data.</FONT></P>
+<P STYLE="font-style: normal; font-weight: medium"><FONT SIZE=3>Please see the 
+  remainder of this document for information on how to update your Boot/BIOS ROM.</FONT></P>
+<h1><font size="3">Locating and Setting the FLASH/ROM Jumper</font> </h1>
+<p STYLE="font-style: normal; font-weight: medium" class="Text">The FLASH/ROM 
+  jumper is a three pin jumper switch located on the printer circuit board of 
+  your development system. The exact location of this jumper varies widely, depending 
+  on the board revision. Click on the following pictures for a (really large) 
+  expanded view of the two example boards.</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text"><a href="./images/clearcasejumper.jpg"><img src="./images/clearcasethumb.jpg" width="125" height="178" border="2" align="middle" alt="5.3 board jumper (set for Flash)."></a>This 
+  jumper is in a clear case system, using a 5.3 board. It is set for FLASH.</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text"><a href="./images/devsysjumper.jpg"><img src="images/devsysthumb.jpg" width="111" height="167" border="2" align="middle" alt="5.1 board jumper (set for ROM)"></a>This 
+  jumper is in a &quot;white box&quot; (PC case) development system, using a 5.1 
+  board. It is set for ROM.</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text">Note that these 
+  are just given as examples, the jumper in your system may be located elsewhere!</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text">To select FLASH 
+  memory using the FLASH/ROM jumper, configure the jumper as shown in the diagram 
+  below.</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text"><img src="images/jumper-flash.gif" width="243" height="219" alt="Jumper set to flash"></p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text">To select ROM 
+  memory using the FLASH/ROM jumper, configure the jumper as shown in the diagram 
+  below.</p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text"><img src="images/jumper-rom.gif" width="243" height="219" alt="Jumper set to ROM"></p>
+<p STYLE="font-style: normal; font-weight: medium" class="Text">Note that it is 
+  safe to &quot;hot switch&quot; the jumper while the system is powered on. In 
+  fact, this will be required if the FLASH memory is uninitialized or if the boot 
+  image becomes corrupted. In that case, you will have to perform the following 
+  steps:</p>
+<ol>
+  <ol>
+    <li>Select ROM memory with the FLASH/ROM jumper.</li>
+    <li>Power cycle the system.</li>
+    <li>Once the system has come back up (to one of color bars, NUON logo, or 
+      fractals), select FLASH memory with the FLASH/ROM jumper.</li>
+    <li>Follow the instructions below to write a fresh, working image to FLASH.</li>
+  </ol>
+</ol>
+<H1>Updating ROM-based BIOS &amp; Boot Code</H1>
+<H1><font size="3">Flashing to Developer mode</font></H1>
+<blockquote> 
+  <p><FONT SIZE=3>The ROM-based BIOS and startup boot code for your Revision 5.x 
+    system may be updated by following these instructions: </FONT> </p>
+  <ol>
+    <li><FONT SIZE=3>Make sure your SDK is properly installed and that your <FONT FACE="Courier New, monospace"><FONT SIZE=2>MD_PORT</FONT></FONT> 
+      environment variable is set correctly.</FONT></li>
+    <li><FONT SIZE=3>Change to the <FONT FACE="Courier New, monospace" class="Filename">%VMLABS%\bin\NUON\</FONT> 
+      directory (Windows) or <span class="Filename">$VMLABS/bin/NUON/</span> directory 
+      (Linux).</FONT></li>
+    <li><FONT SIZE=3>Reset your development system and wait for the reset process 
+      to complete.</FONT></li>
+    <li><FONT SIZE=3>To install the latest combination of boot code and the ROM-based 
+      BIOS for MPE 3, you can do one of the following:</FONT> 
+      <ul>
+        <li>Use the <span class="Filename">nuon-flash.tcl</span> script: 
+          <ul>
+            <li>On Linux systems, you can execute the script by typing: <span class="UserInput">wish 
+              nuon-flash.tcl</span></li>
+            <li>On Windows systems, you will need to install TCL 8.1 by executing 
+              <a href="../bundled/windows/tcl811.exe">bundled\windows\tcl811.exe</a>. 
+              Once this is installed, you can run the <span class="Filename">nuon-flash.tcl</span> 
+              script by typing <span class="UserInput">start nuon-flash.tcl</span> 
+              or by double clicking on it. </li>
+          </ul>
+        </li>
+        <blockquote>
+          <p>For more information, see the <a href="./nuon-flash.html">nuon-flash.tcl 
+            documentation</a>.</p>
+        </blockquote>
+        <li>Use one of the scripts: </li>
+      </ul>
+      <ul>
+        <ul>
+          <li>For the NTSC version, execute <font size="3">the <span class="Filename">flash-dev.bat</span> 
+            batch file (Windows) or<span class="Filename"> flash-dev</span> (Linux).</font> 
+          </li>
+          <li>For the PAL version, execute <font size="3">the <span class="Filename">flash-dev-pal.bat</span> 
+            batch file (Windows) or<span class="Filename"> flash-dev-pal</span> 
+            (Linux).</font> </li>
+        </ul>
+      </ul>
+    </li>
+  </ol>
+  <blockquote> 
+    <p><FONT SIZE=3>These steps will result in a program being downloaded to your 
+      development system, followed by the data to be programmed into the Flash 
+      ROM.&#160; Your development system's display will indicate the current status 
+      of the update.</FONT><FONT SIZE=3> When it is finished, you should reset 
+      your development system.</FONT></p>
+  </blockquote>
+</blockquote>
+<table width="75%" border="3" bordercolor="#FF0033" bgcolor="#FFFF00">
+  <tr> 
+    <td><font size="3" color="#000000">Note that if your system locks up at either 
+      the <span class="Teletype">Clearing</span> or <span class="Teletype">Programming</span> 
+      stages, it probably means your FLASH/ROM jumper is set for ROM. Follow the 
+      instructions given earlier in this document to correctly set the jumper 
+      to FLASH.&nbsp;</font></td>
+  </tr>
+</table>
+<blockquote> 
+  <p><font size="3"><b>Linux failure note: </b>if this fails to execute, check 
+    the permissions on the script to ensure that you have execute permission. 
+    Type <span class="UserInput">chmod +x &lt;filename&gt;</span> to add execute 
+    permission.</font></p>
+</blockquote>
+<h2 STYLE="font-style: normal; font-weight: medium"><font size="3">Flashing to 
+  DVD player mode</font></h2>
+<blockquote> 
+  <p><font size="3">This is not the recommended mode. However, if you want your 
+    system to come up in DVD player mode, you can execute the <span class="Filename">nuon-flash.tcl</span> 
+    script, then on the resulting window, set the Developer toggle to &quot;No&quot;. 
+    Click the Flash button to begin flashing the system.</font></p>
+  </blockquote>
+<H1><font size="4"><b><font size="5">Checking the BIOS version</font></b></font></H1>
+<P STYLE="font-style: normal; font-weight: medium">If you flashed to Developer 
+  mode, you can find out the BIOS version by doing the following:</P>
+<ul>
+  <li>Reset your Nuon system so that you see the NUON logo.</li>
+  <li>Press the up arrow on the joypad </li>
+  <li>Select &quot;Version Information&quot; from the configuration menu by pressing 
+    the down arrow on the joypad. Then hit the &quot;A&quot; button. The BIOS 
+    version number will be displayed.</li>
+</ul>
+<hr>
+<!-- #BeginLibraryItem "/Library/Footer.lbi" --> 
+<P><i><font size="-1">Please email comments or questions to <a href="mailto:%20SDK-Release@vmlabs.com">SDK-Release@vmlabs.com</a></font></i></P>
+<P><span class="Copyright"><i><font size="2">This page &copy; Copyright 2001 VM 
+  Labs, Inc. Mountain View, CA. All rights reserved.<BR>
+  </font></i></span></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">This page and the 
+  directories it links to contain information Confidential and Proprietary to 
+  VM Labs, Inc. Unless otherwise noted, all contents are covered by non-disclosure 
+  agreement.<BR>
+  All contents, unless otherwise noted, are:</span></i></font></P>
+<P CLASS="copyright" STYLE="margin-left: 0.79in"><font size="2"><i><span class="Copyright">Copyright 
+  &copy; 1997-2001 VM Labs, Inc. All Rights Reserved</span></i></font></P>
+<P CLASS="copyright"><font size="2"><i><span class="Copyright">For VM Labs internal 
+  use only.</span></i></font></P>
+<!-- #EndLibraryItem --> 
+</BODY>
+</HTML>

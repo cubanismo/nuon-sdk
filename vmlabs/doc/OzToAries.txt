@@ -1,0 +1,42 @@
+RELEASE NOTES FOR THE OZ->ARIES TRANSITION
+VERSION: $Id: OzToAries.txt,v 1.1 2000/10/11 22:33:07 cheiny Exp $
+
+For those developers who are makign the transition from a development system with the OZ
+chip revision to a system with the new ARIES revision, there are a number of differences
+to note:
+
+
+(1) Only 8 MB of EDO RAM is accessible with the rev 4 board and the default compiler setup. 
+
+	The problem is that the first 8 MB of memory appears twice, and then the second 8 MB
+	appears twice. This is a hardware bug that is fixed on rev 5 boards.
+
+	Thus, to use all 16 MB in an application, you will have to link using the flags:
+
+	-Xlinker -B -Xlinker 0x80800000
+
+	this will offset the usual start address by 8mb so that you may access all
+	16 megabytes contiguously.
+
+
+(2) Video hardware has changed.
+
+	Much old video code will not work properly with Aries. 
+
+	You must use the BIOS calls (or the libmutil VidSetup call, which ends up
+	calling the BIOS) to set up video on Aries.
+
+	Please note that this means that many older demos will not work properly on
+	an ARIES machine.
+
+
+(3) Audio hardware has changed.
+
+	You will need new audio libraries for Aries.  Unfortunately, we cannot efficiently create
+	audio libraries which will work on both Oz and Aries.
+
+	The current SDK includes separate audio libraries for OZ and ARIES.  The end of the
+	library name is appended with either "_oz" or "_aries" to indicate which chip
+	is appropriate for that library.
+
+	If you link an application with the wrong library, you won't get any sound.

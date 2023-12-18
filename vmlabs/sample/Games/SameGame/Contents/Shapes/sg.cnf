@@ -1,0 +1,233 @@
+# Shapes version of SameGame
+
+# Format of a SameGame .cnf file:  The first line must be a comment,
+# meaning it must start with the # symbol.  Any line which is not a 
+# comment or an empty line consists of a variable name following 
+# by at least one space followed by the value the variable is to take.
+
+# specify path for artwork and sounds
+Path "Contents/Shapes/"
+
+# run game using 4TAP filtering  (set to 0 for 2TAP)
+VFILT_4TAP 1
+
+# source dimensions (for now *must* match the screen dimensions)
+# SOURCE_HEIGHT must be a mult of 16
+SOURCE_WIDTH 512
+SOURCE_HEIGHT 352
+
+# screen dimensions -these dimensions *must* match the source
+# dimensions above
+# SCRN_HEIGHT must be a mult of 16	
+SCRN_WIDTH 512
+SCRN_HEIGHT 352
+
+# TABLE SIZE: Number of rows and columns of tiles.  These dimensions
+# should take TILE SIZE into consideration. The maximum value for 
+# ROW_NUM is 15 and for COL_NUM is 20.
+COL_NUM 15
+ROW_NUM 10
+
+# TILE SIZE: Bigger tiles mean nicer more detailed artwork; however,
+# they also mean fewer rows and columns of tiles.  For example, the
+# Flowers version of SameGame uses 31x31 pixel tiles which give a 6x9
+# game.  The Balls version of SameGame is 10x15 which gives the
+# gameplay more depth; but it is played with 18x18 pixel tiles, hence
+# the sphere artwork.  The Shapes version is also 15x10, but we have
+# increased the screen and source size and this has cost in slower
+# frame rate.
+
+# The width in pixels of the tiles; since they are assumed square
+# this is also the height of the tiles.
+SQU_WIDTH 26
+
+# left hand corner of table; we centre it left-right by setting
+# UP_LEFT_X equal to (int)( (SOURCE_WIDTH - (COL_NUM * SQU_WIDTH)) /2)
+UP_LEFT_X 61
+UP_LEFT_Y 30
+
+
+# decide where to put the score(s) and fps info
+
+
+# MATS: A mat is a picture which is uncovered when the tiles are
+# removed.  A game can have between 0 and 10 mats.  The are loaded
+# into SameGame at run time and one is chosen at random at the start
+# of a game.  If the player successfully clears all the tiles from
+# the table then a different mat is chosen for the next game.  The
+# mats are located in Mat0.tga to Mat9.tga.  These tga files must be
+# 288x192.  The picture used will probably be smaller (exact
+# dimensions given below in MAT_WIDTH and MAT_HEIGHT), so position
+# the picture in the tga file so that the upper left corner is at
+# (0,0).
+
+# set MATS equal 0 if not using mats; otherwise set equal 1
+MATS 0
+
+# number of mats (from 0 to 10)
+NUM_MATS 0
+
+# mat dimensions which should NOT be confused with dimensions of 
+# the Mat*.tga file (which are currently 288x192)
+# Here we want:
+# MAT_WIDTH = (COL_NUM * SQU_WIDTH) = 15 * 18 = 270
+# MAT_HEIGHT = (ROW_NUM * SQU_WIDTH) = 10 * 18 = 180
+MAT_WIDTH 270
+MAT_HEIGHT 180
+
+
+# ANIMATION: After highlighting a group and pressing A, an animation
+# sequence plays.  The tiles which make up the animation are found in
+# animate.tga, which *must* be a 352x272 pixel picture.
+#
+# The tiles are arranged in rows from left to right with a one pixel
+# border surrounding them.  The order of the rows depends on the order
+# of the tiles in tiles.tga.  Have a look at one of the provided
+# examples to completely understand the setup. Since each sequence
+# must be in a row, the width of animate.tga limits the number of
+# tiles in the animation sequence; for example, the max number of
+# tiles is 10 if the tiles are 31x31.
+
+# number of steps (tiles) in the animation sequence; set this
+# to 0 (zero) if there is to be no animation;  max number of
+# steps is 10
+NUM_ANIM_STEPS 0
+
+# speed of animation (to come)
+
+
+# TRANSPARENCY IN TILES: In the BALLS version of SameGame, part of
+# the tiles are transparent so that one can see the background
+# between the balls; whereas, in the POKEMON version the tiles are
+# a solid colour and completely cover up the background.  (See
+# below on how to set the transparency colour.)  Set the below to
+# 1 if you want to see some of the background through parts of the
+# tiles; otherwise set it to 0.
+TILE_TRANSPARENCY 1
+
+# TRANSPARENT COLOUR : As we are not using alpha channels but still
+# wish to have transparency in some of the artwork (probably at least
+# the game cursor will have need of transparency), we designate one
+# colour for which ReadTGA will substitute kBlackff.  Note that
+# tga files must be indexed, thus we give up one colour to get the
+# transparency.
+
+# For POKE the colour is (182, 226, 61) and for BALLS, SHAPES, and
+# TOXIC it's (126, 126, 124).
+INV_R 126
+INV_G 126
+INV_B 124
+
+
+# CURSOR SIZE: We need to know the size of the cursor used during
+# gameplay so that the partial redraws (via high_lite_group3) are
+# done correctly.
+
+# width of cursor in pixels (as a square); CURRENTLY NOT USED
+CURSOR_WIDTH 10
+
+# cursor radius  (1/2 width of the square containing the cursor 
+#                 = 1/2 CURSOR_WIDTH)
+# (terminology dating from time when the cursor was a sphere)
+CURSOR_RAD 5
+
+# cursor speed is num of pixels per sec
+#  Note: 120 = 2 pixels per cycle (60 cycles / sec); this
+#  should approx the speed of 4 pixels per move which
+#  we were getting when the frame rate was in the 30s
+CUR_SPEED 150  
+
+# location of cursor blit in the extra.tga file
+CUR_L_X 0
+CUR_L_Y 110
+CUR_R_X 9
+CUR_R_Y 119
+
+# TITLE SCREEN: The tile screen consists of a background picture and
+# two pointers which allow the player to select one of the options.
+# The main options are: Play, Level, Demo, and Exit.  As well Level
+# has three options: Normal, Challenge, and Super Challenge.
+# Pressing the A button on Play or Level will start the game at the
+# level of play currently designated.  Pressing Demo will start a
+# computer=player version of either Normal or Super
+# Challenge. (Challenge gets mapped to Super Challenge.)
+#
+# Currently I use the same blit for both pointers, but they can
+# be different.
+
+
+# TITLE SCREEN POINTERS: The title screen of SameGame uses two
+# pointers for selecting.  The blit(s) is/are located in extra.tga.
+
+# location of the main title screen pointer inside extra.tga
+PTR_L_X 0
+PTR_L_Y 122
+PTR_R_X 25
+PTR_R_Y 147
+
+# Location on the title screen where the upper left corner of the
+# main pointer goes.
+#
+# Play
+PTR_PLAY_X 110
+PTR_PLAY_Y 115
+# Level
+PTR_LEVEL_X 284
+PTR_LEVEL_Y 114
+# Demo
+PTR_DEMO_X 110
+PTR_DEMO_Y 166
+# Exit
+PTR_EXIT_X 110
+PTR_EXIT_Y 218
+
+# DIFFICULTY LEVELS: There is (another) pointer to one of Normal,
+# Challenge, or Super Challenge always showing.
+#
+# Location of pointer2 in extra.tga
+PTR2_L_X 27 
+PTR2_L_Y 122
+PTR2_R_X 52
+PTR2_R_Y 147
+
+# Locations where the upper left corner of pointer2 should go on the title screen.
+#
+# Normal level of difficulty  (3 colours) (add 8 from Y values)
+PTR2_NORM_X 303
+PTR2_NORM_Y 150
+# Challenge level of difficulty  (4 colours and 2 special changeable tiles)
+PTR2_CHALLENGE_X 303
+PTR2_CHALLENGE_Y 182
+# Super Challenge level of difficulty  (4 colours)
+PTR2_SUPERCHAL_X 303
+PTR2_SUPERCHAL_Y 212
+
+# If either of the title screen pointer blits use transparency, set below
+# to 1; otherwise set to 0
+PTR_TITLE_TRANSPARENT 1
+
+# DEMO MODE: In demo mode the computer plays several games,
+# switches back to the title screen, and then plays more games.
+# Specify here the number of games to be played before cutting
+# to the title screen.
+NUM_DEMO_GAMES 3
+
+# location of two "Play Again?" pictures in extra.tga
+# PLAY1 is the picture with "yes" highlighted
+PLAY1_L_X 0
+PLAY1_L_Y 150
+PLAY1_R_X 149
+PLAY1_R_Y 249
+# PLAY2 has "no" highlighted
+PLAY2_L_X 0
+PLAY2_L_Y 0
+PLAY2_R_X 149
+PLAY2_R_Y 99
+
+# location where "Play Again?" should go in the game itself; 141 = 180-39
+PLAY_L_X 175
+PLAY_L_Y 110
+
+# location of the scores in the game itself
+SCORE_X 165
+SCORE_Y 300

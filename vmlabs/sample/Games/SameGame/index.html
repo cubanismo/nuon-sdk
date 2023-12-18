@@ -1,0 +1,111 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>VM Labs SDK Sample Code</title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td>
+
+<h3 align="left">VM Labs SDK Sample Code</h3>
+
+    </td>
+    <td>
+
+      <h3 align="right"><b>\vmlabs\sample\Games\SameGame</b></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <p align="left"><b>Copyright © 2000-2001
+        VM Labs, Inc.&nbsp;
+        All Rights Reserved</b></p>
+    </td>
+    <td>
+      <p align="right"><b>April 11, 2001</b>
+    </td>
+  </tr>
+</table>
+<hr>
+<p align="left">Welcome to SameGame, a simple yet mesmerizing game where you delete 
+  groups of tiles for points. The larger the group, the more points you earn! 
+  Removing all the tiles on the screen wins you a bonus too! </p>
+<p align="left">A group is two or more tiles of the same design or colour which 
+  touch on either the left, right, top or bottom. Deleting a group causes the 
+  images above that group to drop down, forming new groups. If you find these 
+  last two sentences confusing, watch SameGame in Demo mode and all well become 
+  clear to you! </p>
+<p align="left">SameGame has three levels of play. In Normal mode you have 3 different 
+  types of tiles; whereas, Challenge and Ultimate modes have 4 different types 
+  of tiles. Since playing with 4 different tiles is much trickier than with 3 
+  tiles, Challenge mode starts you off with two special tiles (randomly placed) 
+  which are switchable; this will help you in your quest to clear the entire screen! 
+</p>
+<p align="left">Use the D-pad to move your cursor over the various groups and 
+  press A to delete the highlighted group. Pressing B when pointing at a special 
+  tile changes that tile. Pressing Start will exit the current game or demo.</p>
+<div align="center">
+  <table border="1" width="890" cellspacing="0" cellpadding="4">
+    <tr> 
+      <td width="50%"><b><font color="#000080">Filename</font></b></td>
+      <td width="75%"><b><font color="#000080">Description</font></b></td>
+    </tr>
+    <tr> 
+      <td width="50%">sg.cnf</td>
+      <td width="50%">A config file which tells SameGame where to look for artwork 
+        and sounds. This file can be copied from Contents/Flowers/sg.cnf (default) 
+        or Contents/Shapes/sg.cnf.</td>
+    </tr>
+    <tr>
+      <td width="50%">Contents</td>
+      <td width="50%">A directory that contains the sounds and artwork files needed 
+        to play SameGame. See <a href="Contents/index.html">Contents/index.html</a> 
+        for more information.</td>
+    </tr>
+    <tr> 
+      <td width="50%">makefile</td>
+      <td width="50%">MAKEFILE for building and running sample program.</td>
+    </tr>
+  </table>
+</div>
+<div align="center"></div>
+<p>&nbsp;</p>
+<p>Known Problems:</p>
+<ul>
+  <li>Currently it takes a minute or two to load up the game. You will see some 
+    flickering as the game loads, before the main menu is displayed.</li>
+</ul>
+<p>To make SameGame run from a DVD, do the following:</p>
+<ol>
+  <li>Compile SameGame with ON_DVD set to 1 (this turns off the printf statements 
+    amongst other things) </li>
+  <li>Copy the following to the /udf/nuon directory on the DVD: 
+    <ul>
+      <li>sg.cnf</li>
+      <li>SameGame.cof, renamed as nuon.run or as appropiate. </li>
+      <li>Contents directory</li>
+    </ul>
+  </li>
+  <li>Update the PATH variable in /udf/nuon/sg.cnf to the path of the directory 
+    containing the artwork and sounds, i.e. "/udf/nuon/Contents/Flowers/". </li>
+</ol>
+<hr>
+<p align="left">Before attempting to load or run any of the SDK samples, make
+sure you have first read the <a href="../../../doc/Hitchhikers.PDF">Hitchhiker's
+Guide To NUON</a> document.&nbsp;&nbsp;</p>
+<p align="left">After that, if you're still having trouble getting this sample
+program to work, &nbsp;<a href="mailto:devsupport@vmlab.com?subject=Problem with Sample Code">click
+here to request assistance from developer support</a>.</p>
+<p align="left"><a href="../../../doc/html/onlinedocumentation.html">Click here 
+  for other online SDK documentation</a>.</p>
+<hr>
+<p><i>The artwork found in Contents/Flowers (all *.tga files) is for the sole 
+  use of SameGame and may not be used in any other free, shareware, or commercial 
+  product. Flower images <b>©</b> 2000 C Webb.</i></p>
+<p align="left">&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "*** WARNING: Using no-op version of CreateNuonCD ***"
+
+touch NUON.CD

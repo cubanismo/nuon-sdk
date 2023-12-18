@@ -1,0 +1,190 @@
+;
+; bilerp texture (doublewarp)
+;
+
+	bufaddr = r4
+    temp = r7
+
+
+;foo:
+
+	mv_s	#test_dma,r4
+    ld_s    buffnum,r5
+    st_s    #20,acshift         ;for perturbation calculation
+    bits    #0,>>#0,r5
+    lsl #8,r5
+    add r5,r4
+ 
+
+{
+    st_s    tu,ru
+    asr #8,tui,r5
+}
+{
+    st_s    tv,rv
+    asr #8,tvi,r6
+}
+
+{
+        ld_pz    (uv),pixel0      ;Grab a pixel from the source
+        addr    #1,ru           ;go to next horiz pixel
+		add	r5,tu
+}
+{
+        ld_pz    (uv),pixel2     ;Get a second pixel
+        addr    #1,rv           ;go to next vert pixel
+		add	r6,tv
+}
+dbl_bilerploop:
+
+{
+        ld_pz    (uv),pixel4    
+        addr    #-1,ru          ;go to prev horizontal pixel
+}
+{
+        ld_pz    (uv),pixel3   
+        sub_sv  pixel0,pixel2    ;b=b-a
+}     
+{
+		mul_sv	ru,pixel2,>>#14,pixel2	;scale lerp pixel2        
+}
+{
+    mv_s    #mtx2,r5   
+    sub_sv	pixel3,pixel4	;vector for pixel2 on source2    
+}                       	   
+{
+    st_s    r5,uvbase
+		mul_sv	ru,pixel4,>>#14,pixel4
+		add_sv	pixel2,pixel0	;pixel2 is now free
+}
+        add tuii,tui
+{
+		add_sv	pixel3,pixel4	;pixel3 is now free
+    ld_s    object+16,r12       ;pick up X perturbation multiplier
+}    
+{
+		sub_sv	pixel0,pixel4	;prep final pixel value on first quad
+    ld_s    object+20,r13       ;pick up Y perturbation multiplier
+}
+{
+        add tvii,tvi
+		mul_sv	rv,pixel4,>>#14,pixel4		;rv is now free       
+}
+        dec rc1
+
+		add_sv	pixel0,pixel4		;pixel4 is result of first bilerp
+    mul r12,r17,>>acshift,r0
+     
+
+; bilerp for second layer
+
+{
+    push    v4              ;save first pixel for merge
+;    asr #9,r17,r0
+    mul r13,r18,>>acshift,r1
+}
+{
+    mv_s    r18,temp
+;    asr #9,r18,r1
+}
+
+{
+    add tu2,r0
+    addm    tv2,r1
+} 
+{
+    st_s    r0,ru
+    asr #8,tui2,r5
+}
+{
+    st_s    r1,rv
+    asr #8,tvi2,r6
+}
+{
+        ld_pz    (uv),pixel0      ;Grab a pixel from the source
+        addr    #1,ru           ;go to next horiz pixel
+		add	r5,tu2
+}
+{
+        ld_pz    (uv),pixel2     ;Get a second pixel
+        addr    #1,rv           ;go to next vert pixel
+		add	r6,tv2
+}
+{
+        ld_pz    (uv),pixel4    
+        addr    #-1,ru          ;go to prev horizontal pixel
+    abs temp
+}
+{
+        ld_pz    (uv),pixel3   
+        sub_sv  pixel0,pixel2    ;b=b-a
+}     
+{
+		mul_sv	ru,pixel2,>>#14,pixel2	;scale lerp pixel2        
+}
+{
+    mv_s    #microtexture,r5
+		sub_sv	pixel3,pixel4	;vector for pixel2 on source2
+}
+{
+    st_s    r5,uvbase
+		mul_sv	ru,pixel4,>>#14,pixel4
+		add_sv	pixel2,pixel0	;pixel2 is now free
+}
+{
+        add tuii2,tui2
+    st_s    tu,ru
+}
+{
+    pop pixel3              ;get previous pixel
+		add_sv	pixel3,pixel4	;pixel3 is now free
+}
+{
+		sub_sv	pixel0,pixel4	;prep final pixel value on first quad
+        addm tvii2,tvi2,tvi2
+}
+{
+    st_s    tv,rv
+    asr #8,tui,r5
+		mul_sv	rv,pixel4,>>#14,pixel4		;rv is now free       
+}
+;        lsl #2,temp
+;    nop
+;    mv_s    #$1fff0000,temp
+    ld_s    object+28,temp
+   		add_sv	pixel0,pixel4		;pixel4 is result of first bilerp
+
+; now blend the pixels
+{
+    mv_s    #$ff000000,r19
+    sub_sv  pixel4,pixel3
+}
+{
+    mv_s    #4,temp
+    mul_p   temp,pixel3,>>#14,pixel3    
+    asr #8,tvi,r6
+}
+{
+    bra c1ne,dbl_bilerploop
+        ld_pz    (uv),pixel0      ;Grab a pixel from the source
+        addr    #1,ru           ;go to next horiz pixel
+		add	r5,tu
+}
+{
+    add_sv  pixel3,pixel4
+        ld_pz    (uv),pixel2     ;Get a second pixel
+        addr    #1,rv           ;go to next vert pixel
+}
+{
+    st_pz    pixel4,(bufaddr)
+    addm temp,bufaddr,bufaddr
+		add	r6,tv
+}
+  	rts
+{
+    sub r5,tu
+    subm    r6,tv,tv 
+}
+    nop
+    
+    

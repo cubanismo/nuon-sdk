@@ -1,0 +1,27 @@
+
+ANIMATION: 
+
+After highlighting a group and pressing A, an animation sequence on
+that group plays and then the group disappears.
+
+The tiles which make up the animation are found in animate.tga, which
+*must* be a 352x272 pixel picture with indexed colour.
+
+The tiles are arranged in rows from left to right with a one pixel
+border surrounding them.  (Of course each tile is the same size as
+found in tiles.tga and as specified by the variable SQU_WIDTH in
+sg.cnf.)  The order of the rows depends on the order of the tiles in
+tiles.tga.  Take a look at one of the provided examples (in either
+Poke or Toxic folders) to see the setup.  
+
+Note that the size restriction on animate.tga and the size of the
+tiles may limit the number of tiles in each row. At any rate, the
+maximum number of "steps" in the animation sequence is 10.  In other
+words, there can be up to 10 tiles in each row in animate.tga.  The
+number of steps in the animation is set in NUM_ANIM_STEPS in sg.cnf.
+Set NUM_ANIM_STEPS equal to 0 (zero) if there is to be no animation.
+
+Currently the speed at which the animation plays is hardcoded.
+
+Currently both the Toxic Avenger and Balls versions of SameGame have
+animation while Pokemon does not.

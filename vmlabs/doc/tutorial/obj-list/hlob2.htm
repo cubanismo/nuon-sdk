@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<TITLE>HL Object Example 2</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>High-Level Object Example 2</H1><P>
+
+Right, for the next example, find the line in <B>ol_demo2.s</B> that includes the clear-screen
+object:<PRE>
+clear:
+    .include    "cls.moo" 
+</PRE>
+Change it so that it includes "cls2.moo" instead of "cls.moo", and re-assemble and run the
+code.  You should see the yellow llama as before - only now, the background colour throbs slowly
+between white and black.  To see how this action is coded into the high-level object definition,
+let's have a look at "cls2.moo"...
+<PRE>
+
+;
+; cls2.moo = a MacrOObject that
+; clears a block of screen.
+;
+; This one introduces one wave variable.  Woo!
+
+cl_s2:
+
+	.dc.s	0		    ;Prev
+	.dc.s	0			;Next
+	.dc.s	$10000		;length of param block (one vector).
+	.dc.s	0           ;param address, if not local
+
+</PRE>
+Here is the first difference.  We have introduced one variable parameter, so that is
+declared in bits 16-23 of the third long of the first vector. (The meaning of the other bits
+will be revealed in future examples).  The next long is also zero, which means that the
+parameter vectors will be defined locally, that is, they will be a part of each instance of
+the Object, as opposed to being defined elsewhere for sharing amongst many Objects.
+<PRE>
+
+	.dc.s	0	        ;Address of ranges table, if not local
+	.dc.s	0	        ;this'll be where the command string is, if not local
+	.dc.s	clsobj          ;here's the proto
+	.dc.s	0
+
+</PRE>
+Similarly, there are now zeroes in the range-table and command-string pointers.  So, rather
+than use the default range-table and command-string, we are going to define the table and string
+within this Object definition.
+<PRE>
+
+    .dc.s   cl_s2_end-cl_s2   ;total object size
+    .dc.s   0,0,0
+    
+    .dc.s   0,0,0,0
+</PRE>
+The rest of the header is as before - the size in the first long of the third vector, as before.
+However, since we now have declared a local variable parameter, ranges table and command string,
+they must now be included in the object.  Directly after the header come as many vectors of variable
+parameters as we have defined locally - in this case, one vector.
+<PRE>
+; Now, here is a vector describing the wave.
+
+    .dc.s   0       ;This is the base phase.
+    .dc.s   0       ;This is the phase offset.
+    .dc.s   $a000   ;This is the wave's speed.
+    .dc.s   2       ;This is the Type - a Sine wave.
+
+</PRE>
+This vector defines a sine wave.  For the moment, all you really need to look at is the
+Speed setting - which determines the frequency of the resulting wave - and the Type, which
+determines the shape of the waveform.  You might like to try altering the definition of
+cls2.moo, changing the speed and type, re-assembling and checking out the results.  Current
+legal waveform types are 0 (Sawtooth), 1 (Triangle), 2 (Sine), and 3 (Cosine).<P>
+
+Variable-parameter vectors can also define position and motion between boundaries, as well as
+waveforms - but for now, let's just check out the waveforms.<P>
+
+Next comes the Ranges table:
+<PRE>
+
+; This Object now has a local Ranges table.
+
+    .dc.s   0       ;Zero is always udeful.
+    .dc.s   $14     ;This is the minimum colour value.
+    .dc.s   $f0     ;This is the maximum.
+    .dc.s   0       ;No other ranges are defined yet.
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+    .dc.s   0
+
+</PRE>
+
+When we defined the waveform, we defined its shape and its frequency, but not its amplitude.
+The Ranges table is used to specify the amplitude of a waveform.  Here, in tweaking a colour
+value, I am interested in varying the value between $14 and $f0, sp I specify those values in
+my Ranges table as entries 1 and 2.  There are always 16 entries in a Ranges table, whether or
+not all of them are used.<P>
+
+Finally, after the Ranges table we get to the Command string.
+<PRE>
+     
+; This Object also has a local command string.
+
+    .ascii  "A[12]=c0:"    
+
+</PRE>
+
+That doesn't look like much, but the Command string is the most important part of a high-level
+object.  It specifies how the variable parameters fit into the OLR object template.  By using
+a few variable parameters and an interesting command string, some nice'n'groovy effects can be
+achieved.<P>
+
+Here is how it works:  consider that an OLR object always has 16 longwords in it.  Label those
+16 words with lowercase letters a through p.  Those letters in the command string therefore refer
+to values in the OLR object template.<P>
+
+Now, in the high-level object, there are a number of waveforms (or positional values), the Variable
+Parameters, that take up one vector each.  We can label those with the uppercase letters.<P>
+
+When the Command String is interpreted, it is evaluated in strict order from left to right.  Evaluation
+proceeds until the assign character "=" is encountered, and then the computed value is stored.  Consider the
+string above.  First, we have "A", which means "get the value of waveform A".  Remember that the waveform itself does
+not contain any magnitude information (actually, a "raw" waveform evaluates to a value that is in the range +/-$7fffffff).
+So, usually, after we refer to a waveform, we put in a Range statement, as above.  The characters "A[12]" in the command
+string mean: evaluate waveform A, and scale it to the range specified by entries 1 and 2 of the Ranges table".  In this example,
+ranges(1) is $14, and ranges(2) is $f0.  So, "A[12]" will yield a value between $14 and $f0, varying in a sinusoidal manner,
+according to the settings in the first variable parameter vector.<P>
+
+This is just right for use in a colour field, so the next part of the command string deals with putting it there.  First there
+is the "=" sign, which means to stop evaluating and start storing.  Looking at the first vector of the OLR object template,
+<PRE>
+ clsobj:
+
+; here is a simple object that clears the screen
+
+	.dc.s	$00000000			;packed 16bit x:y destination position
+	.dc.s	$016800f0			;size X:Y 
+	.dc.s	$10808000			;colour to clear screen to
+	.dc.s	$0000000	
+</PRE>
+we can see that the colour information is stored in the third longword, which, as explained above, is indexed via the
+lowercase letter "c".<P>
+
+However, we don't want to store to the entire longword referenced by "c".  There are three distinct modes available
+for storing values in the destination structure.  They are: store long, store word, and store byte.<P>
+
+<B>Store long</B> is achieved by just using the index letter without a postfix.  So, if "A[12]" evaluated to $70, then "A[12]=c" would
+leave the third long of the destination structure set to $00000070.<P>
+<B>Store word</B> uses a postfix "<" (for high word) or ">" (for low word) st specify where the result goes.  So "A[12]=c<" would result in
+the third long being $0070xxxx, and "A[12]=c>" in $xxxx0070, where xxxx represents what was already there.<P>
+Lastly, <B><B>store byte</B></B> uses a postfix numeric, 0 to 3, to specify which byte to store the value into.  Byte zero is the leftmost
+byte as you look at the longword written down, or bits 24-31.  Byte 1 is the next leftmost, or bits 16-23, and so on.  So, in our
+example, "A[12]=c0:" means: "Evaluate wave A, scale it to between $14 and $f0, and shove the result in bits 24-31 of the third
+longword of the destination data structure".  Since, in this case, that longword contains a packed, 32-bit pixel value, the result is
+that the Y colour component gets throbbed sinusoidally, and therefore the background colour pulsates.<P>
+
+The final item in the command string is a colon ":".  This is the command string terminator, and tells the high-level object
+system to quit evaluating the string, and write out the destination data structure.<P>
+
+If you examine the first OLR object's hex values in the overlay display, you can clearly see the first byte of the third longword
+changing as the background colour pulses.<P>
+
+Now that you grok that, let's look at a (very) slightly more complex <A HREF="hlob3.htm">example</A>...<P>
+
+</BODY>
+</HTML>

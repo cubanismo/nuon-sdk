@@ -1,0 +1,30 @@
+
+SOUND SPECIFICS: 
+
+Up to 6 different sound effects can be loaded into SameGame.  These
+samples are in "raw" format and must be 24kHz signed 16bit in
+big-endian format.  I converted .wav files to .raw files using sox:
+      sox click.wav -r 24000 -s -w -c 1 -x click.raw
+(Sox is available on Red Hat linux machines.)
+
+SameGame currently places no restrictions on the size of these .raw
+files.
+
+
+The sound files SameGame looks for are:
+
+  click.raw: heard when moving the cursor through menu options
+
+  changetile.raw: heard when changing a special tile (when in
+                  Challenge mode)
+
+  bigdelete.raw: heard when deleting a very large group of tiles
+
+  bigdeleteall.raw: heard when deleting *all* the tiles of one type in
+                    one go
+
+  bonus.raw: heard when the game is over and all the tiles are gone
+
+  nobonus.raw: heard when the game is over but there are some undeleted
+               tiles left
+

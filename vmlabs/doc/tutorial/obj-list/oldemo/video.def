@@ -1,0 +1,84 @@
+	;
+	; Video definitions
+	; Copyright (c) 1997 VM Labs, Inc.
+	; All rights reserved.
+	; Confidential and Proprietary Information
+	; of VM Labs, Inc.
+	;
+
+	; Here are defines used by videoasm.s to
+	; create the screen
+
+	; Screen base address
+	SCRNBASE = 0x40008000
+
+	; SCRNWIDTH can be any value, although you must
+	; be careful to set the cluster bit when
+	; appropriate (e.g. for 32bpp, if SCRNWIDTH > 512
+	; then CLUSTER must be 1)
+	SCRNWIDTH = 360
+
+	; SCRNHEIGHT should be either 240 or 480, for now
+	; 480 implies interlacing
+	SCRNHEIGHT = 240
+
+	; DMA transfer type; this implies the pixel
+	; mode
+	DMA_XFER_TYPE = 4
+
+	; cluster mode on/off; probably on is better, but
+	; imposes more restrictions on width
+	CLUSTER = 1
+
+
+	; everything else is calculated based on the above
+vdg_32bpp = 0x02
+vdg_16bpp = 0x01
+vdg_8bpp  = 0x09
+vdg_4bpp  = 0x00
+vdg_mpeg  = 0x10
+
+.if (DMA_XFER_TYPE == 1)
+	screen_bpp = vdg_4bpp
+	dmaXsize = SCRNWIDTH/32
+.else
+ .if (DMA_XFER_TYPE == 3)
+	screen_bpp = vdg_8bpp
+	dmaXsize = SCRNWIDTH/16
+ .else
+  .if (DMA_XFER_TYPE == 4 || DMA_XFER_TYPE == 6 || DMA_XFER_TYPE == 7)
+	screen_bpp = vdg_32bpp
+	dmaXsize = SCRNWIDTH/4
+  .else
+	screen_bpp = vdg_16bpp
+	dmaXsize = SCRNWIDTH/8
+  .endif
+ .endif
+.endif
+
+.if CLUSTER
+	dmaXsize = floor(dmaXsize/2)
+.else
+	dmaXsize = floor(dmaXsize)
+.endif
+
+.if SCRNHEIGHT > 240
+	interlace = 1
+	binc = 2
+	dma_height = SCRNHEIGHT/2
+.else
+	interlace = 0
+	binc = 1
+	dma_height = SCRNHEIGHT
+.endif
+
+	; stuff for filtering; for now, turn
+	; on no filter
+	lines = 0
+	clines = 0
+	fldup = 0
+	vibits = 3
+	evenscalepos = 0
+	oddscalepos = 0
+
+

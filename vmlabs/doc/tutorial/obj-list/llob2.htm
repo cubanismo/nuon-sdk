@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<TITLE>LL Object Example 2</TITLE>
+</HEAD>
+
+<BODY TEXT="#FFFFFF" LINK="#FFFF00" VLINK="#FF00FF" BACKGROUND="vmback.gif">
+
+<H1>Low-Level Object Example 2</H1><P>
+
+In this example, the Object List Renderer is used in one-shot mode.  In this mode, it halts after
+each Object is drawn.  Although this is a far from efficient way to run the OLR, it does allow
+for re-use of an Object definition - in this case, a Sprite object is re-used multiple times.<P>
+
+To run this example, go to the top of <B>ol_demo2.s</B>, and set it up so that "drawloop = drawframe_olr2", and
+"initlist = 0", and assemble and run the code.<P>
+
+The render routine is a bit more complicated than before:
+<PRE>
+drawframe_olr2:
+
+; use Oneshot mode to draw multiple sprites.
+
+    push    v0,rz
+    mv_s    #testobj,r0
+    st_s    r0,olbase       ;object to draw 
+    jsr LoadRunOLR_Oneshot,nop         
+    jsr WaitMPEs,nop
+
+
+</PRE>
+First, the OLR is run in oneshot mode to clear the background, using the test object.
+<PRE>
+
+; load a copy of the Sprite object to local RAM
+
+    mv_s    #16,r0
+    jsr dma_read
+    mv_s    #msprite,r1
+    mv_s    #object,r2
+    jsr dma_finished
+
+</PRE>
+This loads a copy of the Sprite OLR object into local RAM.  The code will modify values
+into this template, then write it back out to external RAM for the OLR to use.
+<PRE>
+
+; loop and draw a bunch of sprites
+
+    mv_s    #$a3000000,ranmsk   ;set up params for a random sequence generator
+    mv_s    #$31415926,ranseed
+    mv_s    #40,r31             ;# of sprites to draw
+
+</PRE>
+Sets up a couple of variables for use with a random-sequence generator, and a count for the
+number of sprites to draw.
+<PRE>
+
+sprloop:
+
+; generate a position based on pseudo-random sequence and framecount    
+; also generate a rotation.  Update the values in the local
+; copy of sprite object, write it to external RAM, and call the object renderer.
+
+    jsr rsg,nop
+    asr #14,ranseed,r0
+    jsr rsg,nop
+    asr #14,ranseed,r1      ;pseudorandom numbers...
+    jsr rsg,nop
+    asr #14,ranseed,r3
+    ld_s    ctr,r2          ;framecount
+    nop
+    mul r2,r0,>>#16,r0
+    mul r2,r1,>>#16,r1      ;position...
+    mul r2,r3,>>#8,r3       ;rotation...
+    bits    #8,>>#0,r0
+    bits    #8,>>#0,r1     ;range to 0..512
+    sub #$4c,r0
+    sub #$78,r1             ;centre up...
+    add r0,r1,r2
+    bits    #15,>>#0,r0
+    bits    #15,>>#0,r1
+    lsl #16,r0
+    or  r0,r1               ;pack together X and Y
+    st_s    r1,object       ;store XY in local copy of sprite
+    st_s    r3,object+24    ;store angle in local copy of sprite
+
+</PRE>
+The above code generates some randomized position parameters and shoves them in
+the sprite template.
+<PRE< 
+
+    mv_s    #16,r0
+    jsr dma_write           ;write sprite object to external
+    mv_s    #msprite,r1
+    mv_s    #object,r2
+    jsr dma_finished,nop 
+
+</PRE>
+The modified sprite template is written out to external RAM.
+<PRE>
+     
+    mv_s    #msprite,r0
+    st_s    r0,olbase       ;object to draw 
+    jsr     RunOLR_Oneshot,nop         
+    jsr WaitMPEs,nop
+
+</PRE>
+Now we fire up the OLR code, and pass it the address of the sprite object in
+external RAM.  (<B>RunOLR_Oneshot</B> is used instead of <B>LoadRunOLR_Oneshot</B>, because although
+the rendering MPEs halted after drawing the previous object, their code and environment are
+still intact, so all we have to do is restart them).
+<PRE>
+
+    sub #1,r31          ;count off sprites
+    bra ne,sprloop,nop
+
+</PRE>
+Loop for all the sprites.
+<PRE>
+
+    pop v0,rz
+    nop
+    rts t,nop    
+
+</PRE>
+Done, return.<P>
+
+Starting and stopping the OLR is not the most efficient way to use it, though.  It is much more
+efficient when it is allowed to chew on a nice substantial list.  For the generation, care, feeding and
+handling of substantial OLR lists, you could do worse than use... the High-Level Object system!  To see how
+this works, please proceed to the <A HREF="hlob.htm">High-Level Object</A> examples.  However, if you want more
+details about setting up the OLR in your own code and how to make your own objects, and you want to see a really pretty example, check out the next
+two <A HREF="llob3.htm">examples</A>.<P> 
+
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,1016 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Merlin SDK History </title>
+</head>
+
+<body TEXT="#000000" LINK="#008000" ALINK="#FF0000" VLINK="#000080">
+<div align="center">
+  <center>
+  <table border="0" width="500">
+    <tr>
+      <td>
+        <p align="center"><img border="0" src="../images/nuon_logo_3.gif" width="120" height="54"></td>
+      <td>
+        <p align="center"><img border="0" src="../images/vmlogo_men.gif" width="116" height="46"></td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><b>SDK Documentation<br>
+        Confidential &amp; Proprietary<br>
+        to VM Labs Inc.</b></td>
+      <td valign="top">
+        <p align="center"><b>Copyright © 1997-2001<br>
+        VM Labs, Inc.<br>
+        All Rights Reserved</b></td>
+    </tr>
+    <tr>
+      <td valign="top" colspan="2">
+        <p align="center">&nbsp;</p>
+        <p align="center"><b>February 23, 2001</b></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<hr>
+<h1 align="center">SDK History</h1>
+<p align="center">Sorry, but this file has not been maintained recently</p>
+<hr>
+<ul>
+      <li><font color="#000000"><a href="#sdk history">view recent changes to SDK </a></font></li>
+      <li><font color="#000000"><a href="#puffin history">view recent changes to Puffin debugger </a></font></li>
+      <li><font color="#000000"><a href="#llama history">view recent changes to Llama assembler</a></font></li>
+      <li><font color="#000000"><a href="#mml history">view recent changes to Merlin Media
+        Libraries (MMLs)</a></font></li>
+    </ul>
+
+<p>&nbsp;</p>
+
+<p><font color="#000000"><a name="sdk history"><big>History of recent SDK changes</big></a></font></p>
+<font face="Times New Roman"><a name="May 28, 1998">
+
+<p></a><big><big><font color="#000000">November 2, 1998</font></big></big></font>
+
+<ul>
+  <li><font face="Times New Roman" color="#000000">MML2D fixes.&nbsp; <a href="../Graphics/mml2d.pdf">See
+    the updated (version 1.4) MML2D Specification.</a><br>
+    The folder \vmlabs\lib\src\mml2d\src\mlheader has gone away.</font><br>
+    <font face="Times New Roman" size="3">This version fixes bugs in the copy functions,
+    particularly for e888 source pixmaps and e655 display pixmaps.<br>
+    This version also fixes bugs in the linedraw and styled line draw functions.<br>
+    There's a new sample code program sample2d that illustrates the new functionality.</font></li>
+</ul>
+
+<ul>
+  <li><p align="left">Updated llama.exe to version 2.03. This version fixes a bug in the
+    .binclude directory. <br>
+    It now understands the same paths as .include.&nbsp; There are no other differences.</p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">A couple of new scripts in
+    the \vmlabs\bin directory,</font><br>
+    RUNCOFF.BAT = Shortcut batch file to run specified program MPE 0. (i.e. &quot;runcoff
+    pigs.cof&quot;)<br>
+    RESETM.BAT = Shortcut batch file to reset merlin box.</p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Multiple Joysticks!&nbsp; <a
+    href="../../sample/pong/readme.txt">See the Pong Sample program Readme.txt for more info.</a></font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Preliminary version of the
+    OpenGL 3D Graphics library for Merlin, called MGL.&nbsp; <a href="../Graphics/libmgl.pdf">See the
+    Libmgl.pdf file for info.</a></font></p>
+  </li>
+</ul>
+
+<ul>
+  <li><p align="left">There is a BIOS library, libbios.a, which is to be linked to all
+    applications. <br>
+    Not many user visible changes are associated with this (<a
+    href="#library incompatibilities">see below for the ones which cause <br>
+    incompatibilities</a>). libbios.a will grow in future releases to include a more
+    comprehensive set of <br>
+    hardware abstractions. <br>
+    <br>
+    Note: Users of older Merlin development systems may need to obtain a different libbios.a
+    library<br>
+    for Audio to work correctly.&nbsp; Systems equipped with Burr-Brown DACs can use the
+    libbios.a<br>
+    contained in this zip file.</p>
+  </li>
+</ul>
+
+<p><a name="library incompatibilities"><font color="#000000"><big>Developers Notes: &nbsp;
+Incompatibilities in this release</big></font></a><small> </small>
+
+<ol>
+  <li>The BIOS, and some of the libraries which depend upon it, now allows interrupt routines
+    to <br>
+    use the cache even if the main code has the cache off. In order for this to function
+    properly, <br>
+    the application *must* use the __trampoline function from the BIOS in order to run code
+    that <br>
+    bypasses both the icache and dcache. Any code that wants to turn off just the dcache must <br>
+    call __DCacheDisable to flush and disable the cache, and __DCacheEnable when the data <br>
+    cache may be used again.<br>
+    <br>
+    Failure to observe the above rules will result in mysterious crashes in code (such as 3D
+    libraries) <br>
+    which does rendering on MPE 0 by turning off the data cache.<br>
+  </li>
+  <li>As a byproduct of (1) above, C code linked with the current libraries can only run in
+    MPE 0, <br>
+    and only when the cache sizes are set to 4K. This restriction will be eased in future
+    library releases.<br>
+  </li>
+  <li>The API for PCM audio has changed, and has been moved out of libmutil.a and into a
+    seperate <br>
+    library (libmaud2.a). See the audio library documentation for details.<br>
+  </li>
+  <li>It is now much harder to override symbols from the libraries. The work-around is not to
+    try; <br>
+    any symbols beginning with two underscores (one underscore in C) are reserved for the BIOS
+    <br>
+    and libraries. Change all function names and variables in your projects to obey this rule.<br>
+  </li>
+  <li>The default section for the assembler is now &quot;text&quot; if the -c flag is given,
+    &quot;instruction_ram&quot; <br>
+    otherwise.&nbsp; (It used always to be &quot;instruction_ram&quot;.) Code that does not
+    include an explicit .segment <br>
+    directive may therefore behave differently. <br>
+  </li>
+  <li>llama no longer uses the MA_PATH or PUFFIN_PATH environment variables. <br>
+    Use LLAMA_PATH and VMLABS environment variables instead.<br>
+  </li>
+</ol>
+
+<p><a name="known bugs"><font color="#000000"><big>Developers Notes:&nbsp; Known bugs in
+this release</big></font></a><small> </small>
+
+<ol>
+  <li>libmm3d.a has a clipping bug: polygons clipped to the near Z plane will sometimes draw
+    outside <br>
+    of the bounding box.&nbsp; This can cause memory corruption. A work-around is to include
+    an 8 pixel <br>
+    (or so) border around the rendering area (which is a good idea anyway for the screen,
+    because <br>
+    of overscan on TVs.)<br>
+  </li>
+  <li>The new audio library can apparently miss audio interrupts if code is running which has
+    disabled <br>
+    the cache (via __trampoline or __DCacheDisable). This causes some minor glitches in the
+    audio.<br>
+    One work around is to not disable the cache; for example, when using libmml3d.a use the <br>
+    M3D_MPE_USE_OTHERS hint and select only 3 processors in m3dInit().<br>
+  </li>
+  <li>The line drawing functions in libmml2d.a only work correctly in 32 bit per pixel mode.<br>
+  </li>
+  <li>The obj-list tutorial is being revised to conform the new rules for the LLAMA assembler.
+    &nbsp; <br>
+    It is currently broken.<br>
+  </li>
+</ol>
+
+<p><big><big><font color="#000000" face="Times New Roman">October 15, 1998</font></big></big>
+
+<ul>
+  <li><p align="left"><font face="Times New Roman" color="#000000">There is a new environment
+    variable to be set in your AUTOEXEC.BAT file.<br>
+    <br>
+    set VMLABS=c:\vmlabs<br>
+    <br>
+    This example assumes that your \vmlabs directory is on your c: drive.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">You can remove the DJGPP
+    and VMLD_LIBRARY_PATH environment variables from your AUTOEXEC.BAT</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">There is a new ACE360 debug
+    stub, so run aceload.bat from within your \vmlabs\bin directory before you start <br>
+    using this version of the SDK.&nbsp; There are speed improvements in the new version of
+    the ACE360 debug stub.&nbsp; <br>
+    The <a name="ACE360 Stub Version">new ACE360 stub version is 1.2 ( Oct. 1, 1998; 14:18:33
+    )</a></font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">The new debugger,
+    PuffinTK.exe, requires that Tcl/Tk be installed on your system.<br>
+    <a href="http://www.scriptics.com/software/8.0.html#Download Binary">Follow this link to
+    the internet download site for Tcl/Tk</a>.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">PDF documents included with
+    the SDK now share a global, searchable index.<br>
+    You must have Adobe Acrobat Reader with Search Plug-In, or Acrobat Exchange 3.0<br>
+    to use the PDF search engine.&nbsp; <a
+    href="http://www.adobe.com/prodindex/acrobat/readstep.html">Follow this link to the
+    internet download site for Acrobat products.</a><br>
+    Add \vmlabs\doc\index.pdx to the list of search indices using the Tools &gt;&gt; Search...
+    menu item.</font></p>
+  </li>
+  <li><p align="left">There is a BIOS library, libbios.a, which is to be linked to all
+    applications. <br>
+    Not many user visible changes are associated with this (<a
+    href="#library incompatibilities">see below for the ones which cause <br>
+    incompatibilities</a>). libbios.a will grow in future releases to include a more
+    comprehensive set of <br>
+    hardware abstractions.</p>
+  </li>
+  <li><p align="left">libc.a now includes file i/o routines which can communicate with the
+    host PC's disk system. <br>
+    This requires that a file server be running on the PC (or that the -fs option be given to
+    mload.)</p>
+  </li>
+  <li><p align="left">There are two new audio libraries:<br>
+    libmaud1.a library includes the synth and once the synth is started,<br>
+    it takes over a whole MPE.(MPE 1 by default)<br>
+    <br>
+    libmaud2.a is the stand-alone PCM engine (no synth!), which is linked to<br>
+    your C program on MPE 0<br>
+    <br>
+    Note: Users of older Merlin development systems may need to obtain a different libbios.a
+    library<br>
+    for Audio to work correctly.&nbsp; Systems equipped with Burr-Brown DACs can use the
+    libbios.a<br>
+    contained in this zip file.&nbsp; <a href="../mmlaudio.pdf">See the MML Audio
+    documentation for more information.</a></p>
+  </li>
+  <li><p align="left">The new &quot;mergemf.exe&quot; tool converts MIDI format 1 to MIDI
+    format 0, and can be used <br>
+    stand-alone.&nbsp; It is used by the Sendmidi.exe utility to automatically convert format
+    1 to format 0.<br>
+    Just call &quot;mergemf oldfile.mid newfile.mid&quot;</p>
+  </li>
+  <li><p align="left">The usage of the Merlin Synth has also changed.&nbsp; <a
+    href="synth.html">See the &quot;How to use the Merlin Synth&quot; document for new
+    information.</a></p>
+  </li>
+  <li><p align="left">Also, the samples SynthAPI and Audio have been removed from the SDK.
+    &nbsp; These are obsolete.<br>
+    Check out the new sample code MmlAudio for up to date sample Merlin audio code.</p>
+  </li>
+  <li><p align="left">libmml2d.a has a number of new features (such as styled lines)</p>
+  </li>
+  <li><p align="left">llama.exe now tries to check for some beta hardware cache bugs. This may
+    result in the warning:<br>
+    &quot;local access following remote load may trigger cache bug&quot;. <br>
+    <a href="../Tools/llama.pdf">See the llama documentation</a> (section 7.5) for a discussion of
+    this error message.</p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Includes a third party
+    utility program ( redir.exe ) which allows you<br>
+    to redirect stdin, stdout and stderr.&nbsp; Type 'redir -?' for usage instructions.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">A new tool, sendmidi.exe,
+    will upload a selected MIDI file to the Merlin<br>
+    Synth and play it!* **&nbsp; (See <a href="synth.html">\vmlabs\doc\synth\synth.html</a>
+    for details.)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * You must have TCL/TK 8.0 or later installed
+    on your PC to use<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sendmidi.exe.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ** The Merlin Synth currently accepts only
+    format 0 MIDI files.</font></p>
+  </li>
+</ul>
+
+<ul>
+  <li><font face="Times New Roman" color="#000000">New demos include updates to Titan,
+    Eclipse, Tempest, Dancer,&nbsp; and<br>
+    Racing.&nbsp; Get the latest demopack from VM Labs and check them out!<br>
+    </font></li>
+</ul>
+
+<p><a name="library incompatibilities"><font color="#000000"><big><big>Developers Notes:
+&nbsp; Incompatibilities in this (Oct. 15) release</big></big></font></a> 
+
+<ol>
+  <li>The BIOS, and some of the libraries which depend upon it, now allows interrupt routines
+    to <br>
+    use the cache even if the main code has the cache off. In order for this to function
+    properly, <br>
+    the application *must* use the __trampoline function from the BIOS in order to run code
+    that <br>
+    bypasses both the icache and dcache. Any code that wants to turn off just the dcache must <br>
+    call __DCacheDisable to flush and disable the cache, and __DCacheEnable when the data <br>
+    cache may be used again.<br>
+    <br>
+    Failure to observe the above rules will result in mysterious crashes in code (such as 3D
+    libraries) <br>
+    which does rendering on MPE 0 by turning off the data cache.<br>
+  </li>
+  <li>As a byproduct of (1) above, C code linked with the current libraries can only run in
+    MPE 0, <br>
+    and only when the cache sizes are set to 4K. This restriction will be eased in future
+    library releases.<br>
+  </li>
+  <li>The API for PCM audio has changed, and has been moved out of libmutil.a and into a
+    seperate <br>
+    library (libmaud2.a). See the audio library documentation for details.<br>
+  </li>
+  <li>It is now much harder to override symbols from the libraries. The work-around is not to
+    try; <br>
+    any symbols beginning with two underscores (one underscore in C) are reserved for the BIOS
+    <br>
+    and libraries. Change all function names and variables in your projects to obey this rule.<br>
+  </li>
+  <li>The default section for the assembler is now &quot;text&quot; if the -c flag is given,
+    &quot;instruction_ram&quot; <br>
+    otherwise.&nbsp; (It used always to be &quot;instruction_ram&quot;.) Code that does not
+    include an explicit .segment <br>
+    directive may therefore behave differently. <br>
+  </li>
+  <li>llama no longer uses the MA_PATH or PUFFIN_PATH environment variables. <br>
+    Use LLAMA_PATH and VMLABS environment variables instead.<br>
+  </li>
+</ol>
+
+<p><font face="Times New Roman" color="#000000"><a name="May 28, 1998">May 28, 1998</a></font><font
+color="#000000"> </font></p>
+
+<p>&nbsp; 
+
+<ul>
+  <li><p align="left"><font face="Times New Roman" color="#000000">New version of ACE360 stub
+    (contains mostly DVD changes,<br>
+    plus some speed optimizations) which does not require a <br>
+    serial connection to install.&nbsp; Click here for more info on the debug<br>
+    stub.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Performance improvements in
+    single-stepping in PuffinW.<br>
+    Also fixed source highlighting bugs when single-stepping.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Several bug fixes to the
+    Merlin Media Libraries, PuffinW<br>
+    debugger, C compiler, LLAMA assembler and the linker.<br>
+    (see the release notes documents for more info.)</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">New DoomCube demo replaces
+    the Doom demo.&nbsp; Still playable,<br>
+    and with sound, but use the forward-L button to see the<br>
+    game texture-mapped onto lots of moving cubes!</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Other new demos include
+    Titan, Madmars and JulianJukebox.<br>
+    Check them out!</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Additions to STDUTILS.LSP,
+    including a useful DATE class.<br>
+    Read XLisp.doc and date.txt for more info.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Renamed
+    &quot;\vmlabs\doc\release notes&quot; directory to <br>
+    \vmlabs\doc\rlsenote as per suggestion from users.</font></p>
+  </li>
+  <li><p align="left"><font face="Times New Roman" color="#000000">Updated XLisp tutorial
+    document in <br>
+    \vmlabs\sample\tutorials\xlisp directory.</font></p>
+  </li>
+</ul>
+<font face="Times New Roman">
+
+<p></font><font face="Times New Roman" color="#000000">April 3, 1998</font><font
+color="#000000"> </font>
+
+<ul>
+  <li><font color="#000000"><font face="Times New Roman">New directory structure for VMLABS
+    SDK. The entire SDK and all of its components are now located under a single \vmlabs
+    directory. This name is not hard-coded. If you wish to call it \puffin, that will work.
+    Just make sure you point to the correct location in your AUTOEXEC.BAT.</font> <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">You will need to modify your
+    AUTOEXEC.BAT for the new location of the MGCC Compiler environment variable, DJGPP. Set it
+    to the location of the vmlabs bin directory.</font> <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">New Debug stub for the ACE360 board.
+    You will need to update to this new stub image to use the new release of PUFFIN or MLOAD.
+    See newstub.txt for details.</font> <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Support for new COFF file formats.
+    Old formats are still supported, for now, but support will go away for the old COFF file
+    formats soon! You should update your old COFF files to the new format. See doc/html/llama
+    for more info.</font> <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Preliminary release of some Merlin
+    Media Libraries. The libraries are found in the \vmlabs\lib directory. See MML_history.txt
+    in the release notes directory for more info.</font> <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">HTML documentation for the MMLs.</font>
+    <br>
+    </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Puffin changes include:</font> </font><blockquote>
+      <ul>
+        <li><font color="#000000"><font face="Times New Roman">support of new COFF file formats</font>
+          </font></li>
+        <li><font color="#000000"><font face="Times New Roman">new &quot;bload&quot; command to load
+          binary data directly to a memory address (like mload -b)</font> </font></li>
+        <li><font color="#000000"><font face="Times New Roman">performance improvement downloading
+          to IRAM</font> </font></li>
+        <li><font color="#000000"><font face="Times New Roman">addition of DMA Breakpoint dialogs
+          (in expert mode)</font> </font></li>
+        <li><font color="#000000"><font face="Times New Roman">addition of MEM-WATCH and Memory
+          Breakpoint dialogs</font> </font></li>
+        <li><font color="#000000"><font face="Times New Roman">new &quot;stdutils.lsp&quot; loaded
+          at PuffinW runtime</font> </font></li>
+        <li><font color="#000000"><font face="Times New Roman">fix for I-cache problem and
+          &quot;step over interrupt&quot;</font> </font></li>
+        <li><font face="Times New Roman" color="#000000">several other bug fixes and minor
+          enhancements </font></li>
+      </ul>
+    </blockquote>
+  </li>
+</ul>
+<font face="Times New Roman">
+
+<p></font><font face="Times New Roman" color="#000000">February 20, 1998</font><font
+color="#000000"> </font>
+
+<ul>
+  <li><font color="#000000"><font face="Times New Roman">Moved Jeff's tutorial to
+    \puffin\sample\tutorials\optimize\ directory.</font> </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Added a handy Xlisp tutorial document
+    to the tutorials directory. (see \puffin\sample\tutorials )</font> </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Added more of Jeff's demos, including
+    a couple of older demos, feed3 and sprite6r. Also included his latest demo, hot off the
+    presses! It's a variation of the Plasmatron demo, and is found in
+    \puffin\demo\plasmatron\variation. Check out the OL demos selection once this is up and
+    running!</font> </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Added an audio DMA programming
+    sample. The new sample is in \puffin\sample\audio. Check it out!</font> </font></li>
+</ul>
+<font face="Times New Roman">
+
+<p></font><font face="Times New Roman" color="#000000">February 6, 1998</font><font
+color="#000000"> </font>
+
+<ul>
+  <li><font color="#000000"><font face="Times New Roman">PUFFIN_PATH environment variable is
+    no longer required in your autoexec.bat file! You can still use PUFFIN_PATH to point to
+    directories that contain your customized XLISP files, but default locations have already
+    been provided for convenience. The search order for XLISP files from within Puffin.exe or
+    PuffinW.exe is:</font> </font><ol>
+      <li><font color="#000000"><font face="Times New Roman">the current working directory.</font>
+        </font></li>
+      <li><font color="#000000"><font face="Times New Roman">any directories specified by the
+        PUFFIN_PATH env variable</font> </font></li>
+      <li><font color="#000000"><font face="Times New Roman">the \puffin\user directory</font> </font></li>
+      <li><font color="#000000"><font face="Times New Roman">the \puffin\util\xlisp\puffin
+        directory</font> </font></li>
+      <li><font color="#000000"><font face="Times New Roman">the \puffin\util\xlisp directory</font>
+        </font></li>
+    </ol>
+  </li>
+  <li><font face="Times New Roman" color="#000000">MCOM.DLL has been removed. All MCOM.DLL
+    functionality has been rolled into MPACKET.DLL. </font></li>
+  <li><font color="#000000"><font face="Times New Roman">MCTEST.EXE has been removed. That
+    functionality has been replaced by the MLOAD.EXE -B command. For help on the syntax, type
+    MLOAD -? at a DOS prompt after installation.</font> </font></li>
+</ul>
+
+<ul>
+  <li><font color="#000000"><font face="Times New Roman">The default VMLABS directory name has
+    changed. All files that were formerly found in the \puffin or \usr directories (released
+    by VM Labs, Inc) are NOW LOCATED IN THE \VMLABS DIRECTORY BY DEFAULT!</font> </font></li>
+  <li><font color="#000000"><font face="Times New Roman">The MGCC C-compiler directory
+    structure has been integrated with the rest of the SDK into the new \VMLABS directory
+    structure! You should remove the previous version of the compiler after installing this
+    version of the SDK.</font> </font></li>
+  <li><font color="#000000"><font face="Times New Roman">Please read the
+    \vmlabs\doc\read_gcc.txt file for instructions on how to use the MGCC compiler.
+    Installation steps are included in this readme file, but more info can be found in
+    read_gcc.txt.</font> </font></li>
+</ul>
+
+<pre><font color="#000000"><a name="puffin history"><big>History of recent Puffin changes</big></a></font></pre>
+
+<p><font color="#000000">05/11/98: </font></p>
+
+<p><font color="#000000">1. Fixed some bugs in &quot;step over interrupt&quot; in
+conjunction with &quot;step<br>
+over&quot;. </font></p>
+
+<p><font color="#000000">2. When stepping over a bra/jmp/jsr/rts with implied nop
+instruction,<br>
+the debugger will sometimes skip over the two delay slots. This<br>
+happens when an interrupt occurs at the same time and *step-over-interrupts*<br>
+is #t. You can tell that this happened because a message is displayed in<br>
+the listener window saying &quot;Done stepping over interrupt&quot;. </font></p>
+
+<p><font color="#000000">3. Merged in a change that Ian made to the memory watch window. </font></p>
+
+<p><font color="#000000">4. Fixed the handling of DMA Breakpoint clearing. </font></p>
+
+<p><font color="#000000">5. Fixed a problem which caused single-stepping to highlight the <br>
+wrong line of source text.<br>
+<br>
+04/08/98 </font></p>
+
+<p><font color="#000000">Made mload.exe use the LLAMA_FLAGS environment variable to supply
+extra<br>
+arguments to the llama command line used when assembling source files. </font></p>
+
+<p><font color="#000000">Made mload.exe echo the command line used to invoke llama. </font></p>
+
+<p><font color="#000000">Added a workaround to fix a hardware bug that causes the
+instruction tag<br>
+ram to be unavailable when pcfetch points to a cachable location. This<br>
+should fix breakpoints in cached code. However, there still seems to be<br>
+a bug in the &quot;step over interrupt&quot; facility. </font></p>
+
+<p><font color="#000000">Made the ace360 stub clear dma exceptions after reporting them. </font></p>
+
+<p><font color="#000000">04/07/98 (again): </font></p>
+
+<p><font color="#000000">1. Changed the name of the -u switch to -~ to make it less likely
+that<br>
+it would be typed accidentally. </font></p>
+
+<p><font color="#000000">2. Added a new -u switch that reads an update file of the
+following<br>
+format to simplify updating flash memory and make it safer: </font></p>
+
+<p><font color="#000000"># this is a flash update<br>
+type: flashUpdate # file signature<br>
+file: test.bin # binary filename<br>
+src: 00700000 # address of buffer in hex<br>
+dst: 00000000 # address in flash to program<br>
+cnt: 00080000 # number of scalars to write<br>
+<br>
+04/07/98: </font></p>
+
+<p><font color="#000000">1. Added a -a switch to mload to allow ace360 memory to be
+loaded.<br>
+(type mload -? for more information) </font></p>
+
+<p><font color="#000000">2. Added a -u switch to mload to allow a buffer in ace360 memory
+to<br>
+be programmed into flash memory. (type mload -? for more information) </font></p>
+
+<p><font color="#000000">03/31/98: </font></p>
+
+<p><font color="#000000">1. Fixed a bug in the stub that caused problems when trying to
+receive<br>
+data from the comm bus using the mcom interface. </font></p>
+
+<p><font color="#000000">2. Added an acknowledgement after a fast download so that the
+debugger<br>
+doesn't try to start a program running when it hasn't finished<br>
+downloading. This was necessary to support the Motorola Blackbird<br>
+stub that has internal buffering of data going to the comm bus.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">03/27/98: </font></p>
+
+<p><font color="#000000">1. Added a 'q' option to exit from the 'monitoring exceptions'
+mode in<br>
+mload. </font></p>
+
+<p><font color="#000000">2. Substantially improved the speed of loading code into iram on
+the<br>
+oz board. </font></p>
+
+<p><font color="#000000">3. Added a 'bload' function to puffin. You can now type: </font></p>
+
+<p><font color="#000000">(bload #x80000000 &quot;foo.bin&quot;) </font></p>
+
+<p><font color="#000000">to load the file &quot;foo.bin&quot; into system ram at the
+address 80000000.<br>
+In general, the first argument is the load address and the second<br>
+argument is the file to load. The file is assumed to be in merlin<br>
+byte order.<br>
+</font></p>
+
+<p><font color="#000000">03/11/98: </font></p>
+
+<p><font color="#000000">1. Added a simple vdg that implements vidVrst, vidVlen, vidVint,
+vidVcnt,<br>
+vidHlen, vidHint and vidHcnt and generates video interrupts. Writes to<br>
+any other register are ignored and reads from any other register return<br>
+zero </font></p>
+
+<p><font color="#000000">2. Added a very dumb dma controller that accepts write commands
+and<br>
+ignores them and accepts read commands and returns zero.<br>
+</font></p>
+
+<p><font color="#000000">03/05/98: </font></p>
+
+<p><font color="#000000">1. Fixed restart. </font></p>
+
+<p><font color="#000000">2. Added a new built-in function 'report-dma-exception' that is
+called by<br>
+debug.lsp when running under the gui debugger when a dma exception<br>
+occurs. Internally, this function calls theApp.OnDmaException().<br>
+<br>
+</font></p>
+
+<p><font color="#000000">03/04/98: </font></p>
+
+<p><font color="#000000">1. Added a dummy comm bus handler for audio dma. Any packet sent
+to the<br>
+audio dma address (67) will be sent to the proverbial bit bucket clearing<br>
+the receiver full bit and thus allowing another packet to be sent. </font></p>
+
+<p><font color="#000000">2. Implemented sparse linear dma for everything except bytes.
+Beware that<br>
+the emulator doesn't enforce the alignment restrictions imposed by the<br>
+hardware. Make sure your buffers are aligned according to Jude's diagram<br>
+lininfo.eps that can be found in /al/judek/work/sch/LININFO.EPS.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">02/05/98: </font></p>
+
+<p><font color="#000000">1. Added a -b option to mload.exe to load binary files. This
+replaces the<br>
+load facility in mctest.exe. For instance, to load the Doom demo: </font></p>
+
+<p><font color="#000000">mload -b doom1.wad:80800000 merldoom.cof -r </font></p>
+
+<p><font color="#000000">Note that the binary loader uses the current mpe as a helper mpe.<br>
+This means that it will load transfer.mpo into that mpe and use it<br>
+to support the fast loader. Any program that was already running<br>
+in that mpe will be stopped and overwritten. If you need to load<br>
+a binary file without using an mpe, you can use -s before the -b<br>
+to cause the slow loader to be used to load the binary file. You<br>
+probably don't want to do that though because it is *very* slow. </font></p>
+
+<p><font color="#000000">2. Added a delay between loading transfer.mpo and starting the
+first<br>
+transfer to give the helper mpe time to start and initialize.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/28/97: </font></p>
+
+<p><font color="#000000">1. Changed the number of clock cycles the emulator executes at
+each<br>
+iteration of the idle loop to improve gui performance in puffinw.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/23/98: </font></p>
+
+<p><font color="#000000">1. Integrated Ian's changes to the gui. </font></p>
+
+<p><font color="#000000">2. Restructured the debug stub to make it easier to build
+versions for<br>
+other platforms (like Blackbird).<br>
+<br>
+01/22/98: </font></p>
+
+<p><font color="#000000">1. Made the reset button reset the hardware. To work, this
+requires a<br>
+modification of the Oz board.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/21/98 (again): </font></p>
+
+<p><font color="#000000">1. Made puffin.exe (the command line debugger) work with the
+hardware. </font></p>
+
+<p><font color="#000000">2. Made the build script build transfer.mpo. </font></p>
+
+<p><font color="#000000">3. Made the exezip script install transfer.mpo.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/21/98: </font></p>
+
+<p><font color="#000000">1. Added the *step-over-interrupts* global variable that controls
+the<br>
+behavior of single stepping in the presence of interrupts. When this<br>
+variable is set to #t (which it is by default), interrupt service<br>
+routines are stepped over allowing easier debugging of non-interrupt<br>
+code. To allow stepping into interrupt service routines, set this<br>
+variable to #f. </font></p>
+
+<p><font color="#000000">2. PuffinW will now remember window positions if you create a
+'cfg'<br>
+subdirectory of your main 'puffin' directory (the directory your<br>
+PUFFIN_PATH environment variable points to).<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/16/98: </font></p>
+
+<p><font color="#000000">1. Made the fast downloader close the mcom connection at the end
+of<br>
+a download.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">01/14/98: </font></p>
+
+<p><font color="#000000">1. Added the addwc/subwc/cmpwc instructions as well as the
+dec_only<br>
+and mvr instructions and the 32 bit forms of the alu instructions.<br>
+The 32 bit mvr immediate instruction and the 32 bit ecu instructions<br>
+are still missing as is the eor immediate instruction. </font></p>
+
+<p><font color="#000000">2. Removed the range restrictions on the alu pre-shifts and the
+sat<br>
+instruction. </font></p>
+
+<p><font color="#000000">3. Reworked guidebug.lsp to move the window size and position
+functions<br>
+to the C GUI code. This will allow Ian to save and restore window<br>
+positions from the puffin.ini file instead of saving them in<br>
+a lisp source file. (Eric: unfortunately, this will require some<br>
+rework of puffintk) </font></p>
+
+<p><font color="#000000">4. Added an extra parameter to the mcomConnect and
+mcomConnectToReceive<br>
+functions to specify the ip address of the ace card. </font></p>
+
+<p><font color="#000000">5. Made the fast loader find the 'transfer.mpo' file relative to
+the<br>
+first directory in PUFFIN_PATH. The path is constructed by taking<br>
+the first directory in PUFFIN_PATH and appending '\bin\transfer.mpo'<br>
+for Win95 and '/bin/transfer.mpo' for Unix.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">12/17/97: </font></p>
+
+<p><font color="#000000">1. Fixed a bug in the overlay support that made overlays in any<br>
+mpe other than mpe 0 fail.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">12/09/97: </font></p>
+
+<p><font color="#000000">1. Fixed a bug in the ace stub. </font></p>
+
+<p><font color="#000000">2. Added &quot;*.s&quot; to the Load Source file filter. </font></p>
+
+<p><font color="#000000">3. Fixed various other bugs. </font></p>
+
+<p><font color="#000000">4. Updated the VM Labs copyright notice.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">12/07/97: </font></p>
+
+<p><font color="#000000">1. Fixed a bug in the mload.exe -dm command. </font></p>
+
+<p><font color="#000000">2. Fixed a bug in cload. </font></p>
+
+<p><font color="#000000">3. (Eric) Added some of the new opcodes. </font></p>
+
+<p><font color="#000000">4. Added overlay support for .mpo files only.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">12/01/97: </font></p>
+
+<p><font color="#000000">1. Added the :ignore-before-after? keyword argument to mload and<br>
+cload to allow loading object files without loading before or<br>
+after methods.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">11/21/97: </font></p>
+
+<p><font color="#000000">1. Enable caching of the register window to improve window update<br>
+preformance.<br>
+<br>
+</font></p>
+
+<p><font color="#000000">11/20/97: </font></p>
+
+<p><font color="#000000">1. Moved the breakpoint support from the debug stub back into the<br>
+debugger to simplify the stub.<br>
+<br>
+<a href="#top">[ back to top ]</a></font></p>
+
+<p><font color="#000000"><a name="llama history"><big>History of recent Llama assembler
+changes</big></a></font></p>
+
+<p><font color="#000000">llama version 1.105<br>
+-------------------<br>
+Changes since the last SDK release are all bug fixes,<br>
+except that:<br>
+<br>
+(1) The -v option has been enhanced to<br>
+provide more useful output.<br>
+<br>
+(2) Under Windows, all warnings and errors are output<br>
+to the standard output. This allows warnings/errors<br>
+to easily be captured into a file from COMMAND.COM.<br>
+HOWEVER, note that some old makefiles which do<br>
+things like:<br>
+llama -fcoff foo.s &gt; foo.o<br>
+may no longer work, if there are any warnings at<br>
+all in the file. Change these to:<br>
+llama -fcoff -o foo.o foo.s<br>
+</font></p>
+
+<p><font color="#000000">llama version 1.101<br>
+-------------------<br>
+Changes since the last SDK release are all bug fixes,<br>
+except that the -v option has been enhanced to<br>
+provide more useful output.<br>
+</font></p>
+
+<p><font color="#000000">llama version 1.92<br>
+------------------<br>
+(1) Fixed a bug in S-Record output format. </font></p>
+
+<p><font color="#000000">(2) Made all messages go to stdout in the DOS <br>
+version (so they can be captured in a file). </font></p>
+
+<p><font color="#000000">(3) Added a &quot;maximum size&quot; parameter to the<br>
+.overlay directive; for example,<br>
+.overlay foo,1024<br>
+declares an overlay which must be less than<br>
+1K bytes in size. See the assembler documentation<br>
+for more details on overlays. </font></p>
+
+<p><font color="#000000">llama version 1.91<br>
+------------------<br>
+Changes to the assembler since the last release<br>
+(see the documentation in doc/html/llama for<br>
+more detailed information): </font></p>
+
+<p><font color="#000000">(1) The addr instruction now accepts full 32 bit<br>
+operands. This means that you should write<br>
+your immediate constants as 16.16 fixed point<br>
+numbers. For example, to add the integer 1<br>
+to the ry register, do:<br>
+addr #(1&lt;&lt;16),ry<br>
+or<br>
+addr #fix(1.0,16),ry<br>
+instead of the old notation, which was:<br>
+addr #1,ry </font></p>
+
+<p><font color="#000000">The latter form will still be accepted (for now)<br>
+but a warning will be printed. In the next<br>
+release of the assembler, addr #1,ry will actually<br>
+add the (32 bit) value 1. </font></p>
+
+<p><font color="#000000">The .revision directive (or the -r# command line<br>
+option) can be used to control this behaviour.<br>
+Specifying &quot;.revision 19&quot; (or -r19) will suppress<br>
+the warning. Specifying &quot;.revision 21&quot; (or -r21)<br>
+will cause all constants to silently be treated as<br>
+32 bits. </font></p>
+
+<p><font color="#000000">(2) The short vector multiply instructions now accept<br>
+fully 32 bit shifts. In the current manual, and in<br>
+previous versions of the assembler, the shifts on<br>
+the dotp, mul_p, and mul_sv instructions were<br>
+specified as though the quantities being multiplied<br>
+were 16 bit values. llama now accepts 32 bit relative<br>
+shifts, and will issue warnings for obsolete 16 bit<br>
+relative shifts. </font></p>
+
+<p><font color="#000000">Old Code --&gt; New Code<br>
+mul_p ru,v0,&gt;&gt;#8,v0 --&gt; mul_p ru,v0,&gt;&gt;#24,v0<br>
+mul_sv r1,v2,&gt;&gt;#14,v2 --&gt; mul_sv r1,v2,&gt;&gt;#30,v2<br>
+dotp v0,v1,&gt;&gt;#16,r20 --&gt; dotp v0,v1,&gt;&gt;#32,r20 </font></p>
+
+<p><font color="#000000">Note that the immediate shift of 0 remains the same,<br>
+because adding 16 to it would conflict with an<br>
+existing shift amount. </font></p>
+
+<p><font color="#000000">The .revision directive (or the -r# command line<br>
+option) can be used to control this behaviour.<br>
+Specifying &quot;.revision 19&quot; (or -r19) will suppress<br>
+warnings about obsolete forms. Specifying &quot;.revision 21&quot;<br>
+(or -r21) will cause an immediate shift of 16 to<br>
+be interpreted the same as the old immediate shift<br>
+of 0. This will be the behaviour in the next<br>
+release of the assembler, so make sure that you<br>
+fix any warnings llama issues about 16 bit shifts<br>
+(or at least insert .revision directives into your<br>
+source code!) </font></p>
+
+<p><font color="#000000">(3) New directives, .cache and .nocache, have been added<br>
+to control code alignment. The .cache directive forces<br>
+subsequent code to be properly aligned for running in<br>
+cache, using whatever cache line size was specified<br>
+on the command line (or the default value of 32, if<br>
+none was specified). The .nocache directive turns<br>
+off code alignment, which will slightly reduce the<br>
+size of executed code. It is a very grave error to<br>
+use .nocache in code which actually will run in<br>
+cached space (e.g. in system RAM) rather than in<br>
+local MPE memory. </font></p>
+
+<p><font color="#000000">(4) A check has been added for a cache/DMA interaction bug.<br>
+If any DMA or comm bus control register is accessed<br>
+in the second-to-last packet of a cache line, the<br>
+subsequent cache miss can cause the register access<br>
+to be repeated, which usually causes a crash. llama<br>
+will automatically insert padding to try to avoid<br>
+this situation, and will print a warning if it is<br>
+unable to (for example, if the access occurs in a<br>
+branch delay slot). Note that the padding which llama<br>
+adds occupies space, but does not (otherwise) affect<br>
+execution time. </font></p>
+
+<p><font color="#000000">(5) The COFF output file format has been extended to allow<br>
+debugging of larger files. This changes will cause<br>
+object files assembled with the new release of llama<br>
+to crash the old linker. Make sure that you use the new<br>
+linker (vmld.exe) which comes with this SDK release. </font></p>
+
+<p><font color="#000000">(6) Information about C source file names and line numbers<br>
+is now passed along to the puffin debugger if the C file<br>
+is compiled with mgcc's &quot;-g&quot; flag. Puffin does not yet<br>
+understand how to step C source lines; pressing the<br>
+single step button in puffin will step only 1 assembly<br>
+language statement, which may not be all of the C line. </font></p>
+
+<p><font color="#000000">(7) There have, of course, been numerous bug fixes and minor<br>
+enhancements.<br>
+<br>
+Version 1.83<br>
+------------<br>
+Added the .revision directive to allow for<br>
+changes in assembly language syntax. </font></p>
+
+<p><font color="#000000">Added a warning for use of the old addr #n,rx form;<br>
+this should now be written as &quot;addr #(n&lt;&lt;16),rx&quot;. </font></p>
+
+<p><font color="#000000">Changed the dotp, mul_p, and mul_sv accept 32 bit<br>
+shift amounts as well as 16 bit ones. This creates<br>
+one ambiguity (the meaning of &quot;&gt;&gt;#16&quot;); for now<br>
+this is resolved with the old meaning, but a warning<br>
+is printed for this.<br>
+</font></p>
+
+<p><font color="#000000">Allowed &gt;&gt; modifier in front of the first register in<br>
+ls instructions, and &lt;&gt; modifier in front of the<br>
+first register in rotate instructions. </font></p>
+
+<p><font color="#000000">Fixed an off-by-one error in line numbers inside<br>
+.if statements. </font></p>
+
+<p><font color="#000000">Cleaned up error handling and reporting to reduce<br>
+redundant error messages. </font></p>
+
+<p><font color="#000000">Version 1.82<br>
+------------<br>
+Fixed a bug in the PUFFIN_PATH include<br>
+file search code. </font></p>
+
+<p><font color="#000000">Version 1.81<br>
+------------<br>
+Added -I switch for giving explicit paths<br>
+for include files. </font></p>
+
+<p><font color="#000000">Added the ceil() function. </font></p>
+
+<p><font color="#000000">Improved documentation for equates.</font></p>
+
+<p><font color="#000000"><a href="#top">[ back to top ]</a></font></p>
+
+<p><font color="#000000"><a name="mml history"><big>History of recent MML changes</big></a></font></p>
+
+<p><font color="#000000">See <a href="../../lib/src/mutil/changelog.txt">\vmlabs\lib\src\mutil\ChangeLog.txt</a>
+for a list of recent<br>
+mutil changes.<br>
+</font></p>
+
+<p><font color="#000000"><big>July release</big>: </font></p>
+
+<p><font color="#000000">MML3D: </font></p>
+
+<p><font color="#000000">Added a number of speed improvements. </font></p>
+
+<p><font color="#000000">Implemented edge anti-aliasing code. This implementation is<br>
+still very slow, but we think we can improve it. </font></p>
+
+<p><font color="#000000">Fixed a bug that caused bad pixels to be written at the<br>
+edges of texture mapped polygons.<br>
+<br>
+--------------------------------------------------------------------<br>
+Merlin libraries: April 1998 </font></p>
+
+<p><font color="#000000">The following libraries are provided: </font></p>
+
+<p><font color="#000000">libmml3d.a -- 3D libraries. These are still very primitive, and<br>
+will be much improved before our next release. The 2D<br>
+library and utility library (libmml2d.a and libmutil.a) must<br>
+also be linked if you use this. </font></p>
+
+<p><font color="#000000">libmml2d.a -- 2D libraries. Again, very primitive, and will<br>
+be much improved. See also some of the sample code for<br>
+some 2D primitive code for sprites, etc. (C APIs for<br>
+these will be available as part of libmml2d in a<br>
+future release). Make sure you link libmutil.a also. </font></p>
+
+<p><font color="#000000">libmutil.a -- Utility libraries. Basic utility functions<br>
+for programming on Merlin.<br>
+</font></p>
+
+<p><font color="#000000">libjpeg.a -- The Independent JPEG Group's library for<br>
+JPEG decompression. See the documentation in<br>
+vmlabs/doc/jpeg. We expect to replace this with a<br>
+faster, Merlin specific library, but this one is<br>
+solid, portable code that will let you get started<br>
+with JPEG'd images.</font></p>
+
+<p><font color="#000000"><a href="#top">[ back to top ]</a></font></p>
+</body>
+</html>

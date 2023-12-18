@@ -1,0 +1,40 @@
+
+SameGame General Contents Readme:
+
+Within Contents we find the sounds and artwork files needed to play
+SameGame.  For example, each of the Poke, Balls, and Toxic directories
+contain the artwork, sound, and configuration files needed to play
+that particular flavour/version of SameGame.
+
+The artwork files which *must* be present are: background.tga,
+extra.tga, tiles.tga, and title_pic.tga.  If the game uses mats, each
+of these is stored in Mat0.tga, Mat1.tga, Mat2.tga, etc.  If the game
+uses animation then animate.tga must be present. See Readme.Art for
+details about artwork.
+
+As well, each of the Poke, Balls, and Toxic directories *must* contain
+a configuration file sg.cnf.  To implement one of these flavours of
+SameGame, copy the appropiate sg.cnf file up into the directory
+containing SameGame.cof IF YOU ARE RUNNING SAMEGAME FROM A PC.  (If
+SameGame is on a DVD, it expects to find the config file at:
+/udf/nuon/sg.cnf.  See Readme.DVD for more info.)
+
+SameGame looks for the following sound files: click.raw,
+changetile.raw, bigdelete.raw, bigdeleteall.raw, bonus.raw, and
+nobonus.raw.  If SameGame can't find or load one of these files, it
+will not try to play it during the game.  Thus a particular sound
+effect can be effectively turned off by removing the corresponding
+.raw file from the directory.  See Readme.Snd for details about sound.
+
+To create a new version of SameGame you will need to have at least the
+4 artwork .tga files plus a config file.  (Mats and sound effects are
+nice too, but the game will run without them.)  The sg.cnf files
+accompanying the Poke, Toxic, and Balls versions of SameGame are
+heavily commented and so can act as a prototype for any new config file.
+
+SameGame now has the capacity to animate a group just before it
+disappears. To add animation, create the necessary artwork in
+animate.tga which must be a 352x272 pixel picture and set the
+NUM_ANIM_STEPS variable in sg.cnf appropiately.  More information is
+found in Readme.ani. Also look at the Toxic Avenger and Balls versions
+of SameGame as they now have animation.

@@ -1,0 +1,46 @@
+vmdump - coff file display and convertion
+
+vmdump is an ad hoc tool for generating certain views of a coff
+file. Most of it's functionality will be moved to vmld.
+
+Invocation
+
+	vmdump option dataspec:file ...
+
+vmdump applies the action specified by "option" to a "dataspec"
+portion of a coff file. For most options, the dataspec is a
+comma-separated list of section names, or symbol names, as
+appropriate. For --snap option (see below) a dataspec is a
+requested memory range.
+
+Either long or short option format is supported.
+
+vmdump supports the following opitons:
+
+-h (--headers) sect[,sect...]:file
+	Displays general section information (similar to coffdump -h)
+
+-s (--symbols) sym[,sym...]:file
+	Displays symbolic information (similar to coffdump -s)
+
+-d (--debugging) sym[,sym...]:file
+	Displays extended symbolic information
+
+(The following options generate the binary output)
+
+-T (--symtab) sym[,sym...]:file
+	Generates the coff file consisting of just a linkable
+	symbol table
+
+-S (--Srecord) sect[,sect...]:file
+	Generates contents of listed sections as an S-record file
+
+-B (--bin)
+	Dumps a pure contents of listed sections as a binary file
+
+-P (--snap) start,size:file
+	Dumps a pure contents of a _memory range_ (including
+	inter-section gaps) as a binary file.
+
+VERSION INFO: $Id: vmdump.txt,v 1.1 2000/10/11 22:33:07 cheiny Exp $
+
