@@ -24,6 +24,10 @@
 #endif
 #endif
 
+#if defined(__nuon__)
+#define __go32_types__
+#endif
+
 # include <stddef.h>	
 # include <machine/types.h>
 

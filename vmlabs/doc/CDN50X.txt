@@ -1,0 +1,169 @@
+libcdn50x.a
+CD access library for Samsung N50x players.
+Andreas Binner
+
+
+DISCLAIMER
+==========
+
+This library can be used "as-is". It is a hack, but it seems to work. I'm not responsible for any damage or loss that may happen by using this library. It is not very well debugged either. However, feel free to ask me questions. I can't promise that I will have the time to support this library in future.
+
+==========
+
+libcdn50x is a hardware dependent library that alows to load data from CD on Samsung N50x players. It contains the low-level drive access code and an ISO9660 file system.
+
+NOTE: The library needs MPE 1 while reading data!
+
+
+Here a brief API description:
+
+Low-Level
+=========
+
+int CDInit(void)
+
+Loads the CDI helper on MPE 1 and initializes the drive. Returns "0" on success, and "-1" in case of an error (e.g. MPE 1 was not available).
+
+int CDExit()
+
+Stops and frees MPE 1. Shuts down CDI.
+
+int CDReadSectors(int lsn,int count,char *addr, int isXA)
+
+Reads 'count' sectors, starting at logical sector 'lsn' and stores them starting at address 'addr'. The 'isXA' flag  has to be set to "1" for CDROM-XA (Mode 2 Form 1) disks. The call is blocking until the sectors are read or an error occurs.
+
+Returns:
+
+" 0": Success.
+"-1": Not initialized
+"-2": Timeout
+"-3": Read error
+
+
+ISO9660
+=======
+
+NOTE: All following APIs take a 'err' pointer to receive a stdio error code. "0" means 'no error'!
+
+void  *iso_init(long para, int * err)
+
+Initialize ISO. 'para' is the start sector of the session. '0' means first session. Returns a context pointer, to be passed into all other calls!
+
+The following APIs are like the stdio calls and take the context returned from iso_init as the first parameter.
+
+void *iso_open(void *context, const char * path, int flags, int mode, int * err)
+
+Open a file. Returns a file handle, to be used in subsequent calls as the 'fp' parameter.
+
+int iso_close(void *context, void * fp, int * err)
+
+Close a file.
+
+int iso_read(void *context, void * fp, void * ptr, int len, int * err)
+
+Read from a file.
+
+int iso_lseek(void *context, void * fp, int offt, int whence, int * err)
+
+Seek within a file.
+
+int iso_lstat(void *context, const char * path, struct stat * st, int * err)
+
+Fill stat struct for given file (given by path)
+
+int iso_fstat(void *context, void * fp, struct stat * st, int * err)
+
+Fill stat struct for given opened file.
+
+
+'stat' is defined in 'stat.h' as:
+
+struct stat {
+  dev_t         st_dev;      /* device */
+  ino_t         st_ino;      /* inode */
+  mode_t        st_mode;     /* protection */
+  nlink_t       st_nlink;    /* number of hard links */
+  uid_t         st_uid;      /* user ID of owner */
+  gid_t         st_gid;      /* group ID of owner */
+  dev_t         st_rdev;     /* device type (if inode device) */
+  off_t         st_size;     /* total size, in bytes */
+  blksize_t     st_blksize;  /* blocksize for filesystem I/O */
+  blkcnt_t      st_blocks;   /* number of blocks allocated */
+  time_t        st_atime;    /* time of last access */
+  time_t        st_mtime;    /* time of last modification */
+  time_t        st_ctime;    /* time of last change */
+};
+
+int iso_opendir(void *context, const char *path, iso_dir *dir, int *err)
+
+Opens the directory 'path'. Fills out a iso_dir structure provided by the caller. Returns "-1" in the case of an error (check 'err' for the reason), otherwise "0" for OK.
+NOTE: There is no need to 'close' a directory since all information is stored in the application provided 'dir' structure!
+
+int iso_readdir(void *context, iso_dir *dir, char *name, struct stat * st, int *err)
+
+Reads the next entry of the directory given by 'dir'. The name is copied into 'name' and the stat structure 'st' is filled out. Returns "1" if there are more directory entries, "0" if the last entry was read and "-1" in the case of an error (check 'err').
+
+int iso_rewinddir(void *context, iso_dir *dir, int *err)
+
+Resets the directory 'dir' to the first entry.
+
+
+Examples
+========
+
+1. Read 2KB from the file 'foo.bar'
+ 
+int err,l;
+void *vol,*f;
+char buffer[2048];
+
+CDInit();
+vol=iso_init(0,&err);
+if (!err)
+{
+   f=iso_open(vol,"foo.bar",0,0,&err);
+   if (!err)
+   {
+       l=iso_read(vol,f,buffer,2048,&err);
+	   iso_close(vol,f,&err);
+   }
+}
+CDExit();
+
+2. Walk a directory recursivly
+
+int WalkDir(char *path,iso_dir *dir)
+{
+	int ret,err;
+	char name[256];
+	char newpath[256];
+	struct stat st;
+	iso_dir ndir;
+	
+	for(;;)
+	{
+		ret=iso_readdir(vol,dir,name,&st,&err);
+		if (!ret || err)
+			break;
+
+		strcpy(newpath,path);
+		strcat(newpath,name);
+		if (st.st_mode&S_IFDIR)
+		{
+			strcat(newpath,"/");
+			iso_opendir(vol,newpath,&ndir,&err);
+			WalkDir(newpath,&ndir);
+		}
+		else
+		{
+			/* Put your code here */
+		}
+	}
+}
+
+To read the entire disk directory:
+
+iso_dir root;
+
+iso_opendir(vol,"/",&root,&err);
+WalkDir("/",&root);
