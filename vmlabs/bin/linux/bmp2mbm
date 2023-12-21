@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -x "`which wine`" ]; then
+	SCRIPT_DIR="`dirname "$0"`"
+	WINEDEBUG=-all wine "${SCRIPT_DIR}"/../win32/bmp2mbm.exe "$@"
+	exit $?
+else
+	echo "*** ERROR: Need WINE installed to run bmp2mbm.exe on Linux ***"
+	exit 1
+fi

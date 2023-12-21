@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ -x "`which wine`" ]; then
+	SCRIPT_DIR="`dirname "$0"`"
+	WINEDEBUG=-all wine "${SCRIPT_DIR}"/../win32/CreateNuonCD.exe "$@"
+	exit $?
+fi
+
 echo "*** WARNING: Using no-op version of CreateNuonCD ***"
 
 touch NUON.CD
