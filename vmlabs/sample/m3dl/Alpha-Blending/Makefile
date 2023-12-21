@@ -34,12 +34,12 @@ NUON.CD: cd_app.cof
 cd_app.cof: transparency.cof
 	coffpack -o cd_app.cof transparency.cof
 
-transparency.cof: ckrbd.mbi $(OBJ)
+transparency.cof: ckrbd.MBI $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LIBS)
 
 ########################
 
-ckrbd.mbi: ckrbd.bmp
+ckrbd.MBI: ckrbd.bmp
 	bmp2mbm -IMG -YCRCB -16 -NM ckrbd.bmp
 
 load: transparency.cof

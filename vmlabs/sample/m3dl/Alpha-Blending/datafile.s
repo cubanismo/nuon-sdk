@@ -16,5 +16,5 @@ All rights reserved.
 
 	.align.v
 _BackgroundMBIhiycc:
-	.binclude "ckrbd.mbi"
+	.binclude "ckrbd.MBI"
 

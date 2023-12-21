@@ -16,7 +16,7 @@ All rights reserved.
 
 	.align.v
 _BackgroundImage:
-	.binclude "bg.mbi"
+	.binclude "bg.MBI"
 
 
 
@@ -24,19 +24,19 @@ _BackgroundImage:
 
 	.align.v
 _SpriteData:
-	.binclude "sprite.mbm"
+	.binclude "sprite.MBM"
 
 	.export	_SpriteData2
 
 	.align.v
 _SpriteData2:
-	.binclude "sprite2.mbm"
+	.binclude "sprite2.MBM"
 
 
 	.export	_SpriteData3
 
 	.align.v
 _SpriteData3:
-	.binclude "sprite3.mbm"
+	.binclude "sprite3.MBM"
 
 

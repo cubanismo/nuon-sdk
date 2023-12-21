@@ -38,9 +38,9 @@ transparency.cof: $(OBJS)
 
 ########################
 
-datafile.o: datafile.s sprite.mbm sprite2.mbm sprite3.mbm bg.mbi
+datafile.o: datafile.s sprite.mbm sprite2.mbm sprite3.mbm bg.MBI
 
-bg.mbi: bg.bmp
+bg.MBI: bg.bmp
 	bmp2mbm -YCRCB -16 -IMG bg.bmp
 
 sprite.mbm: sprite.bmp
