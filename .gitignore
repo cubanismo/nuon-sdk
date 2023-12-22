@@ -3,6 +3,7 @@
 *.cof
 *.ycrcb
 *~
+*.swp
 NUON.CD
 
 # Special-case some SDK-provided object files
