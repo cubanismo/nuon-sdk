@@ -437,6 +437,7 @@ typedef volatile struct
 int _DeviceDetect(int slot);
 
 ControllerData *_ControllerInitialize(void);
+void _ControllerPollRate(int n);
 void *_ControllerExtendedInfo(int slot);
 
 /* NOTE: the ControllerData struct is already marked as volatile */
