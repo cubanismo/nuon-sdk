@@ -7,22 +7,24 @@ REM Convert TMP to its shortname format
 
 CALL :makeshort TMP "%TMP%"
 
-REM Use the the modified specfile from the nuon SDK, substituting the
-REM appropriate VMLABS dir into it in a temporary file first.
+REM Use the the modified specfile from the nuon SDK, prepending the
+REM appropriate VMLABS dir varilable to it in a temporary file first.
 CALL maketemp TMPSPECFILE
 CALL :makeshort TMPSPECFILE "%TMPSPECFILE%"
 
 SET "VMLABS_SLASH=%VMLABS:\=/%"
-@powershell -Command "(Get-Content '%VMLABS%\lib\specs') -replace '%%%%VMLABSDIR%%%%','%VMLABS_SLASH%' | Out-File -encoding ASCII '%TMPSPECFILE%'"
+echo *vmlabsdir:> "%TMPSPECFILE%"
+echo %VMLABS_SLASH%>> "%TMPSPECFILE%"
+echo.>> "%TMPSPECFILE%"
+type "%VMLABS%\lib\specs" >> "%TMPSPECFILE%"
 SET VMLABS_SLASH=
 
 mgcc-real -specs="%TMPSPECFILE%" %*
-SET MYERRORLEVEL=%ERRORLEVEL%
+SET SAVEDERRORLEVEL=%ERRORLEVEL%
 
 del "%TMPSPECFILE%"
 
-ENDLOCAL & SET MYERR=%MYERRORLEVEL%
-exit /b %MYERR%
+exit /b %SAVEDERRORLEVEL%
 
 :makeshort
 SET %1=%~s2

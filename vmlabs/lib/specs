@@ -1,9 +1,6 @@
 *asm:
 -nologo -compiled -fcoff -c %{mreopt:-O} %{mreopt-more:-O2}
 
-*vmlabsdir:
-%%VMLABSDIR%%
-
 *asm_final:
 
 
