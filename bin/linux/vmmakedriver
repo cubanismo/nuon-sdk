@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if test -n "$1"
+then
+    echo "Blessing $1"
+    "${VMBLESSDIR}/linux-${VMHOSTARCH}/blessdriver" $1
+    echo "Signing blessings"
+    "${VMBLESSDIR}/linux-${VMHOSTARCH}/gpg" -b --homedir "${VMBLESSDIR}/gnupghome" --digest-algo md5 --default-key "$2" "$1.bless"
+    echo "Creating $1.blessings"
+    cat "$1.bless" "$1.bless.sig" > "$1.blessings"
+    echo "Padding $1.blessings"
+    "${VMBLESSDIR}/linux-${VMHOSTARCH}/paddriver" "$1.blessings"
+    cat "$1.blessings.padded" $1 > "$1.driver"
+    rm "$1.blessings" "$1.bless" "$1.bless.sig" "$1.blessings.padded"
+else
+    echo "Usage: $0 driver key-name"
+fi

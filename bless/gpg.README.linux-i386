@@ -1,0 +1,5 @@
+Built from the GNU Privacy Guard 1.1.1 source code, on Red Hat Linux 7.1
+default install (*NOT* Red Hat Enterprise Linux 7.1), after deleting
+/usr/include/gdbm.h, with the following command line:
+
+./configure --enable-static=yes --enable-shared=no --disable-nls --disable-dynload --with-included-zlib --prefix=/home/jjones/gnupg-install && make install

@@ -6,6 +6,8 @@
 *.swp
 NUON.CD
 
+/bless/gnupghome/random_seed
+
 # Special-case some SDK-provided object files
 !/vmlabs/lib/gcrt0p.o
 !/vmlabs/lib/crt0p.o

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if test -n "$1"
+then
+    echo "Blessing $1"
+    if test -n "$2"
+    then
+        "${VMBLESSDIR}/linux-${VMHOSTARCH}/blessapp" $1 $2
+    else
+        "${VMBLESSDIR}/linux-${VMHOSTARCH}/blessapp" $1
+    fi
+    echo "Signing blessings"
+    if test -n "$3"
+    then
+        "${VMBLESSDIR}/linux-${VMHOSTARCH}/gpg" -b --homedir "${VMBLESSDIR}/gnupghome" --digest-algo md5 --default-key "$3" "$1.bless"
+    else
+        "${VMBLESSDIR}/linux-${VMHOSTARCH}/gpg" -b --homedir "${VMBLESSDIR}/gnupghome" --digest-algo md5 --default-key "Application" "$1.bless"
+    fi
+    echo "Creating $1.blessings"
+    cat "$1.bless" "$1.bless.sig" > "$1.blessings"
+    echo "Padding $1.blessings"
+    "${VMBLESSDIR}/linux-${VMHOSTARCH}/padapp" "$1.blessings"
+    cat "$1.blessings.padded" $1 > "$1.app"
+    rm "$1.blessings" "$1.bless" "$1.bless.sig" "$1.blessings.padded"
+else
+    echo "Usage: $0 app [app-type] [key-name]"
+fi
+
+
+
+
+
+

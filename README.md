@@ -77,3 +77,12 @@ now it's a separate manual step. Note there are win32 versions of the signing
 tools attached later in that thread if you're on Windows and don't want to set
 up the whole virtual machine or aren't comfortable with Linux command line
 tools.
+
+## Acknowledgements
+
+Many thanks to the VM labs employees for developing the Nuon technology and
+releasing a public/homebrew SDK for it.
+
+Special thanks to EdgeConnector and mgarcia for coercing the Nuon authentication
+tools and signing keys included in this version of the SDK into working again
+and porting them to Windows.

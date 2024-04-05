@@ -1,0 +1,31 @@
+Makeapp authentication windows port.
+
+Copy this folder to %VMLABS%\gnupg and include %VMLABS%\gnupg in your env var path
+Contains keys and pass phrase from EdgeConnector.
+Run makeapp.bat ie: makeapp APP_NAME.cof 
+
+
+Compiled with:
+https://github.com/fsb4000/gcc-for-Windows98/releases/ (win32 686 target)
+x86-64 was compiled with mingw-x86-64
+
+To compile windows exe's, just replace :
+
+#include <netinet/in.h> 
+to
+#include <winsock.h>
+
+in bless.c and blessdisk.c
+
+In the Makefile, set CC to:
+CC = C:\gcc_win98\bin\gcc -std=c99
+
+Add -lws2_32 to each line, ie:
+$(CC) -g -o $@ -I../include bless.c md5c.c -lws2_32
+
+
+Folder .gnupg contains keys and pass phrase from EdgeConnector 
+https://www.thehelper.net/threads/nuon-authentication-tools-thread-emulating-older-outdated-versions-of-linux.167407/post-1394668
+
+Issues and questions, just ask.
+mgarcia

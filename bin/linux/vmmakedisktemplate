@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if test -n "$1"
+then
+    echo "Blessing $1"
+    "${VMBLESSDIR}/linux-${VMHOSTARCH}/blessdisk" $1
+    cat "$1.bless" $1 > "$1.template"
+    rm "$1.bless"
+else
+    echo "Usage: $0 app"
+fi
