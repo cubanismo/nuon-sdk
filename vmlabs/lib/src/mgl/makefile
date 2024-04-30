@@ -23,8 +23,8 @@ RELEASE_HDRS = gl.h gltypes.h
 RELEASE_LIBS = libmgl.a
 RELEASE_SRCS = *.c *.h *.s Makefile
 
-LOCAL_CFLAGS = -O2
-#LOCAL_CFLAGS = -g -DDEBUG
+CFLAGS = -O2
+#CFLAGS = -g -DDEBUG
 
 LOBJS		= api.o \
 			  begend.o \

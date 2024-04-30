@@ -429,6 +429,7 @@ GLTexture *mglInitBMPTexture(void *bp, GLuint convertToYCrCb, GLuint sdramFlag)
 					}
 					if (inverted) pp -= 2 * lineWidth;
 	       			}
+				break;
 			case eGRB655:
 				for (i = 0; i < header.height; i++) {
 					for (j = 0; j < header.width; j++) {
