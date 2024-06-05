@@ -50,6 +50,18 @@ After that, try adapting one of the more complex sample programs to do what
 you want it to. Good starting points are Game-Controllers/DeadZone and
 Sprites/VMBalls4.
 
+## VM Labs SDK Documentation
+
+Most of what is included here is from the original VM Labs SDK, which included
+its own documentation. This is all included under the vmlabs/doc subdirectory.
+You can also browse the HTML portions of it directly on github using this link:
+
+[VM Labs SDK Documentation Root](https://htmlpreview.github.io/?https://github.com/cubanismo/nuon-sdk/blob/main/vmlabs/readme.html)
+
+Note this documentation has not been updated to reflect changes made to the
+original VM Labs files. See this repository's commit history for details on such
+changes.
+
 ## Testing/Running programs
 
 ### Testing On An Emulator
